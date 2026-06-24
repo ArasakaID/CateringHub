@@ -6,10 +6,50 @@ export default function DetailProduk({ menu, catering, relatedMenus }) {
     const [optionQtys, setOptionQtys] = useState({});
     const [isSaved, setIsSaved] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const [addingToCart, setAddingToCart] = useState(false);
+    const [addedToCart, setAddedToCart] = useState(false);
 
     const options = menu.options || [];
 
     const totalPrice = menu.price * qty;
+
+    const handleAddToCart = async () => {
+        if (addingToCart || addedToCart) return;
+
+        setAddingToCart(true);
+        setAddedToCart(false);
+
+        // Collect selected options (those with qty > 0)
+        const selectedOptions = Object.entries(optionQtys)
+            .filter(([_, q]) => q > 0)
+            .map(([name]) => name);
+
+        try {
+            const res = await fetch(route('cart.add'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    menu_id: menu.id,
+                    quantity: qty,
+                    options: selectedOptions,
+                }),
+            });
+
+            if (res.ok) {
+                setQty(1);
+                setOptionQtys({});
+                setAddingToCart(false);
+                // Tampilkan "✓ Ditambahkan" selama 2 detik
+                setAddedToCart(true);
+                setTimeout(() => setAddedToCart(false), 2000);
+                return;
+            }
+        } catch (e) {
+            console.error('Cart add failed', e);
+        }
+
+        setAddingToCart(false);
+    };
 
     const decreaseQty = () => {
         if (qty > 1) setQty(qty - 1);
@@ -321,10 +361,13 @@ export default function DetailProduk({ menu, catering, relatedMenus }) {
 
                         {/* Masuk keranjang button */}
                         <button
-                            className="w-full h-[62px] bg-[#ff7622] rounded-[12px] flex items-center justify-center cursor-pointer hover:bg-[#e5681a] transition active:scale-[0.98]"
+                            onClick={handleAddToCart}
+                            disabled={addingToCart || addedToCart}
+                            className="w-full h-[62px] rounded-[12px] flex items-center justify-center cursor-pointer transition active:scale-[0.98] disabled:opacity-80 disabled:cursor-not-allowed"
+                            style={{ backgroundColor: addedToCart ? '#059c6a' : '#ff7622' }}
                         >
                             <span className="text-white text-[16px] font-bold uppercase tracking-wide">
-                                Masuk keranjang
+                                {addedToCart ? '✓ Ditambahkan' : addingToCart ? 'Menambahkan...' : 'Masuk keranjang'}
                             </span>
                         </button>
                     </div>

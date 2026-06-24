@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
@@ -13,6 +15,17 @@ Route::get('/catering/{slug}', [HomeController::class, 'showCatering'])->name('c
 Route::get('/api/caterings/filter', [HomeController::class, 'filter'])->name('caterings.filter');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.show');
+
+// Cart
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/toggle-check', [CartController::class, 'toggleCheck'])->name('cart.toggle');
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+
+// Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
