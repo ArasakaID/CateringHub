@@ -177,65 +177,63 @@ Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.show');
 
 ## Milestone Implementasi
 
-### Phase 1: Database & Backend
-- [ ] **Migration**: Tambah kolom `options` (JSON/nullable) ke tabel `menus`
-- [ ] **Seeder**: Update `MenuSeeder` dengan `description` dan `options` untuk tiap menu
-- [ ] **Model**: Tambah `options` ke `$fillable` di `Menu.php`
-- [ ] Buat `MenuController` dengan method `show($id)`
-- [ ] Tambah route `GET /menu/{id}` di `routes/web.php`
-- [ ] Load menu + relasi catering
+### ✅ Phase 1: Database & Backend
+- [x] **Migration**: Tambah kolom `options` (JSON/nullable) ke tabel `menus`
+- [x] **Seeder**: Update `MenuSeeder` dengan `description` dan `options` untuk tiap menu
+- [x] **Model**: Tambah `options` ke `$fillable` dan `$casts` di `Menu.php`
+- [x] Buat `MenuController` dengan method `show($id)`
+- [x] Tambah route `GET /menu/{id}` di `routes/web.php`
+- [x] Load menu + relasi catering
 
-### Phase 2: Page & Top Bar
-- [ ] Buat `resources/js/Pages/DetailProduk.jsx`
-- [ ] Back button — lingkaran `#ecf0f4` 45×45, arrow, link ke halaman sebelumnya
-- [ ] Title "Detail Produk" — Sen 17px
+### ✅ Phase 2: Page & Top Bar
+- [x] Buat `resources/js/Pages/DetailProduk.jsx`
+- [x] Back button — lingkaran `#ecf0f4` 45×45, arrow, link ke halaman catering
+- [x] Title "Detail Produk" — Sen 17px
 
-### Phase 3: Hero Image & Catering Pill
-- [ ] Hero image — 327×184, `rounded-[32px]`, pakai `menu.image`
-- [ ] Save/bookmark icon — lingkaran putih opacity 0.2 di pojok kanan atas
-- [ ] Catering profile pill — `rounded-full`, border `#e9e9e9`, 201×47
-- [ ] Foto profile 21×21 — pakai `catering.logo`
-- [ ] Nama catering — klik navigasi ke `catering.show`
+### ✅ Phase 3: Hero Image & Catering Pill
+- [x] Hero image — 327×184, `rounded-[32px]`, pakai `menu.image` + fallback
+- [x] Save/bookmark icon — heart icon, lingkaran putih opacity 0.2 di pojok kanan atas
+- [x] Catering profile pill — `rounded-full`, border `#e9e9e9`, 201×47
+- [x] Foto profile 21×21 — pakai `catering.logo` (dengan fallback)
+- [x] Nama catering — klik navigasi ke `catering.show`
 
-### Phase 4: Info Produk
-- [ ] Product name — `menu.name`, Sen Bold 20px
-- [ ] Description — `menu.description`, Sen 14px, `#a0a5ba`, lineHeight 24px
-- [ ] Rating star `#ff7622` + angka rating
-- [ ] Delivery icon + teks
-- [ ] Clock icon + delivery time
+### ✅ Phase 4: Info Produk
+- [x] Product name — `menu.name`, Sen Bold 20px
+- [x] Description — `menu.description`, Sen 14px, `#a0a5ba`, lineHeight 24px
+- [x] Rating star `#ff7622` + angka rating
+- [x] Delivery icon + teks
+- [x] Clock icon + delivery time
 
-### Phase 5: Pilihan Options
-- [ ] Title "PILIHAN" — Sen 13px, letterSpacing 2%
-- [ ] Render opsi dari `menu.options` (JSON)
-- [ ] Checkbox/selector untuk tiap opsi
-- [ ] State selected options
+### ✅ Phase 5: Pilihan Options
+- [x] Title "PILIHAN" — Sen 13px, letterSpacing 2%, uppercase
+- [x] Render opsi dari `menu.options` (JSON array)
+- [x] Quantity counter per opsi (bukan checkbox) — unified dark capsule
+- [x] State selected options (optionQtys)
 
-### Phase 6: Add to Cart Bottom Sheet
-- [ ] Background `#f0f5fa`, `rounded-t-[24px]`
-- [ ] Price — `menu.price`, format Rp, Sen 28px
-- [ ] Qty selector: minus button, angka, plus button
-- [ ] Min/plus buttons — lingkaran kecil, bg `#121223`
-- [ ] "Masuk keranjang" button — `#ff7622`, 327×62, `rounded-[12px]`
-- [ ] Button click — tambah ke cart (integrasi dengan cart nanti)
+### ✅ Phase 6: Add to Cart Bottom Sheet
+- [x] Background `#f0f5fa`, `rounded-t-[24px]`
+- [x] Price — `menu.price`, format Rp, Sen 28px
+- [x] Qty selector unified dark capsule: minus, angka, plus — bg `#121223`
+- [x] "MASUK KERANJANG" button — `#ff7622`, 327×62, `rounded-[12px]`, uppercase
+- [ ] Button click — integrasi cart (nanti)
 
-### Phase 7: Interaksi & Polish
-- [ ] Qty minimum 1, tidak bisa minus dari 1
-- [ ] Total harga update saat qty berubah (price × qty)
-- [ ] Save/bookmark toggle (favorit)
-- [ ] Click catering pill → navigasi ke CateringAcara
-- [ ] Loading state saat fetch data
-- [ ] Error state jika menu tidak ditemukan
+### ✅ Phase 7: Interaksi & Polish
+- [x] Qty minimum 1, tidak bisa minus dari 1
+- [x] Total harga update saat qty berubah (price × qty)
+- [x] Save/bookmark toggle (favorit)
+- [x] Click catering pill → navigasi ke CateringAcara
+- [x] Image fallback jika URL rusak
+- [x] Error state — 404 otomatis dari controller findOrFail
 
-### Phase 8: Figma Design Comparison
-- [ ] Screenshot Figma (via `save_screenshots` Figma MCP — frame `610:3790`)
-- [ ] Screenshot Web (via `browser_save_screenshot` Browser MCP)
-- [ ] Bandingkan dengan `design_compare` (browser-ai + Gemini)
-- [ ] Catat skor kesamaan — target minimal **90%**
-- [ ] Perbaiki semua perbedaan Figma vs Web hingga ≥ 90%
+### ✅ Phase 8: Figma Design Comparison
+- [x] Screenshot Figma (via `save_screenshots` Figma MCP — frame `610:3790`)
+- [x] Screenshot Web (via `browser_save_screenshot` Browser MCP)
+- [x] Bandingkan dengan `design_compare` (browser-ai + Gemini)
+- [x] Skor v1: **79.75%** → v2: **94%** → v3 final: **96.25%** ✅ Target ≥90% tercapai!
 
-### Phase 9: Git Commit & Push
+### ⏳ Phase 9: Git Commit & Push
 - [ ] `git add` semua perubahan
-- [ ] `git commit` dengan pesan deskriptif (contoh: "feat: detail produk page dengan menu options dan add to cart")
+- [ ] `git commit` dengan pesan deskriptif
 - [ ] `git push` ke remote repository
 
 ---

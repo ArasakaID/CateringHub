@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useState, useMemo } from 'react';
 
 // Helper: chunk array into pairs for 2-column grid
@@ -166,6 +166,7 @@ export default function CateringAcara({ catering, keywords }) {
                                 {row.filter(Boolean).map((menu, colIdx) => (
                                     <div
                                         key={menu.id}
+                                        onClick={() => router.visit(route('menu.show', { id: menu.id }))}
                                         className="flex-1 bg-white rounded-[25px] overflow-hidden cursor-pointer hover:-translate-y-1 transition-all duration-200"
                                         style={{
                                             boxShadow: '0 15px 40px rgba(150,150,154,0.20)',

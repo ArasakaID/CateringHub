@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Foundation\Application;
@@ -11,6 +12,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/catering/{slug}', [HomeController::class, 'showCatering'])->name('catering.show');
 Route::get('/api/caterings/filter', [HomeController::class, 'filter'])->name('caterings.filter');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.show');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

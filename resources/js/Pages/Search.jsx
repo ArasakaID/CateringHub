@@ -283,6 +283,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
                                     {row.filter(Boolean).map((menu) => (
                                         <div
                                             key={menu.id}
+                                            onClick={() => router.visit(route('menu.show', { id: menu.id }))}
                                             className="w-[153px] bg-white rounded-[25px] cursor-pointer hover:-translate-y-1 transition-all duration-200"
                                             style={{
                                                 boxShadow: '0 12px 30px rgba(150,150,154,0.15)',

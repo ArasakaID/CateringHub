@@ -10,7 +10,12 @@ class Menu extends Model
 {
     protected $fillable = [
         'catering_id', 'category_id', 'name', 'description',
-        'price', 'image', 'is_available',
+        'price', 'image', 'options', 'is_available',
+    ];
+
+    protected $casts = [
+        'options' => 'array',
+        'price' => 'decimal:2',
     ];
 
     public function catering(): BelongsTo
