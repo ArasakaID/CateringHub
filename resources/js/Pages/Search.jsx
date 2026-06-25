@@ -127,7 +127,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
                 {/* Inner wrapper — match Figma frame width 363px */}
                 <div className="mx-auto" style={{ maxWidth: '363px' }}>
                 {/* ===== 1. TOP BAR ===== */}
-                <div className="px-[18px] pt-[50px] flex items-center justify-between">
+                <div className="pl-[24px] pr-[12px] pt-[50px] flex items-center justify-between">
                     {/* Back */}
                     <Link href={route('home')} className="w-[45px] h-[45px] rounded-full bg-[#ecf0f4] flex items-center justify-center shrink-0 cursor-pointer hover:bg-gray-200 transition">
                         <svg width="6" height="11" viewBox="0 0 6 11" fill="none">
@@ -159,7 +159,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
                 </div>
 
                 {/* ===== 2. SEARCH INPUT ===== */}
-                <div className="px-[18px] mt-[24px]">
+                <div className="pl-[24px] pr-[12px] mt-[24px]">
                     <div className="bg-[#f6f6f6] rounded-[10px] h-[62px] w-full flex items-center px-5 gap-4 transition-all focus-within:ring-1 focus-within:ring-[#fc6e2a] focus-within:bg-white">
                         {/* Search icon */}
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="shrink-0">
@@ -194,7 +194,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
 
                 {/* ===== 3. KEYWORD TAGS ===== */}
                 {keywords.length > 0 && (
-                    <div className="px-[18px] mt-[24px]">
+                    <div className="pl-[24px] pr-[12px] mt-[24px]">
                         <h2 className="text-[#32343e] text-[20px] mb-[14px]">Ktegori</h2>
                         <div
                             ref={tagScrollRef}
@@ -223,7 +223,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
 
                 {/* ===== 4. REKOMENDASI KETRING ===== */}
                 {caterings.length > 0 && (
-                    <div className="px-[18px] mt-[30px]">
+                    <div className="pl-[24px] pr-[12px] mt-[30px]">
                         <h2 className="text-[#32343e] text-[20px] mb-[20px]">Rekomendasi Ketring</h2>
                         <div className="w-full">
                             {caterings.map((catering, idx) => (
@@ -276,7 +276,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
 
                 {/* ===== 5. PAKET TERPOPULER ===== */}
                 {menus.length > 0 && (
-                    <div className="px-[18px] mt-[32px] pb-8">
+                    <div className="pl-[24px] pr-[12px] mt-[32px] pb-8">
                         <h2 className="text-[#181c2e] text-[20px] mb-[24px]">Paket Terpopuler</h2>
 
                         {/* Menu grid — 2 columns */}
@@ -339,7 +339,7 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
 
                 {/* ===== EMPTY STATE ===== */}
                 {caterings.length === 0 && menus.length === 0 && (
-                    <div className="px-[18px] mt-[60px] text-center">
+                    <div className="pl-[24px] pr-[12px] mt-[60px] text-center">
                         <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-5">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
                                 <circle cx="11" cy="11" r="7" stroke="#9CA3AF" strokeWidth="1.5"/>
