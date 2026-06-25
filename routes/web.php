@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TrackingController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,6 +51,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Tracking & Delivery routes (auth required)
+Route::middleware('auth')->group(function () {
+    Route::get('/pesanan/{order}/tracking', [TrackingController::class, 'show'])->name('tracking.show');
+    Route::get('/pesanan/{order}/call', [TrackingController::class, 'initiateCall'])->name('tracking.call');
+    Route::get('/pesanan/{order}/chat', [TrackingController::class, 'chat'])->name('tracking.chat');
+    Route::post('/pesanan/{order}/chat/send', [TrackingController::class, 'sendMessage'])->name('tracking.chat.send');
 });
 
 // Location routes (all require auth)

@@ -33,25 +33,11 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
         switch (type) {
             case 'cash':
                 return (
-                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <rect x="1" y="5" width="26" height="18" rx="3" stroke="#ff7622" strokeWidth="2"/>
-                        <circle cx="14" cy="14" r="4" stroke="#ff7622" strokeWidth="2"/>
-                        <path d="M5 11H7" stroke="#ff7622" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M21 16H23" stroke="#ff7622" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
+                    <img src="/images/figma-cash-icon.png" alt="Tunai" width="28" height="28" />
                 );
             case 'qris':
                 return (
-                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <rect x="1" y="1" width="11" height="11" rx="2" stroke="#ff7622" strokeWidth="2"/>
-                        <rect x="16" y="1" width="11" height="11" rx="2" stroke="#ff7622" strokeWidth="2"/>
-                        <rect x="1" y="16" width="11" height="11" rx="2" stroke="#ff7622" strokeWidth="2"/>
-                        <rect x="16" y="16" width="11" height="11" rx="2" stroke="#ff7622" strokeWidth="2"/>
-                        <path d="M12 6.5H16" stroke="#ff7622" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M6.5 12V16" stroke="#ff7622" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M12 21.5H16" stroke="#ff7622" strokeWidth="2" strokeLinecap="round"/>
-                        <path d="M21.5 12V16" stroke="#ff7622" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
+                    <img src="/images/figma-qris-logo.png" alt="QRIS" width="52" height="20" />
                 );
             case 'mastercard':
                 return (
@@ -120,8 +106,16 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
                         Metode Pembayaran
                     </h2>
 
-                    {/* Grid 3 columns */}
-                    <div className="grid grid-cols-3 gap-[12px]">
+                    {/* Grid 3 columns — fixed 85×72 cards */}
+                    <div
+                        className="grid"
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(3, 85px)',
+                            gap: '12px',
+                            justifyContent: 'center',
+                        }}
+                    >
                         {paymentMethods.map((method) => (
                             <button
                                 key={method.id}
@@ -135,11 +129,16 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
                                     border: isSelected(method.id) ? '2px solid #ff7622' : '2px solid transparent',
                                 }}
                             >
-                                {/* Check icon - only visible when selected */}
+                                {/* Check icon - top-right when selected */}
                                 {isSelected(method.id) && (
                                     <div
-                                        className="absolute top-[-6px] right-[-6px] w-[24px] h-[24px] rounded-full flex items-center justify-center"
-                                        style={{ backgroundColor: '#ff7622' }}
+                                        className="absolute w-[24px] h-[24px] rounded-full flex items-center justify-center"
+                                        style={{
+                                            backgroundColor: '#ff7622',
+                                            border: '2px solid #ffffff',
+                                            top: '-7px',
+                                            right: '-7px',
+                                        }}
                                     >
                                         <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
                                             <path d="M1.5 5L4.5 8L10.5 2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -164,41 +163,19 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
                 {/* ===== QR CODE (only for QRIS) ===== */}
                 {isQris && (
                     <div className="px-6 mt-[36px] flex flex-col items-center">
-                        {/* QR Code Image */}
-                        <div
-                            className="w-[253px] h-[253px] rounded-[20px] flex items-center justify-center bg-[#f0f5fa]"
+                        {/* QR Code Image from Figma — no border radius, drop shadow */}
+                        <img
+                            src="/images/figma-qr-code.png"
+                            alt="QRIS QR Code"
+                            className="w-[253px] h-[253px]"
                             style={{
-                                boxShadow: '0 4px 8px rgba(0,0,0,0.25)',
+                                boxShadow: '4px 4px 4px rgba(0,0,0,0.25)',
                             }}
-                        >
-                            {/* QR placeholder — in real app would be a dynamic QR */}
-                            <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
-                                <rect x="10" y="10" width="180" height="180" rx="12" fill="white"/>
-                                <rect x="20" y="20" width="50" height="50" rx="4" fill="#181c2e"/>
-                                <rect x="30" y="30" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="50" y="30" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="30" y="50" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="50" y="50" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="100" y="20" width="50" height="50" rx="4" fill="#181c2e"/>
-                                <rect x="110" y="30" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="130" y="30" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="110" y="50" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="130" y="50" width="50" height="10" rx="1" fill="white"/>
-                                <rect x="20" y="100" width="50" height="50" rx="4" fill="#181c2e"/>
-                                <rect x="30" y="110" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="50" y="110" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="30" y="130" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="100" y="100" width="30" height="30" rx="4" fill="#181c2e"/>
-                                <rect x="110" y="110" width="10" height="10" rx="1" fill="white"/>
-                                <rect x="160" y="100" width="20" height="20" rx="2" fill="#181c2e"/>
-                                <rect x="80" y="160" width="30" height="20" rx="2" fill="#181c2e"/>
-                                <rect x="160" y="140" width="20" height="40" rx="2" fill="#181c2e"/>
-                            </svg>
-                        </div>
+                        />
 
                         {/* CEK STATUS Button */}
                         <button
-                            className="w-[327px] h-[62px] flex items-center justify-center mt-[24px] cursor-pointer hover:opacity-80 transition rounded-[10px]"
+                            className="w-full max-w-[327px] h-[62px] flex items-center justify-center mt-[24px] cursor-pointer hover:opacity-80 transition rounded-[10px]"
                             style={{ backgroundColor: '#f0f5fa' }}
                         >
                             <span className="text-[14px] font-bold" style={{ color: '#ff7622' }}>
@@ -258,38 +235,50 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
                                 savedCards.map((card) => (
                                     <div
                                         key={card.id}
-                                        className="w-full h-[82px] rounded-[10px] px-[16px] flex items-center justify-between"
-                                        style={{ backgroundColor: '#f4f5f7' }}
+                                        className="w-full rounded-[10px] px-[20px] relative flex items-center justify-between"
+                                        style={{
+                                            backgroundColor: '#f4f5f7',
+                                            height: '82px',
+                                        }}
                                     >
-                                        <div className="flex items-center gap-[12px]">
-                                            {/* Card icon */}
-                                            {card.card_type === 'mastercard' ? (
-                                                <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
-                                                    <circle cx="12" cy="12" r="10" fill="#eb001b"/>
-                                                    <circle cx="20" cy="12" r="10" fill="#f79e1b"/>
-                                                    <circle cx="20" cy="12" r="10" fill="#ff5f00" opacity="0.5"/>
-                                                    <ellipse cx="16" cy="12" rx="4" ry="10" fill="#ff5f00"/>
-                                                </svg>
-                                            ) : (
-                                                <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
-                                                    <rect x="1" y="3" width="30" height="18" rx="3" fill="#1a1f71"/>
-                                                    <text x="16" y="15" textAnchor="middle" fill="white" fontSize="6" fontWeight="bold" fontFamily="Arial">VISA</text>
-                                                </svg>
-                                            )}
+                                        <div className="flex flex-col justify-center" style={{ gap: '12px' }}>
+                                            {/* Row 1: Cardholder name */}
+                                            <p className="text-[#32343e] text-[16px] font-bold" style={{ fontFamily: 'Sen, sans-serif' }}>
+                                                {card.cardholder_name}
+                                            </p>
 
-                                            <div>
-                                                <p className="text-[#32343e] text-[16px] font-bold">
-                                                    {card.cardholder_name}
-                                                </p>
-                                                <p className="text-[#32343e] text-[16px]" style={{ opacity: 0.5 }}>
-                                                    ************* {card.last_four}
-                                                </p>
+                                            {/* Row 2: Logo + masked number + last 4 */}
+                                            <div className="flex items-center" style={{ gap: '10px' }}>
+                                                {/* Card logo */}
+                                                {card.card_type === 'mastercard' ? (
+                                                    <svg width="28" height="18" viewBox="0 0 28 18" fill="none">
+                                                        <rect width="28" height="18" rx="3.6" fill="#2d2d2d"/>
+                                                        <circle cx="9.75" cy="9" r="5.5" fill="#ff5023"/>
+                                                        <ellipse cx="14" cy="9" rx="3.25" ry="5.5" fill="#ffcd00"/>
+                                                        <circle cx="18.25" cy="9" r="5.5" fill="#ff5023"/>
+                                                    </svg>
+                                                ) : (
+                                                    <svg width="28" height="18" viewBox="0 0 28 18" fill="none">
+                                                        <rect width="28" height="18" rx="3" fill="#1a1f71"/>
+                                                        <text x="14" y="13" textAnchor="middle" fill="white" fontSize="6" fontWeight="bold" fontFamily="Arial">VISA</text>
+                                                    </svg>
+                                                )}
+
+                                                {/* Masked number */}
+                                                <span className="text-[16px]" style={{ color: '#32343e', opacity: 0.5, fontFamily: 'Sen, sans-serif' }}>
+                                                    *************
+                                                </span>
+
+                                                {/* Last 4 digits */}
+                                                <span className="text-[16px]" style={{ color: '#32343e', fontFamily: 'Sen, sans-serif' }}>
+                                                    {card.last_four}
+                                                </span>
                                             </div>
                                         </div>
 
-                                        {/* Arrow right */}
-                                        <svg width="8" height="13" viewBox="0 0 8 13" fill="none">
-                                            <path d="M1 1L6 6.5L1 12" stroke="#181c2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        {/* Arrow down */}
+                                        <svg width="10" height="7" viewBox="0 0 10 7" fill="none">
+                                            <path d="M1 1L5 5.5L9 1" stroke="#181c2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                     </div>
                                 ))
@@ -299,22 +288,22 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
                                 </p>
                             )}
 
-                            {/* Add New Button */}
+                            {/* ADD NEW Button — vertical layout: text above, icon below */}
                             <button
-                                className="w-full h-[62px] rounded-[10px] flex items-center justify-center gap-[8px] cursor-pointer hover:opacity-80 transition"
+                                className="w-full h-[62px] rounded-[10px] flex flex-col items-center justify-center gap-[6px] cursor-pointer hover:opacity-80 transition"
                                 style={{
                                     backgroundColor: '#ffffff',
                                     border: '2px solid #f0f5fa',
                                 }}
                             >
+                                <span className="text-[14px] font-bold" style={{ color: '#ff7622' }}>
+                                    Add New
+                                </span>
                                 {/* Plus icon (silang diputar 45°) */}
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                                     <path d="M7 0V14" stroke="#ff7622" strokeWidth="2.5" strokeLinecap="round"/>
                                     <path d="M0 7H14" stroke="#ff7622" strokeWidth="2.5" strokeLinecap="round"/>
                                 </svg>
-                                <span className="text-[14px] font-bold" style={{ color: '#ff7622' }}>
-                                    Add New
-                                </span>
                             </button>
                         </div>
                     </div>
@@ -322,13 +311,11 @@ export default function Pembayaran({ order, total, paymentMethods, savedCards })
 
                 {/* ===== TOTAL & BAYAR ===== */}
                 <div className="px-6 mt-[50px] pb-[80px]">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <span className="text-[16px]" style={{ color: '#121223' }}>
-                                Total:
-                            </span>
-                        </div>
-                        <span className="text-[30px]" style={{ color: '#181c2e' }}>
+                    <div className="flex items-baseline justify-between">
+                        <span className="text-[16px]" style={{ color: '#121223', fontFamily: 'Sen, sans-serif', lineHeight: '24px' }}>
+                            Total:
+                        </span>
+                        <span className="text-[30px]" style={{ color: '#181c2e', fontFamily: 'Sen, sans-serif', lineHeight: '36px' }}>
                             Rp {Number(total).toLocaleString('id-ID')}
                         </span>
                     </div>

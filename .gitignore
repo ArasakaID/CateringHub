@@ -25,3 +25,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/screenshots/
+.claude/
+/public/images/figma-compare-*.png
+/public/images/web-compare-*.png

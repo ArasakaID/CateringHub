@@ -13,7 +13,15 @@ class CateringSeeder extends Seeder
         $user = User::first() ?? User::factory()->create([
             'name' => 'Admin CateringHub',
             'email' => 'admin@cateringhub.com',
+            'password' => bcrypt('password'),
         ]);
+
+        // Ensure admin user has a known password even if already exists
+        if (User::where('email', 'admin@cateringhub.com')->exists()) {
+            User::where('email', 'admin@cateringhub.com')->update([
+                'password' => bcrypt('password'),
+            ]);
+        }
 
         $caterings = [
             [

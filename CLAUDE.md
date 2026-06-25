@@ -66,5 +66,22 @@ composer run setup
 ### Figma MCP
 - Use **figma-bridge** MCP tools only (not plugin_figma)
 - **JANGAN GUNAKAN `get_document`** — output terlalu besar dan membuang token. Guna `get_design_context` atau `get_node` dengan node ID spesifik saja.
-- Design file key: `unsaved-mqs49lag-zcqi8mlr`
+- **Gunakan `get_design_context` hanya dengan depth 1** — depth >1 menghasilkan terlalu banyak data dan membuang token. Untuk detail lebih lanjut, gunakan `get_node` dengan node ID spesifik.
+- Design file key: **tidak statis** — gunakan `list_files()` untuk melihat file yang terhubung, atau cukup panggil `get_metadata` tanpa `fileKey` (auto-detect file yang aktif). Jika error, cek `list_files()` dulu untuk mendapat fileKey yang benar.
 - Pages: USER_FIX
+
+## Sub-Agents (.claude/agents/)
+
+Project-specific agents untuk memparalelkan dan mempercepat development:
+
+| Agent | Fungsi |
+|-------|--------|
+| `figma-expert` | Ekstrak detail Figma (warna, font, ukuran, layout) secara efisien |
+| `ui-reviewer` | Bandingkan Figma vs implementasi, kasih score 0-100% |
+| `plan-creator` | Buat `plans/*.md` berbasis Figma frames sesuai template BASE_PLAN.md |
+| `migration-maker` | Buat migration, model, controller, routes Laravel |
+| `component-builder` | Buat React/Inertia page components dengan Tailwind CSS |
+| `design-validator` | Jalankan workflow design comparison (screenshot → compare → iterasi) per-frame |
+| `workflow-runner` | Orchestrate full pipeline dari analisis Figma sampai Git commit |
+
+Panggil dengan: `Agent` tool → pilih `general-purpose` → tulis prompt sesuai agent description. Atau untuk research ringan, pilih `Explore` agent.

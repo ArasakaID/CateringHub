@@ -39,8 +39,8 @@ export default function Pesanan({ orders }) {
         });
     };
 
-    const handleTrackOrder = () => {
-        alert('Fitur lacak pesanan akan segera tersedia.');
+    const handleTrackOrder = (orderId) => {
+        router.visit(route('tracking.show', orderId));
     };
 
     const handleRate = () => {
@@ -263,7 +263,7 @@ export default function Pesanan({ orders }) {
                                                 <>
                                                     {/* Track Order — filled */}
                                                     <button
-                                                        onClick={handleTrackOrder}
+                                                        onClick={() => handleTrackOrder(order.id)}
                                                         className="flex-1 h-[39px] rounded-[8px] flex items-center justify-center cursor-pointer hover:opacity-80 transition text-[12px] font-bold"
                                                         style={{ backgroundColor: '#ff7622', color: '#ffffff' }}
                                                     >

@@ -1,8 +1,11 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function TambahLokasiBaru({ address = null, pendingLocation = { latitude: null, longitude: null, city: null } }) {
     const isEditing = !!address;
+    const mapRef = useRef(null);
+    const mapInstance = useRef(null);
+    const [L, setL] = useState(null);
 
     const [form, setForm] = useState({
         label: address?.label || 'Rumah',
@@ -18,6 +21,78 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
     const [submitting, setSubmitting] = useState(false);
 
     const labels = ['Rumah', 'Kantor', 'Lainya'];
+
+    useEffect(() => {
+        import('leaflet').then((leaflet) => {
+            const L = leaflet.default || leaflet;
+            setL(() => L);
+
+            delete L.Icon.Default.prototype._getIconUrl;
+            L.Icon.Default.mergeOptions({
+                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            });
+        });
+    }, []);
+
+    useEffect(() => {
+        if (!L || mapInstance.current) return;
+
+        import('leaflet/dist/leaflet.css').then(() => {
+            const lat = form.latitude ? parseFloat(form.latitude) : -7.7956;
+            const lng = form.longitude ? parseFloat(form.longitude) : 110.3695;
+
+            const map = L.map(mapRef.current, {
+                center: [lat, lng],
+                zoom: 14,
+                zoomControl: false,
+                attributionControl: false,
+                dragging: false,
+                scrollWheelZoom: false,
+                touchZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                keyboard: false,
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Custom orange circle pin (matching Figma)
+            const orangeIcon = L.divIcon({
+                className: '',
+                html: `
+                    <div style="position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">
+                        <div style="position:absolute;width:30px;height:30px;border-radius:50%;background-color:#fb6d3a;opacity:0.2;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+                        <svg width="22" height="30" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                            <ellipse cx="11" cy="11.5" rx="10.5" ry="10.5" fill="#fb6d3a"/>
+                            <circle cx="11" cy="11" r="4" fill="white"/>
+                            <path d="M11 22V29" stroke="#fb6d3a" strokeWidth="2.5" strokeLinecap="round"/>
+                        </svg>
+                    </div>
+                `,
+                iconSize: [50, 50],
+                iconAnchor: [25, 50],
+            });
+
+            L.marker([lat, lng], { icon: orangeIcon }).addTo(map);
+
+            mapInstance.current = map;
+            setTimeout(() => map.invalidateSize(), 100);
+        });
+
+        return () => {
+            if (mapInstance.current) {
+                mapInstance.current.remove();
+                mapInstance.current = null;
+            }
+        };
+    }, [L]);
+
+    const latNum = form.latitude ? parseFloat(form.latitude) : null;
+    const lngNum = form.longitude ? parseFloat(form.longitude) : null;
 
     const handleChange = (field, value) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -66,42 +141,36 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Sen, sans-serif' }}>
             <Head title={isEditing ? 'Edit Alamat' : 'Tambah Lokasi Baru'} />
 
-            {/* Back Button */}
-            <div className="px-4 pt-4 pb-2">
-                <button
-                    onClick={() => window.history.length > 1 ? window.history.back() : router.get(route('location.index'))}
-                    className="flex items-center justify-center"
-                    style={{
-                        width: '45px',
-                        height: '45px',
-                        backgroundColor: '#32343e',
-                        borderRadius: '50%',
-                        border: 'none',
-                        cursor: 'pointer',
-                    }}
-                >
-                    <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 1L1.70711 8.29289C1.31658 8.68342 1.31658 9.31658 1.70711 9.70711L9 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </button>
-            </div>
+            {/* Map Area with floating back button */}
+            <div className="relative w-full overflow-hidden" style={{ height: '295px' }}>
+                {/* Back Button — floating over map */}
+                <div className="absolute top-4 left-4 z-[1001]">
+                    <button
+                        onClick={() => window.history.length > 1 ? window.history.back() : router.get(route('location.index'))}
+                        className="flex items-center justify-center"
+                        style={{
+                            width: '45px',
+                            height: '45px',
+                            backgroundColor: '#32343e',
+                            borderRadius: '50%',
+                            border: 'none',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 1L1.70711 8.29289C1.31658 8.68342 1.31658 9.31658 1.70711 9.70711L9 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
 
-            {/* Map Area */}
-            <div
-                className="relative w-full overflow-hidden"
-                style={{
-                    height: '295px',
-                    backgroundColor: '#c4c4c4',
-                    backgroundImage: form.latitude ? `url(https://tile.openstreetmap.org/14/9353/10428.png)` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
-            >
-                {/* Tooltip */}
+                {/* Map */}
+                <div ref={mapRef} className="absolute inset-0 w-full h-full" />
+
+                {/* Tooltip — centered above pin */}
                 <div
-                    className="absolute z-10"
+                    className="absolute z-[1000]"
                     style={{
-                        top: '16px',
+                        top: 'calc(50% - 85px)',
                         left: '50%',
                         transform: 'translateX(-50%)',
                     }}
@@ -111,8 +180,8 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             style={{
                                 backgroundColor: '#32343e',
                                 borderRadius: '3px',
-                                padding: '4px 10px',
-                                fontFamily: 'Sen, sans-serif',
+                                padding: '4px 8px',
+                                fontFamily: 'Poppins, sans-serif',
                                 fontSize: '9px',
                                 color: '#ffffff',
                                 whiteSpace: 'nowrap',
@@ -131,36 +200,6 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                         />
                     </div>
                 </div>
-
-                {/* Pin */}
-                <div
-                    className="absolute z-10"
-                    style={{
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -100%)',
-                    }}
-                >
-                    {/* Glow */}
-                    <div
-                        className="absolute rounded-full"
-                        style={{
-                            width: '30px',
-                            height: '30px',
-                            backgroundColor: '#fb6d3a',
-                            opacity: 0.2,
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                        }}
-                    />
-                    {/* Pin */}
-                    <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="10" cy="10.5" rx="10" ry="10" fill="#fb6d3a"/>
-                        <circle cx="10" cy="10" r="3.5" fill="white"/>
-                        <path d="M10 20V27" stroke="#fb6d3a" strokeWidth="2.5" strokeLinecap="round"/>
-                    </svg>
-                </div>
             </div>
 
             {/* Form */}
@@ -177,7 +216,7 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             letterSpacing: '0.02em',
                         }}
                     >
-                        alamat
+                        ALAMAT
                     </label>
                     <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2" style={{ fontSize: '14px' }}>📍</span>
@@ -185,7 +224,7 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             type="text"
                             value={form.address}
                             onChange={(e) => handleChange('address', e.target.value)}
-                            placeholder="jl. ringroad utara, Ngropoh, Condongcatrur"
+                            placeholder="Jl. Ringroad Utara, Ngropoh, Condongcatrur"
                             style={{
                                 width: '100%',
                                 height: '50px',
@@ -220,13 +259,13 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                                 letterSpacing: '0.02em',
                             }}
                         >
-                            provinsi
+                            PROVINSI
                         </label>
                         <input
                             type="text"
                             value={form.province}
                             onChange={(e) => handleChange('province', e.target.value)}
-                            placeholder="di yogyakarta"
+                            placeholder="Di Yogyakarta"
                             style={{
                                 width: '100%',
                                 height: '50px',
@@ -249,12 +288,12 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             style={{
                                 fontFamily: 'Sen, sans-serif',
                                 fontSize: '14px',
-                                fontWeight: 'bold',
+                                fontWeight: 400,
                                 color: '#32343e',
                                 letterSpacing: '0.02em',
                             }}
                         >
-                            Kode pos
+                            KODE POS
                         </label>
                         <input
                             type="text"
@@ -291,13 +330,13 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             letterSpacing: '0.02em',
                         }}
                     >
-                        Detail lainnya
+                        DETAIL LAINNYA
                     </label>
                     <input
                         type="text"
                         value={form.detail}
                         onChange={(e) => handleChange('detail', e.target.value)}
-                        placeholder="sebelah rumah kuning"
+                        placeholder="Sebelah rumah kuning"
                         style={{
                             width: '100%',
                             height: '50px',
@@ -327,7 +366,7 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             letterSpacing: '0.02em',
                         }}
                     >
-                        Tandai sebagai
+                        TANDAI SEBAGAI
                     </label>
                     <div className="flex gap-3">
                         {labels.map((label) => (
@@ -356,14 +395,14 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                 </div>
 
                 {/* Submit Button */}
-                <div className="pb-8">
+                <div className="pb-8 flex justify-center">
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="flex items-center justify-center w-full"
+                        className="flex items-center justify-center"
                         style={{
-                            width: '100%',
-                            maxWidth: '327px',
+                            width: '327px',
+                            maxWidth: '100%',
                             height: '62px',
                             backgroundColor: '#ff7622',
                             borderRadius: '12px',
@@ -374,10 +413,9 @@ export default function TambahLokasiBaru({ address = null, pendingLocation = { l
                             fontSize: '14px',
                             fontWeight: 700,
                             color: '#ffffff',
-                            margin: '0 auto',
                         }}
                     >
-                        {submitting ? 'Menyimpan...' : isEditing ? 'simpan perubahan' : 'simpan alamat'}
+                        {submitting ? 'Menyimpan...' : isEditing ? 'SIMPAN PERUBAHAN' : 'SIMPAN ALAMAT'}
                     </button>
                 </div>
             </form>

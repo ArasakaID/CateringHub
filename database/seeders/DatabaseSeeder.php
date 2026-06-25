@@ -16,6 +16,14 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             CateringSeeder::class,
             MenuSeeder::class,
+            CourierSeeder::class,
+        ]);
+
+        // Assign couriers to orders after orders exist
+        $this->call([
+            OrderCourierSeeder::class,
+            OrderTrackingLogSeeder::class,
+            ChatMessageSeeder::class,
         ]);
     }
 }

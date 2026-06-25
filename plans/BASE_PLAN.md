@@ -171,13 +171,25 @@ Route::post('/path/{id}/action', [Controller::class, 'action'])->name('route.act
 - [ ] Cek empty state jika tidak ada data
 - [ ] Cek error/loading state
 
-### ⬜ Phase 7: Figma Design Comparison
-- [ ] Screenshot Figma frame(s) (via `save_screenshots` Figma MCP):
-  - Frame `<frame_id>` — <nama_frame> (<width>x<height>px)
-- [ ] Screenshot Web (via `browser_save_screenshot` Browser MCP)
+### ⬜ Phase 7: Figma Design Comparison (Per-Frame Sequential)
+
+Validasi dilakukan **satu per satu per frame** secara berurutan. Setiap frame diselesaikan dulu (screenshot Figma → screenshot Web → compare → iterasi jika < 90%) sebelum lanjut ke frame berikutnya.
+
+Ulangi blok di bawah untuk setiap frame yang ada di plan:
+
+**Frame 1: <nama_frame> (`<frame_id>`)**
+- [ ] Screenshot Figma frame `<frame_id>` — <nama_frame> (via `save_screenshots` Figma MCP)
+- [ ] Screenshot Web state yang sama (via `browser_save_screenshot` Browser MCP)
 - [ ] Bandingkan dengan `design_compare` (browser-ai + Gemini)
-- [ ] Target skor ≥ **90%** — jika kurang, catat perbaikan lalu iterasi
-- [ ] Simpan screenshot final ke folder `/screenshots/`
+- [ ] Jika skor < **90%** — catat perbaikan, perbaiki kode, ulang screenshot & compare
+- [ ] Jika skor ≥ **90%** — simpan screenshot final ke `/screenshots/` → lanjut Frame 2
+
+**Frame 2: <nama_frame> (`<frame_id>`)**
+- [ ] Screenshot Figma frame <frame_id> — <nama_frame> (via `save_screenshots` Figma MCP)
+- [ ] Screenshot Web state yang sama (via `browser_save_screenshot` Browser MCP)
+- [ ] Bandingkan dengan `design_compare` (browser-ai + Gemini)
+- [ ] Jika skor < **90%** — catat perbaikan, perbaiki kode, ulang screenshot & compare
+- [ ] Jika skor ≥ **90%** — simpan screenshot final ke `/screenshots/` → lanjut Frame 3
 
 ### ⬜ Phase 8: Git Commit & Push
 - [ ] `git add` semua perubahan

@@ -6,7 +6,6 @@ export default function AksesLokasi() {
     const [geoError, setGeoError] = useState(null);
 
     useEffect(() => {
-        // Check if geolocation permission was already granted
         if (navigator.permissions) {
             navigator.permissions.query({ name: 'geolocation' }).then(result => {
                 if (result.state === 'granted') {
@@ -25,7 +24,6 @@ export default function AksesLokasi() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 setLocationGranted(true);
-                // Navigate to location selection page with coordinates
                 router.get(route('location.select'), {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
@@ -34,7 +32,6 @@ export default function AksesLokasi() {
             },
             (error) => {
                 setGeoError(error.message);
-                // Still navigate to select page even on error
                 router.get(route('location.select'));
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
@@ -49,8 +46,8 @@ export default function AksesLokasi() {
         <div className="min-h-screen bg-white flex flex-col items-center" style={{ fontFamily: 'Sen, sans-serif' }}>
             <Head title="Akses Lokasi" />
 
-            {/* Map Illustration */}
-            <div className="mt-[176px] mb-8">
+            {/* Map Illustration — y:176 */}
+            <div className="mt-[176px] mb-[93px]">
                 <div
                     className="w-[206px] h-[250px] rounded-[90px] overflow-hidden bg-gray-100"
                     style={{
@@ -61,27 +58,7 @@ export default function AksesLokasi() {
                 />
             </div>
 
-            {/* Description Text */}
-            <p
-                className="text-center px-6 mb-4"
-                style={{
-                    fontFamily: 'Sen, sans-serif',
-                    fontSize: '16px',
-                    fontWeight: 400,
-                    color: '#646982',
-                    lineHeight: '24px',
-                    maxWidth: '323px',
-                }}
-            >
-                DFOOD WILL ACCESS YOUR LOCATION ONLY WHILE USING THE APP
-            </p>
-
-            {/* Geolocation Error */}
-            {geoError && (
-                <p className="text-red-500 text-xs mb-2 px-6 text-center">{geoError}</p>
-            )}
-
-            {/* Button */}
+            {/* Button — y:519.5 (map bottom: 176+250=426 → gap: 519.5-426 = 93.5 ≈ 93) */}
             {!locationGranted ? (
                 <button
                     onClick={handleRequestLocation}
@@ -104,7 +81,7 @@ export default function AksesLokasi() {
                             color: '#ffffff',
                         }}
                     >
-                        Access LOCATION
+                        ACCESS LOCATION
                     </span>
 
                     {/* Map Pin Icon */}
@@ -171,6 +148,27 @@ export default function AksesLokasi() {
                     </div>
                 </button>
             )}
+
+            {/* Geolocation Error */}
+            {geoError && (
+                <p className="text-red-500 text-xs mt-2 px-6 text-center">{geoError}</p>
+            )}
+
+            {/* Description Text — y:618 (button bottom: 519.5+62=581.5 → gap: 618-581.5 = 36.5 ≈ 36) */}
+            <p
+                className="text-center px-6"
+                style={{
+                    marginTop: '36px',
+                    width: '323px',
+                    fontFamily: 'Sen, sans-serif',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    color: '#646982',
+                    lineHeight: '24px',
+                }}
+            >
+                DFOOD WILL ACCESS YOUR LOCATION ONLY WHILE USING THE APP
+            </p>
         </div>
     );
 }

@@ -13,11 +13,12 @@ export default function MemilihLokasi({ latitude = null, longitude = null, city 
 
     useEffect(() => {
         import('leaflet').then((leaflet) => {
-            setL(() => leaflet.default || leaflet);
+            const L = leaflet.default || leaflet;
+            setL(() => L);
 
             // Fix default icon path issue with webpack/vite
-            delete (leaflet.default || leaflet).Icon.Default.prototype._getIconUrl;
-            (leaflet.default || leaflet).Icon.Default.mergeOptions({
+            delete L.Icon.Default.prototype._getIconUrl;
+            L.Icon.Default.mergeOptions({
                 iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
                 iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
                 shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -40,22 +41,22 @@ export default function MemilihLokasi({ latitude = null, longitude = null, city 
                 maxZoom: 19,
             }).addTo(map);
 
-            // Custom red pin marker
+            // Custom red pin marker using divIcon
             const redIcon = L.divIcon({
-                className: 'custom-pin-marker',
+                className: '',
                 html: `
-                    <div style="position:relative;width:36px;height:36px;">
-                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <ellipse cx="18" cy="17.5" rx="18" ry="17.5" fill="#f14237"/>
-                            <path d="M18 8C13.58 8 10 11.47 10 15.75C10 21.33 16.16 27.38 17.28 28.47C17.68 28.86 18.32 28.86 18.72 28.47C19.84 27.38 26 21.33 26 15.75C26 11.47 22.42 8 18 8Z" fill="#f14237"/>
-                            <path d="M18 19C20.2091 19 22 17.2091 22 15C22 12.7909 20.2091 11 18 11C15.7909 11 14 12.7909 14 15C14 17.2091 15.7909 19 18 19Z" fill="white"/>
-                            <path d="M18 11C15.79 11 14 12.79 14 15C14 17.21 15.79 19 18 19C20.21 19 22 17.21 22 15C22 12.79 20.21 11 18 11Z" stroke="white" stroke-width="1.5"/>
-                            <path d="M18 8C13.58 8 10 11.47 10 15.75C10 21.33 16.16 27.38 17.28 28.47C17.68 28.86 18.32 28.86 18.72 28.47C19.84 27.38 26 21.33 26 15.75C26 11.47 22.42 8 18 8Z" stroke="white" stroke-width="1.5"/>
+                    <div style="position:relative;width:40px;height:50px;">
+                        <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                            <path d="M20 0C8.96 0 0 9.12 0 20.36C0 33.88 17.2 48.12 18.56 49.28C19.12 49.76 19.56 50 20 50C20.44 50 20.88 49.76 21.44 49.28C22.8 48.12 40 33.88 40 20.36C40 9.12 31.04 0 20 0Z" fill="#f14237"/>
+                            <circle cx="20" cy="19" r="9" fill="white"/>
+                            <circle cx="20" cy="19" r="5.5" fill="#f14237"/>
+                            <circle cx="20" cy="19" r="9" stroke="white" stroke-width="2"/>
+                            <path d="M20 2C10.63 2 3 9.82 3 19.48C3 29.15 15.5 40.08 18.56 42.84C19.04 43.28 19.52 43.48 20 43.48C20.48 43.48 20.96 43.28 21.44 42.84C24.5 40.08 37 29.15 37 19.48C37 9.82 29.37 2 20 2Z" stroke="white" stroke-width="1.5"/>
                         </svg>
                     </div>
                 `,
-                iconSize: [36, 36],
-                iconAnchor: [18, 35],
+                iconSize: [40, 50],
+                iconAnchor: [20, 50],
             });
 
             const marker = L.marker([position.lat, position.lng], { icon: redIcon, draggable: true }).addTo(map);
@@ -92,11 +93,11 @@ export default function MemilihLokasi({ latitude = null, longitude = null, city 
         <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Sen, sans-serif' }}>
             <Head title="Pilih Lokasi" />
 
-            {/* Top Bar */}
-            <div className="flex items-center px-4 py-3 z-10 bg-white">
+            {/* Top Bar — floating over map, no background */}
+            <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center px-4 pt-12">
                 <button
                     onClick={() => window.history.length > 1 ? window.history.back() : router.get(route('location.access'))}
-                    className="flex items-center justify-center"
+                    className="flex items-center justify-center flex-shrink-0"
                     style={{
                         width: '45px',
                         height: '45px',
@@ -125,20 +126,18 @@ export default function MemilihLokasi({ latitude = null, longitude = null, city 
 
             {/* Map Area */}
             <div className="flex-1 relative overflow-hidden">
-                <div ref={mapRef} className="absolute inset-0 w-full h-full" style={{ minHeight: '400px' }} />
+                <div ref={mapRef} className="absolute inset-0 w-full h-full" style={{ minHeight: '100%' }} />
 
-                {/* Tooltip */}
+                {/* Tooltip above pin */}
                 <div
                     className="absolute z-[1000]"
                     style={{
-                        top: 'calc(50% - 120px)',
+                        top: 'calc(50% - 85px)',
                         left: '50%',
                         transform: 'translateX(-50%)',
                     }}
                 >
-                    <div
-                        className="relative flex flex-col items-center"
-                    >
+                    <div className="flex flex-col items-center">
                         <div
                             style={{
                                 backgroundColor: '#32343e',
@@ -167,7 +166,7 @@ export default function MemilihLokasi({ latitude = null, longitude = null, city 
             </div>
 
             {/* Bottom Button */}
-            <div className="flex justify-center pb-4" style={{ marginTop: '-20px' }}>
+            <div className="flex justify-center" style={{ marginTop: '-2px' }}>
                 <button
                     onClick={handleSave}
                     className="flex items-center justify-center"
@@ -187,9 +186,10 @@ export default function MemilihLokasi({ latitude = null, longitude = null, city 
                             fontSize: '16px',
                             fontWeight: 700,
                             color: '#ffffff',
+                            lineHeight: '75px',
                         }}
                     >
-                        simpan LOkasi
+                        Simpan Lokasi
                     </span>
 
                     {/* Map Pin Icon */}
