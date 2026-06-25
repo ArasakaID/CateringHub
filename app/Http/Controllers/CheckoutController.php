@@ -101,6 +101,6 @@ class CheckoutController extends Controller
         // Clear cart
         $this->cart->clear();
 
-        return redirect()->route('home')->with('success', 'Pesanan berhasil dibuat! Nomor order: ' . $order->order_number);
+        return redirect()->route('pembayaran', ['order' => $order->id]);
     }
 }

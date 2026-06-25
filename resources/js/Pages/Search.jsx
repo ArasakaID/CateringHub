@@ -35,7 +35,7 @@ function MenuImage({ menu }) {
     );
 }
 
-export default function Search({ query: initialQuery, activeTag: initialTag, caterings, menus, keywords }) {
+export default function Search({ query: initialQuery, activeTag: initialTag, caterings, menus, keywords, cartCount }) {
     const [searchQuery, setSearchQuery] = useState(initialQuery || '');
     const [activeTag, setActiveTag] = useState(initialTag || '');
     const inputRef = useRef(null);
@@ -140,17 +140,20 @@ export default function Search({ query: initialQuery, activeTag: initialTag, cat
                         Cari
                     </span>
 
-                    {/* Cart */}
+                    {/* Cart — link ke Checkout */}
                     <div className="relative shrink-0">
-                        <div className="w-[45px] h-[45px] rounded-full bg-[#181c2e] flex items-center justify-center cursor-pointer hover:bg-gray-800 transition">
+                        <button
+                            onClick={() => router.visit(route('checkout'))}
+                            className="w-[45px] h-[45px] rounded-full bg-[#181c2e] flex items-center justify-center cursor-pointer hover:bg-gray-800 transition"
+                        >
                             <svg width="20" height="22" viewBox="0 0 20 22" fill="none">
                                 <path d="M1 1H3L3.4 3M3.4 3L5 15H17L19 5H3.4Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                 <circle cx="6" cy="19" r="1.5" stroke="white" strokeWidth="1.5"/>
                                 <circle cx="16" cy="19" r="1.5" stroke="white" strokeWidth="1.5"/>
                             </svg>
-                        </div>
+                        </button>
                         <div className="absolute w-[25px] h-[25px] bg-[#ff7622] rounded-full flex items-center justify-center shadow-md ring-2 ring-white" style={{ top: '-6px', right: '-6px' }}>
-                            <span className="text-white text-[11px] font-bold">3</span>
+                            <span className="text-white text-[11px] font-bold">{cartCount}</span>
                         </div>
                     </div>
                 </div>

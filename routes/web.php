@@ -4,6 +4,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Foundation\Application;
@@ -26,6 +28,18 @@ Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
 // Checkout
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
+
+// Pembayaran
+Route::get('/checkout/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran');
+Route::post('/checkout/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
+Route::get('/checkout/berhasil/{order}', [PembayaranController::class, 'sukses'])->name('pembayaran.sukses');
+
+// Pesanan
+Route::middleware('auth')->group(function () {
+    Route::get('/pesanan', [OrderController::class, 'index'])->name('pesanan');
+    Route::post('/pesanan/{order}/cancel', [OrderController::class, 'cancelOrder'])->name('pesanan.cancel');
+    Route::post('/pesanan/{order}/reorder', [OrderController::class, 'reorder'])->name('pesanan.reorder');
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

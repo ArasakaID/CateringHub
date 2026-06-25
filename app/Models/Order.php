@@ -12,6 +12,7 @@ class Order extends Model
         'user_id', 'catering_id', 'order_number', 'subtotal',
         'delivery_fee', 'total', 'status', 'notes',
         'delivery_address', 'phone',
+        'payment_method', 'payment_status', 'paid_at',
     ];
 
     public function user(): BelongsTo

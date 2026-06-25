@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Catering;
 use App\Models\Menu;
 use App\Models\Category;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SearchController extends Controller
 {
+    protected CartService $cart;
+
+    public function __construct(CartService $cart)
+    {
+        $this->cart = $cart;
+    }
+
     public function index(Request $request)
     {
         $query = $request->input('q');
@@ -98,6 +106,7 @@ class SearchController extends Controller
             'caterings' => $caterings->values(),
             'menus' => $menus->values(),
             'keywords' => $keywords,
+            'cartCount' => $this->cart->getCount(),
         ]);
     }
 }

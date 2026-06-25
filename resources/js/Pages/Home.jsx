@@ -47,7 +47,7 @@ const categoryIcons = {
     ),
 };
 
-export default function Home({ auth, categories, caterings }) {
+export default function Home({ auth, categories, caterings, cartCount }) {
     const [selectedCategory, setSelectedCategory] = useState('semua');
     const [searchQuery, setSearchQuery] = useState('');
     const [location, setLocation] = useState('Pilih lokasimu');
@@ -142,13 +142,16 @@ export default function Home({ auth, categories, caterings }) {
                         )}
                     </div>
 
-                    {/* Cart */}
+                    {/* Cart — link ke Checkout */}
                     <div className="relative shrink-0 pt-1">
-                        <div className="w-[45px] h-[45px] rounded-full bg-[#181c2e] flex items-center justify-center cursor-pointer hover:bg-gray-800 transition">
+                        <button
+                            onClick={() => router.visit(route('checkout'))}
+                            className="w-[45px] h-[45px] rounded-full bg-[#181c2e] flex items-center justify-center cursor-pointer hover:bg-gray-800 transition"
+                        >
                             <img src="/images/icons/cart.svg" alt="Cart" className="w-[20px] h-[22px]" />
-                        </div>
+                        </button>
                         <div className="absolute top-0 right-0 w-[22px] h-[22px] bg-[#ff7622] rounded-full flex items-center justify-center shadow-md ring-2 ring-white">
-                            <span className="text-white text-[11px] font-bold">3</span>
+                            <span className="text-white text-[11px] font-bold">{cartCount}</span>
                         </div>
                     </div>
                 </div>

@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Catering;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    protected CartService $cart;
+
+    public function __construct(CartService $cart)
+    {
+        $this->cart = $cart;
+    }
+
     public function index()
     {
         $categories = Category::active()->get();
@@ -17,6 +25,7 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'categories' => $categories,
             'caterings' => $caterings,
+            'cartCount' => $this->cart->getCount(),
         ]);
     }
 
