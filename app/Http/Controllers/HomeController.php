@@ -22,10 +22,28 @@ class HomeController extends Controller
         $categories = Category::active()->get();
         $caterings = Catering::with('category')->active()->get();
 
+        $userAddresses = null;
+        $activeAddress = null;
+        if (auth()->check()) {
+            $userAddresses = auth()->user()->addresses()
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(fn ($a) => [
+                    'id' => $a->id,
+                    'label' => $a->label,
+                    'address' => $a->address,
+                    'province' => $a->province,
+                    'is_active' => $a->is_active,
+                ]);
+            $activeAddress = $userAddresses->firstWhere('is_active', true);
+        }
+
         return Inertia::render('Home', [
             'categories' => $categories,
             'caterings' => $caterings,
             'cartCount' => $this->cart->getCount(),
+            'userAddresses' => $userAddresses,
+            'activeAddress' => $activeAddress,
         ]);
     }
 

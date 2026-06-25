@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState, useMemo, useCallback, useRef } from 'react';
 
-export default function Checkout({ items, total, userAddress, userPhone }) {
+export default function Checkout({ items, total, userAddress, userPhone, userAddresses, activeAddress }) {
     const [cartItems, setCartItems] = useState(items);
     const [showJadwal, setShowJadwal] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
@@ -16,6 +16,7 @@ export default function Checkout({ items, total, userAddress, userPhone }) {
     const [dragY, setDragY] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [popupExpanded, setPopupExpanded] = useState(false);
+    const [showSlideUp, setShowSlideUp] = useState(true);
     const popupRef = useRef(null);
     const dragState = useRef({ startY: 0, currentY: 0 });
 
@@ -70,13 +71,18 @@ export default function Checkout({ items, total, userAddress, userPhone }) {
         setDragY(newY);
     }, [isDragging]);
 
+    const closePopup = useCallback(() => {
+        setShowPopup(false);
+        setPopupExpanded(false);
+        setShowBreakdown(false);
+    }, []);
+
     const handleTouchEnd = useCallback(() => {
         setIsDragging(false);
         const finalY = dragState.current.currentY;
 
         if (finalY > DRAG_THRESHOLD) {
-            setShowPopup(false);
-            setPopupExpanded(false);
+            closePopup();
         } else if (finalY < -50) {
             setPopupExpanded(true);
         }
@@ -300,7 +306,7 @@ export default function Checkout({ items, total, userAddress, userPhone }) {
 
                             {/* KONFIRMASI button — langsung di atas background gelap (tanpa white card) */}
                             <button
-                                onClick={() => setShowPopup(true)}
+                                onClick={() => { setShowPopup(true); setShowSlideUp(true); }}
                                 className="w-full h-[67px] bg-[#ff7622] rounded-[12px] flex items-center justify-center cursor-pointer hover:bg-[#e5681a] transition active:scale-[0.98]"
                                 style={{ boxShadow: '0 8px 20px rgba(255,118,34,0.3)' }}
                             >
@@ -320,7 +326,7 @@ export default function Checkout({ items, total, userAddress, userPhone }) {
                         {/* Backdrop */}
                         <div
                             className="absolute inset-0 bg-black/50"
-                            onClick={() => setShowPopup(false)}
+                            onClick={closePopup}
                         />
 
                         {/* Popup card — white, rounded-t-[24px], draggable */}
@@ -331,19 +337,21 @@ export default function Checkout({ items, total, userAddress, userPhone }) {
                                 maxHeight: popupExpanded ? '85vh' : 'auto',
                                 transform: `translateY(${Math.max(0, dragY)}px)`,
                                 transition: isDragging ? 'none' : 'transform 0.3s ease-out, max-height 0.3s ease-out',
-                                animation: !isDragging && dragY === 0 ? 'slideUp 0.3s ease-out' : 'none',
+                                animation: showSlideUp && dragY === 0 ? 'slideUp 0.3s ease-out' : 'none',
                                 touchAction: 'none',
                             }}
-                            onTouchStart={handleTouchStart}
+                            onAnimationEnd={() => setShowSlideUp(false)}
                             onTouchMove={handleTouchMove}
                             onTouchEnd={handleTouchEnd}
-                            onMouseDown={handleTouchStart}
                             onMouseMove={handleTouchMove}
                             onMouseUp={handleTouchEnd}
                             onMouseLeave={handleTouchEnd}
                         >
-                            {/* Drag Handle — 3 garis horizontal #131927 */}
-                            <div className="flex justify-center pt-[14px] pb-[12px] cursor-grab active:cursor-grabbing">
+                            {/* Drag Handle — 3 garis horizontal #131927 — gesture grab only from handle */}
+                            <div className="flex justify-center pt-[14px] pb-[12px] cursor-grab active:cursor-grabbing"
+                                onTouchStart={handleTouchStart}
+                                onMouseDown={handleTouchStart}
+                            >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <path d="M3 8H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
                                     <path d="M3 12H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
@@ -365,6 +373,37 @@ export default function Checkout({ items, total, userAddress, userPhone }) {
                             {/* Address field */}
                             {editingAddress ? (
                                 <div className="space-y-3 mb-[20px]">
+                                    {/* Saved addresses selector */}
+                                    {userAddresses && userAddresses.length > 0 && (
+                                        <div className="space-y-2 mb-3">
+                                            <label className="text-[#a0a5ba] text-[12px]">Alamat tersimpan</label>
+                                            {userAddresses.map((addr) => (
+                                                <button
+                                                    key={addr.id}
+                                                    onClick={() => {
+                                                        setAddress(addr.address + (addr.detail ? ', ' + addr.detail : ''));
+                                                        setEditingAddress(false);
+                                                    }}
+                                                    className={`w-full text-left p-3 rounded-[10px] transition ${
+                                                        address.includes(addr.address) ? 'bg-orange-50 border border-[#ff7622]' : 'bg-[#f0f5fa]'
+                                                    }`}
+                                                >
+                                                    <span className="font-semibold text-[#32343e] text-[14px]">{addr.label}</span>
+                                                    <p className="text-[#6b6e82] text-[12px] truncate">
+                                                        {addr.address}{addr.detail ? ', ' + addr.detail : ''}
+                                                    </p>
+                                                </button>
+                                            ))}
+                                            <div className="text-center pt-1">
+                                                <button
+                                                    onClick={() => router.get(route('location.index'))}
+                                                    className="text-[#ff7622] text-[12px] font-semibold hover:underline"
+                                                >
+                                                    + Kelola alamat
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                     <input
                                         type="text"
                                         value={address}

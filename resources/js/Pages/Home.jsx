@@ -47,10 +47,12 @@ const categoryIcons = {
     ),
 };
 
-export default function Home({ auth, categories, caterings, cartCount }) {
+export default function Home({ auth, categories, caterings, cartCount, userAddresses, activeAddress }) {
     const [selectedCategory, setSelectedCategory] = useState('semua');
     const [searchQuery, setSearchQuery] = useState('');
-    const [location, setLocation] = useState('Pilih lokasimu');
+    const [location, setLocation] = useState(activeAddress
+        ? `${activeAddress.label}: ${activeAddress.address?.substring(0, 20)}...`
+        : 'Pilih lokasimu');
     const [showLocation, setShowLocation] = useState(false);
     const scrollRef = useRef(null);
     const searchRef = useRef(null);
@@ -121,23 +123,53 @@ export default function Home({ auth, categories, caterings, cartCount }) {
                         </button>
 
                         {showLocation && (
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.12)] py-2 z-20 min-w-[180px]">
-                                {['Kost Putri', 'Kost Putra', 'Rumah', 'Kantor'].map(loc => (
-                                    <button
-                                        key={loc}
-                                        onClick={() => { setLocation(loc); setShowLocation(false); }}
-                                        className={`block w-full text-left px-5 py-2.5 text-sm transition ${
-                                            location === loc ? 'text-[#fc6e2a] font-bold bg-orange-50' : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
-                                    >
-                                        {location === loc && (
-                                            <svg className="inline mr-2 -mt-0.5" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                                <path d="M2 6L5 9L10 3" stroke="#fc6e2a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
-                                        )}
-                                        {loc}
-                                    </button>
-                                ))}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.12)] py-2 z-20 min-w-[220px]">
+                                {(!userAddresses || userAddresses.length === 0) ? (
+                                    <div className="px-5 py-3 text-sm text-gray-400 text-center">
+                                        <p className="mb-2">Belum ada alamat</p>
+                                        <button
+                                            onClick={() => router.get(route('location.access'))}
+                                            className="text-[#fc6e2a] font-semibold hover:underline"
+                                        >
+                                            Tambah alamat
+                                        </button>
+                                    </div>
+                                ) : (
+                                    userAddresses.map((addr) => (
+                                        <button
+                                            key={addr.id}
+                                            onClick={() => {
+                                                setLocation(`${addr.label}: ${addr.address.substring(0, 20)}...`);
+                                                setShowLocation(false);
+                                                router.post(route('location.set-active', addr.id), {}, {
+                                                    preserveScroll: true,
+                                                    preserveState: true,
+                                                });
+                                            }}
+                                            className={`block w-full text-left px-5 py-2.5 text-sm transition ${
+                                                addr.is_active ? 'text-[#fc6e2a] font-bold bg-orange-50' : 'text-gray-600 hover:bg-gray-50'
+                                            }`}
+                                        >
+                                            {addr.is_active && (
+                                                <svg className="inline mr-2 -mt-0.5" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M2 6L5 9L10 3" stroke="#fc6e2a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                            )}
+                                            <span className="font-medium">{addr.label}</span>
+                                            <span className="text-gray-400 ml-1 truncate">{addr.address.substring(0, 25)}</span>
+                                        </button>
+                                    ))
+                                )}
+                                {auth && auth.user && (
+                                    <div className="border-t border-gray-100 mt-1 pt-1">
+                                        <button
+                                            onClick={() => router.get(route('location.index'))}
+                                            className="block w-full text-left px-5 py-2.5 text-sm text-[#fc6e2a] font-semibold hover:bg-orange-50 transition"
+                                        >
+                                            Kelola alamat
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

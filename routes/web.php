@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PembayaranController;
@@ -49,6 +50,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Location routes (all require auth)
+Route::middleware('auth')->group(function () {
+    Route::get('/lokasi/akses', [LocationController::class, 'access'])->name('location.access');
+    Route::get('/lokasi/pilih', [LocationController::class, 'select'])->name('location.select');
+    Route::post('/lokasi/simpan-dari-map', [LocationController::class, 'saveFromMap'])->name('location.save-from-map');
+    Route::get('/lokasi/sukses', [LocationController::class, 'success'])->name('location.success');
+    Route::get('/lokasi', [LocationController::class, 'index'])->name('location.index');
+    Route::get('/lokasi/tambah', [LocationController::class, 'create'])->name('location.create');
+    Route::post('/lokasi', [LocationController::class, 'store'])->name('location.store');
+    Route::get('/lokasi/{id}/edit', [LocationController::class, 'edit'])->name('location.edit');
+    Route::put('/lokasi/{id}', [LocationController::class, 'update'])->name('location.update');
+    Route::delete('/lokasi/{id}', [LocationController::class, 'destroy'])->name('location.destroy');
+    Route::post('/lokasi/{id}/active', [LocationController::class, 'setActive'])->name('location.set-active');
 });
 
 require __DIR__.'/auth.php';

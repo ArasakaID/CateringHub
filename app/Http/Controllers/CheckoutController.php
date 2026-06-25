@@ -31,6 +31,24 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $userAddress = $user?->address ?? '';
         $userPhone = $user?->phone ?? '';
+        $userAddresses = null;
+        $activeAddress = null;
+
+        if ($user) {
+            $userAddresses = $user->addresses()
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(fn ($a) => [
+                    'id' => $a->id,
+                    'label' => $a->label,
+                    'address' => $a->address,
+                    'province' => $a->province,
+                    'postal_code' => $a->postal_code,
+                    'detail' => $a->detail,
+                    'is_active' => $a->is_active,
+                ]);
+            $activeAddress = $userAddresses->firstWhere('is_active', true);
+        }
 
         // If no items, redirect back
         if (empty($items)) {
@@ -40,8 +58,12 @@ class CheckoutController extends Controller
         return Inertia::render('Checkout', [
             'items' => $items,
             'total' => $total,
-            'userAddress' => $userAddress,
+            'userAddress' => $activeAddress
+                ? ($activeAddress['address'] . ($activeAddress['detail'] ? ', ' . $activeAddress['detail'] : ''))
+                : ($userAddress ?? ''),
             'userPhone' => $userPhone,
+            'userAddresses' => $userAddresses,
+            'activeAddress' => $activeAddress,
         ]);
     }
 
