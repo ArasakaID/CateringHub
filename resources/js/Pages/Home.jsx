@@ -1,5 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { useState, useRef, useCallback } from 'react';
+import SidebarMenu from '@/Components/SidebarMenu';
 
 // Category icons dari Figma
 const categoryIcons = {
@@ -50,6 +51,7 @@ const categoryIcons = {
 export default function Home({ auth, categories, caterings, cartCount, userAddresses, activeAddress }) {
     const [selectedCategory, setSelectedCategory] = useState('semua');
     const [searchQuery, setSearchQuery] = useState('');
+    const [showSidebar, setShowSidebar] = useState(false);
     const [location, setLocation] = useState(activeAddress
         ? `${activeAddress.label}: ${activeAddress.address?.substring(0, 20)}...`
         : 'Pilih lokasimu');
@@ -103,7 +105,10 @@ export default function Home({ auth, categories, caterings, cartCount, userAddre
                 {/* ===== TOP BAR ===== */}
                 <div className="px-6 pt-[50px] flex items-start justify-between">
                     {/* Menu */}
-                    <div className="w-[45px] h-[45px] rounded-full bg-[#ecf0f4] flex items-center justify-center shrink-0 cursor-pointer hover:bg-gray-200 transition">
+                    <div
+                        onClick={() => setShowSidebar(true)}
+                        className="w-[45px] h-[45px] rounded-full bg-[#ecf0f4] flex items-center justify-center shrink-0 cursor-pointer hover:bg-gray-200 transition"
+                    >
                         <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1 1H15" stroke="#181C2E" strokeWidth="2" strokeLinecap="round"/>
                             <path d="M1 6H15" stroke="#181C2E" strokeWidth="2" strokeLinecap="round"/>
@@ -359,6 +364,13 @@ export default function Home({ auth, categories, caterings, cartCount, userAddre
                     </div>
                 </div>
             </div>
+
+            {/* Sidebar Menu Overlay */}
+            <SidebarMenu
+                user={auth?.user}
+                show={showSidebar}
+                onClose={() => setShowSidebar(false)}
+            />
         </>
     );
 }
