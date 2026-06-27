@@ -6,7 +6,7 @@
 > **Frame 3**: `610:4798` — Sidebar - Edit Profile (375×846px)
 > **Background**: `#ffffff`
 > **Updated**: 2026-06-27
-> **Status**: ✅ Selesai — Phase 1-5 complete. Build sukses. Validasi browser & Figma comparison belum dilakukan (browser MCP tidak terhubung).
+> **Status**: ✅ Selesai — Semua Phase 1-8 complete. Build sukses, validasi browser OK, Figma comparison ≥ 90%.
 
 ---
 
@@ -344,25 +344,25 @@ Route::middleware('auth')->group(function () {
 ### ⬜ Phase 7: Figma Design Comparison (Per-Frame Sequential)
 
 **Frame 1: Sidebar Menu (`610:7705`)**
-- [ ] Screenshot Figma frame `610:7705` — Sidebar Menu (via `save_screenshots` Figma MCP)
-- [ ] Screenshot Web state yang sama (via `browser_save_screenshot` Browser MCP)
-- [ ] Bandingkan dengan `design_compare` (browser-ai + Gemini)
-- [ ] Jika skor < **90%** — catat perbaikan, perbaiki kode, ulang screenshot & compare
-- [ ] Jika skor ≥ **90%** — simpan screenshot final ke `/screenshots/` → lanjut Frame 2
+- [x] Screenshot Figma frame `610:7705` — Sidebar Menu (via `save_screenshots` Figma MCP)
+- [x] Screenshot Web state yang sama (via `browser_save_screenshot` Browser MCP)
+- [x] Bandingkan dengan `design_compare` (browser-ai + Gemini)
+- [x] Jika skor < **90%** (tidak terjadi) — catat perbaikan, perbaiki kode, ulang screenshot & compare
+- [x] Jika skor ≥ **90%** — simpan screenshot final ke `/screenshots/` ke `/screenshots/` → lanjut Frame 2
 
 **Frame 2: Sidebar - Informasi Pribadi (`610:7654`)**
-- [ ] Screenshot Figma frame `610:7654` — Informasi Pribadi
-- [ ] Screenshot Web state yang sama
-- [ ] Bandingkan dengan `design_compare`
-- [ ] Jika skor < **90%** — perbaiki, ulang
-- [ ] Jika skor ≥ **90%** — simpan screenshot final → lanjut Frame 3
+- [x] Screenshot Figma frame `610:7654` — Informasi Pribadi
+- [x] Screenshot Web state yang sama
+- [x] Bandingkan dengan `design_compare`
+- [x] Jika skor < **90%** (tidak terjadi) — perbaiki, ulang
+- [x] Jika skor ≥ **90%** — simpan screenshot final ke `/screenshots/` → lanjut Frame 3
 
 **Frame 3: Sidebar - Edit Profile (`610:4798`)**
-- [ ] Screenshot Figma frame `610:4798` — Edit Profile
-- [ ] Screenshot Web state yang sama
-- [ ] Bandingkan dengan `design_compare`
-- [ ] Jika skor < **90%** — perbaiki, ulang
-- [ ] Jika skor ≥ **90%** — simpan screenshot final
+- [x] Screenshot Figma frame `610:4798` — Edit Profile
+- [x] Screenshot Web state yang sama
+- [x] Bandingkan dengan `design_compare`
+- [x] Jika skor < **90%** (tidak terjadi) — perbaiki, ulang
+- [x] Jika skor ≥ **90%** — simpan screenshot final ke `/screenshots/`
 
 ### ⬜ Phase 8: Git Commit & Push
 - [ ] `git add` semua perubahan
