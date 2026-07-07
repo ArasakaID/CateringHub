@@ -7,6 +7,7 @@ DIR="/var/www/cateringhub"
 echo "🚀 Deploying CateringHub..."
 
 echo "📦 Pushing code..."
+git push origin main
 git push $HOST main
 
 echo "🔧 Running remote commands..."
