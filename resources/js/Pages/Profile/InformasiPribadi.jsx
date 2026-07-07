@@ -103,25 +103,22 @@ export default function InformasiPribadi({ auth, user }) {
                 </div>
 
                 {/* Info Card */}
-                <div className="mx-6 mt-[24px] bg-[#f6f8fa] rounded-[16px] px-5 py-6">
+                <div className="mx-6 mt-[24px] bg-[#f6f8fa] rounded-[16px] px-5 py-6 space-y-5">
                     <InfoRow
                         icon={<PersonIcon />}
                         label="nama"
                         value={user?.name}
                     />
-                    <div className="border-t border-[#eef2f6]" />
                     <InfoRow
                         icon={<EmailIcon />}
                         label="Email"
                         value={user?.email}
                     />
-                    <div className="border-t border-[#eef2f6]" />
                     <InfoRow
                         icon={<CallIcon />}
                         label="NOmor telepon"
                         value={user?.phone}
                     />
-                    <div className="border-t border-[#eef2f6]" />
                     <InfoRow
                         icon={<MapIcon />}
                         label="alamat saat ini"

@@ -144,8 +144,8 @@ export default function SidebarMenu({ user, show, onClose }) {
 
             {/* Sidebar Panel */}
             <div
-                className={`fixed top-0 right-0 h-full bg-white z-50 shadow-2xl overflow-y-auto transition-transform duration-300 ease-in-out ${
-                    show ? 'translate-x-0' : 'translate-x-full'
+                className={`fixed top-0 left-0 h-full bg-white z-50 shadow-2xl overflow-y-auto transition-transform duration-300 ease-in-out ${
+                    show ? 'translate-x-0' : '-translate-x-full'
                 }`}
                 style={{ width: '375px', maxWidth: '100vw' }}
             >
@@ -193,13 +193,12 @@ export default function SidebarMenu({ user, show, onClose }) {
                 {/* Menu Items */}
                 <div className="px-6 mt-[24px] space-y-5">
                     {/* Group 1: Informasi & Alamat */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6">
+                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
                         <MenuItem
                             icon={<PersonIcon />}
                             label="Informasi Pribadi"
                             href={route('profile.info')}
                         />
-                        <div className="border-t border-[#eef2f6]" />
                         <MenuItem
                             icon={<MapIcon />}
                             label="Alamat Pengiriman"
@@ -208,25 +207,22 @@ export default function SidebarMenu({ user, show, onClose }) {
                     </div>
 
                     {/* Group 2: Belanja */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6">
+                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
                         <MenuItem
                             icon={<CartIcon />}
                             label="Keranjang Belanja"
                             href={route('checkout')}
                         />
-                        <div className="border-t border-[#eef2f6]" />
                         <MenuItem
                             icon={<HeartIcon />}
                             label="Menu Favorit"
                             onClick={() => {}}
                         />
-                        <div className="border-t border-[#eef2f6]" />
                         <MenuItem
                             icon={<BellIcon />}
                             label="Notivikasi"
                             onClick={() => {}}
                         />
-                        <div className="border-t border-[#eef2f6]" />
                         <MenuItem
                             icon={<CardIcon />}
                             label="Metode Pembayaran"
@@ -235,19 +231,17 @@ export default function SidebarMenu({ user, show, onClose }) {
                     </div>
 
                     {/* Group 3: Lainnya */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6">
+                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
                         <MenuItem
                             icon={<FaqIcon />}
                             label="Tanya Jawab (FAQ)"
                             onClick={() => {}}
                         />
-                        <div className="border-t border-[#eef2f6]" />
                         <MenuItem
                             icon={<ChefIcon />}
                             label="Buka Catering"
                             onClick={() => {}}
                         />
-                        <div className="border-t border-[#eef2f6]" />
                         <MenuItem
                             icon={<GearIcon />}
                             label="Pengaturan"

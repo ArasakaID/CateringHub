@@ -83,5 +83,24 @@ Project-specific agents untuk memparalelkan dan mempercepat development:
 | `component-builder` | Buat React/Inertia page components dengan Tailwind CSS |
 | `design-validator` | Jalankan workflow design comparison (screenshot → compare → iterasi) per-frame |
 | `workflow-runner` | Orchestrate full pipeline dari analisis Figma sampai Git commit |
+| `team-captain` 🚀 | **Orkestrator tim paralel** — jalankan SEMUA agent sebagai tim, bukan bergiliran |
 
-Panggil dengan: `Agent` tool → pilih `general-purpose` → tulis prompt sesuai agent description. Atau untuk research ringan, pilih `Explore` agent.
+## 🚀 Team Workflow (Paralel)
+
+Gunakan **Workflow tool** dengan `name: "team-workflow"` untuk menjalankan semua agent sebagai tim PARALEL:
+
+```
+Research [PARALEL] → Plan → Build [PARALEL] → Validate [PARALEL]
+     ↓                    ↓          ↓                  ↓
+ figma-expert        plan-creator  migration-maker   ui-reviewer
+ + Explore                        + component-builder + design-validator
+```
+
+**Cara pakai:**
+```
+Workflow({ name: "team-workflow", args: { feature: "Nama Fitur", description: "..." } })
+```
+
+Atau panggil agent `team-captain` untuk orchestrasi manual.
+
+Panggil agent individual dengan: `Agent` tool → pilih `general-purpose` → tulis prompt sesuai agent description. Atau untuk research ringan, pilih `Explore` agent.
