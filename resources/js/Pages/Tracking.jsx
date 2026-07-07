@@ -226,9 +226,8 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                 </div>
 
                 {/* ===== BOTTOM CARD ===== */}
-                <div className="fixed bottom-0 left-1/2 z-20 w-full"
+                <div className="fixed bottom-0 left-1/2 z-20 w-full max-w-md"
                     style={{
-                        maxWidth: '430px',
                         transform: 'translateX(-50%)',
                     }}
                 >

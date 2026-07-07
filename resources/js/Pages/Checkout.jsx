@@ -175,7 +175,7 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
         <>
             <Head title="Keranjang Belanja - CateringHub" />
 
-            <div className="min-h-screen bg-[#131927] mx-auto relative" style={{ maxWidth: 430, fontFamily: 'Sen, sans-serif' }}>
+            <div className="min-h-screen bg-[#131927] mx-auto relative" style={{ fontFamily: 'Sen, sans-serif' }}>
                 {/* ===== TOP BAR ===== */}
                 <div className="px-6 pt-[50px] flex items-center justify-between">
                     <Link
@@ -299,7 +299,7 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                 {!showPopup && (
                     <div
                         className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-10"
-                        style={{ maxWidth: '430px' }}
+                        style={{}}
                     >
                         <div className="px-6 pb-[36px]">
                             {infoContent}
@@ -321,7 +321,7 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                 {/* ===== POPUP STATE: WHITE CARD DENGAN ALAMAT, TOTAL, PLACE ORDER ===== */}
                 {showPopup && (
                     <div className="fixed inset-0 z-20 flex items-end justify-center"
-                         style={{ maxWidth: 430, margin: '0 auto', left: 0, right: 0 }}
+                         style={{ margin: '0 auto', left: 0, right: 0 }}
                     >
                         {/* Backdrop */}
                         <div

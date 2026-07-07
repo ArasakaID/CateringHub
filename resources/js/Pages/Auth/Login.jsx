@@ -23,7 +23,7 @@ export default function Login({ status, canResetPassword }) {
         <>
             <Head title="Log In" />
 
-            <div className="min-h-screen bg-[#131927] mx-auto relative" style={{ maxWidth: 430, fontFamily: 'Sen, sans-serif' }}>
+            <div className="min-h-screen bg-[#131927] mx-auto relative" style={{ fontFamily: 'Sen, sans-serif' }}>
                 {/* ===== BACK BUTTON ===== */}
                 <Link
                     href={route('home')}

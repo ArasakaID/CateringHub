@@ -19,9 +19,9 @@
         @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased bg-[#e8e8e8]">
-        <div class="min-h-screen mx-auto bg-white shadow-xl relative overflow-hidden"
-             style="max-width: 430px;">
+    <body class="font-sans antialiased sm:bg-[#e8e8e8]">
+        <div class="min-h-screen bg-white relative overflow-hidden
+                    w-full sm:max-w-md sm:mx-auto sm:shadow-xl">
             @inertia
         </div>
     </body>

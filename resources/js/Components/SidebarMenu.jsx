@@ -138,7 +138,6 @@ export default function SidebarMenu({ user, show, onClose }) {
                 className={`fixed inset-0 z-40 transition-all duration-300 ease-in-out ${
                     show ? 'bg-black/50 opacity-100' : 'bg-black/0 opacity-0 pointer-events-none'
                 }`}
-                style={{ maxWidth: '430px', margin: '0 auto', right: 0, left: 0 }}
                 onClick={onClose}
             />
 

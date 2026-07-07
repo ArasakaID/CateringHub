@@ -57,9 +57,8 @@ export default function CallScreen({ order, courier }) {
                 />
 
                 {/* ===== BOTTOM SHEET ===== */}
-                <div className="absolute bottom-0 left-1/2 w-full"
+                <div className="absolute bottom-0 left-1/2 w-full max-w-md"
                     style={{
-                        maxWidth: '430px',
                         transform: 'translateX(-50%)',
                     }}
                 >

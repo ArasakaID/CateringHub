@@ -309,8 +309,7 @@ export default function DetailProduk({ menu, catering, relatedMenus }) {
 
                 {/* ===== BOTTOM SHEET ADD TO CART ===== */}
                 <div
-                    className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-10"
-                    style={{ maxWidth: '430px' }}
+                    className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-10"
                 >
                     <div
                         className="bg-[#f0f5fa] px-6 pt-[24px] pb-[32px]"
