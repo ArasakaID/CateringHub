@@ -11,9 +11,16 @@ function RevenueChart({ data }) {
         return <div style={{ height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9c9ba6', fontSize: 12, fontFamily: 'Sen, sans-serif' }}>Belum ada pendapatan</div>;
     }
 
-    const values = data.map(d => d.value);
-    const maxVal = Math.max(...values);
+    const rawValues = data.map(d => d.value);
+    const maxVal = Math.max(...rawValues);
     const hasData = maxVal > 0;
+
+    // Smooth values using moving average for more natural curve
+    const values = rawValues.map((v, i) => {
+        if (i === 0 || i === rawValues.length - 1) return v;
+        return (rawValues[i - 1] + v + rawValues[i + 1]) / 3;
+    });
+
     const chartMax = hasData ? maxVal : 1;
     const chartWidth = 290;
     const chartHeight = 80;
@@ -28,8 +35,8 @@ function RevenueChart({ data }) {
     const smoothPath = points.map((p, i) => {
         if (i === 0) return `M${p[0]},${p[1]}`;
         const prev = points[i - 1];
-        const cpx1 = prev[0] + (p[0] - prev[0]) / 2;
-        const cpx2 = p[0] - (p[0] - prev[0]) / 2;
+        const cpx1 = prev[0] + (p[0] - prev[0]) * 0.4;
+        const cpx2 = p[0] - (p[0] - prev[0]) * 0.4;
         return `C${cpx1},${prev[1]} ${cpx2},${p[1]} ${p[0]},${p[1]}`;
     }).join(' ');
 
@@ -65,8 +72,8 @@ function RevenueChart({ data }) {
             </svg>
             {hasData && (
                 <div style={{
-                    position: 'absolute', left: tooltipX - 33, top: tooltipY - 38,
-                    background: '#32343e', borderRadius: 5, padding: '4px 10px',
+                    position: 'absolute', left: tooltipX - 33, top: -36,
+                    background: '#32343e', borderRadius: 8, padding: '6px 12px',
                     color: '#ffffff', fontSize: 14, fontWeight: 700, fontFamily: 'Sen, sans-serif',
                     whiteSpace: 'nowrap',
                 }}>
@@ -151,20 +158,20 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Stat Cards */}
-                <div style={{ display: 'flex', gap: 11, padding: '0 24px', marginBottom: 16 }}>
+                <div style={{ display: 'flex', gap: 11, padding: '0 24px', marginBottom: 24 }}>
                     <div style={{
-                        flex: 1, background: '#ffffff', borderRadius: 24, padding: '16px 12px',
+                        flex: 1, background: '#ffffff', borderRadius: 28, padding: '16px 12px',
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
                     }}>
                         <span style={{ fontSize: 52, fontWeight: 700, color: '#32343e', lineHeight: 1 }}>{stats.runningOrders}</span>
                         <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center', textTransform: 'uppercase' }}>Pesanan diterima</span>
                     </div>
 
                     <div style={{
-                        flex: 1, background: '#ffffff', borderRadius: 24, padding: '16px 12px',
+                        flex: 1, background: '#ffffff', borderRadius: 28, padding: '16px 12px',
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
                     }}>
                         <span style={{ fontSize: 52, fontWeight: 700, color: '#32343e', lineHeight: 1 }}>{stats.orderRequests}</span>
                         <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center', textTransform: 'uppercase' }}>
@@ -174,7 +181,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Revenue Card */}
-                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 24, padding: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 28, padding: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Total Revenue</span>
                         <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See Details</span>
@@ -183,7 +190,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                         {formatRupiah(totalRevenue)}
                     </div>
                     <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 5,
+                        display: 'inline-flex', alignItems: 'center', gap: 5, minWidth: 76,
                         border: '1px solid #e8eaed', borderRadius: 7, padding: '6px 8px',
                         marginBottom: 8,
                     }}>
@@ -196,7 +203,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Reviews Card */}
-                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 24, padding: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 28, padding: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Reviews</span>
                         <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See All Reviews</span>
@@ -219,7 +226,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Popular Items */}
-                <div style={{ margin: '0 24px', background: '#ffffff', borderRadius: 20, padding: 16 }}>
+                <div style={{ margin: '0 24px', background: '#ffffff', borderRadius: 28, padding: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Populer Items This Weeks</span>
                         <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See All</span>
