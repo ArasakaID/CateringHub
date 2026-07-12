@@ -19,7 +19,7 @@ class ReviewSeeder extends Seeder
                     'user_id' => $catering->user_id,
                     'catering_id' => $catering->id,
                     'rating' => rand(3, 5),
-                    'comment' => fake()->sentence(),
+                    'comment' => 'Review for ' . $catering->name . ' #' . ($i + 1),
                     'created_at' => now()->subDays(rand(0, 30)),
                     'updated_at' => now(),
                 ]);
