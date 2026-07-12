@@ -50,14 +50,14 @@ function RevenueChart({ data }) {
                     strokeLinejoin="round"
                 />
             </svg>
-            {maxVal > 0 && (
+                {maxVal > 0 && (
                 <div style={{
                     position: 'absolute', left: tooltipX - 30, top: tooltipY - 30,
                     background: '#32343e', borderRadius: 5, padding: '4px 8px',
                     color: '#ffffff', fontSize: 14, fontWeight: 700, fontFamily: 'Sen, sans-serif',
                     whiteSpace: 'nowrap',
                 }}>
-                    {formatRupiah(maxVal)}
+                    ${Math.round(maxVal).toLocaleString('en-US')}
                     <div style={{
                         position: 'absolute', bottom: -4, left: '50%', transform: 'translateX(-50%)',
                         width: 0, height: 0, borderLeft: '5px solid transparent',
@@ -79,21 +79,14 @@ function RevenueChart({ data }) {
 function PopularItem({ item }) {
     return (
         <div style={{
-            width: 145, minWidth: 145, borderRadius: 18, overflow: 'hidden',
-            background: '#98a8b8', position: 'relative', height: 153,
+            width: 150, minWidth: 150, borderRadius: 18, overflow: 'hidden',
+            background: '#98a8b8', height: 153,
         }}>
-            {item.image ? (
+            {item.image && !item.image.startsWith('http') ? (
                 <img src={`/storage/${item.image}`} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', padding: 8 }}>
-                    <div style={{
-                        background: 'rgba(0,0,0,0.5)', borderRadius: 8, padding: '4px 8px',
-                        color: '#fff', fontSize: 11, fontFamily: 'Sen, sans-serif', fontWeight: 700,
-                    }}>
-                        {item.name}
-                    </div>
-                </div>
-            )}
+            ) : item.image ? (
+                <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : null}
         </div>
     );
 }
@@ -134,7 +127,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                     </button>
 
                     <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#fc6e2a' }}>Location</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#fc6e2a', textTransform: 'uppercase', letterSpacing: 0 }}>Location</div>
                         <div style={{ fontSize: 14, color: '#676767' }}>
                             {catering?.address || 'Office'}
                             <svg width="11" height="8" viewBox="0 0 11 8" fill="none" style={{ marginLeft: 4, verticalAlign: 'middle' }}>
@@ -202,7 +195,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                         {reviewsSummary.count > 0 ? (
                             <>
                                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                                    <path d="M13 2L16.09 9.02L23.58 10.45L18 15.81L19.18 23.36L13 19.54L6.82 23.36L8 15.81L2.42 10.45L9.91 9.02L13 2Z" stroke="#fb6d3a" strokeWidth="2" />
+                                    <path d="M13 2L16.09 9.02L23.58 10.45L18 15.81L19.18 23.36L13 19.54L6.82 23.36L8 15.81L2.42 10.45L9.91 9.02L13 2Z" fill="#fb6d3a" />
                                 </svg>
                                 <span style={{ fontSize: 22, fontWeight: 700, color: '#fb6d3a' }}>{reviewsSummary.average}</span>
                                 <span style={{ fontSize: 14, color: '#32343e' }}>

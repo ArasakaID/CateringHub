@@ -82,10 +82,9 @@ export default function SellerTabBar({ currentPath = '/seller/dashboard' }) {
                     <button
                         key={idx}
                         onClick={() => router.visit(tab.path)}
-                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, border: 'none', background: 'none', cursor: 'pointer' }}
+                        style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
                     >
                         <Icon color={color} />
-                        <span style={{ fontSize: 10, fontFamily: 'Sen, sans-serif', color }}>{tab.label}</span>
                     </button>
                 );
             })}
