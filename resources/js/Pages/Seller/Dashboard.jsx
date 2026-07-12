@@ -15,21 +15,29 @@ function RevenueChart({ data }) {
     const maxVal = Math.max(...values, 1);
     const chartWidth = 290;
     const chartHeight = 80;
-    const padding = 0;
     const drawWidth = chartWidth;
-    const drawHeight = chartHeight;
 
     const points = values.map((v, i) => {
-        const x = padding + (i / (values.length - 1)) * drawWidth;
-        const y = chartHeight - (v / maxVal) * drawHeight;
-        return `${x},${y}`;
+        const x = (i / (values.length - 1)) * drawWidth;
+        const y = chartHeight - (v / maxVal) * chartHeight;
+        return [x, y];
+    });
+
+    const smoothPath = points.map((p, i) => {
+        if (i === 0) return `M${p[0]},${p[1]}`;
+        const prev = points[i - 1];
+        const cpx1 = prev[0] + (p[0] - prev[0]) / 2;
+        const cpx2 = p[0] - (p[0] - prev[0]) / 2;
+        return `C${cpx1},${prev[1]} ${cpx2},${p[1]} ${p[0]},${p[1]}`;
     }).join(' ');
 
-    const areaPoints = `${padding},${chartHeight} ${points} ${chartWidth},${chartHeight}`;
+    const lastPoint = points[points.length - 1];
+    const firstPoint = points[0];
+    const areaPath = `${smoothPath} L${lastPoint[0]},${chartHeight} L${firstPoint[0]},${chartHeight} Z`;
 
     const maxIdx = values.indexOf(maxVal);
-    const tooltipX = padding + (maxIdx / (values.length - 1)) * drawWidth;
-    const tooltipY = chartHeight - (maxVal / maxVal) * drawHeight;
+    const tooltipX = (maxIdx / (values.length - 1)) * drawWidth;
+    const tooltipY = chartHeight - (maxVal / maxVal) * chartHeight;
 
     return (
         <div style={{ position: 'relative', height: chartHeight + 30, marginTop: 8 }}>
@@ -40,9 +48,9 @@ function RevenueChart({ data }) {
                         <stop offset="100%" stopColor="#fb6d3a" stopOpacity="0" />
                     </linearGradient>
                 </defs>
-                <polygon points={areaPoints} fill="url(#chartGrad)" />
-                <polyline
-                    points={points}
+                <path d={areaPath} fill="url(#chartGrad)" />
+                <path
+                    d={smoothPath}
                     fill="none"
                     stroke="#fb6d3a"
                     strokeWidth="2.62"
@@ -50,7 +58,7 @@ function RevenueChart({ data }) {
                     strokeLinejoin="round"
                 />
             </svg>
-                {maxVal > 0 && (
+            {maxVal > 0 && (
                 <div style={{
                     position: 'absolute', left: tooltipX - 30, top: tooltipY - 30,
                     background: '#32343e', borderRadius: 5, padding: '4px 8px',
@@ -67,7 +75,7 @@ function RevenueChart({ data }) {
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
                 {data.map((d, i) => (
-                    <span key={i} style={{ fontSize: 9, color: '#9c9ba6', fontFamily: 'Sen, sans-serif', width: 26, textAlign: 'center' }}>
+                    <span key={i} style={{ fontSize: 9, color: '#9c9ba6', fontFamily: 'Sen, sans-serif', width: 26, textAlign: 'center', textTransform: 'uppercase' }}>
                         {d.label}
                     </span>
                 ))}
@@ -149,7 +157,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
                     }}>
                         <span style={{ fontSize: 52, fontWeight: 700, color: '#32343e', lineHeight: 1 }}>{stats.runningOrders}</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center' }}>Pesanan diterima</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center', textTransform: 'uppercase' }}>Pesanan diterima</span>
                     </div>
 
                     <div style={{
@@ -157,7 +165,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
                     }}>
                         <span style={{ fontSize: 52, fontWeight: 700, color: '#32343e', lineHeight: 1 }}>{stats.orderRequests}</span>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center' }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center', textTransform: 'uppercase' }}>
                             Permintaan<br />pesanan
                         </span>
                     </div>
