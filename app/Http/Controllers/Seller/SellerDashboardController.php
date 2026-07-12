@@ -92,7 +92,8 @@ class SellerDashboardController extends Controller
                 ->whereBetween('created_at', [$hourStart, $hourEnd])
                 ->sum('total');
 
-            $label = $i <= 12 ? $i . 'am' : ($i - 12) . 'pm';
+            $label = $i <= 12 ? $i . 'AM' : ($i - 12) . 'PM';
+            if ($i < 10) $label = '0' . $label;
 
             $hours[] = [
                 'label' => $label,

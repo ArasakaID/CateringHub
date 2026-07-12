@@ -48,7 +48,7 @@ export default function SellerTabBar({ currentPath = '/seller/dashboard' }) {
         <div style={{
             position: 'fixed', bottom: 0, left: 0, right: 0, maxWidth: 430,
             margin: '0 auto', height: 89, background: '#ffffff',
-            boxShadow: '0 -4px 20px rgba(0,0,0,0.05)',
+            boxShadow: '0 -6px 25px rgba(0,0,0,0.1)',
             display: 'flex', alignItems: 'flex-start', justifyContent: 'space-around',
             paddingTop: 12, zIndex: 50,
         }}>

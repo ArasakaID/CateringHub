@@ -3,7 +3,7 @@ import { useState } from 'react';
 import SellerTabBar from '@/Components/SellerTabBar';
 
 function formatRupiah(amount) {
-    return 'Rp' + Math.round(amount).toLocaleString('id-ID');
+    return 'Rp' + Math.round(amount).toLocaleString('en-US');
 }
 
 function RevenueChart({ data }) {
@@ -12,14 +12,16 @@ function RevenueChart({ data }) {
     }
 
     const values = data.map(d => d.value);
-    const maxVal = Math.max(...values, 1);
+    const maxVal = Math.max(...values);
+    const hasData = maxVal > 0;
+    const chartMax = hasData ? maxVal : 1;
     const chartWidth = 290;
     const chartHeight = 80;
     const drawWidth = chartWidth;
 
     const points = values.map((v, i) => {
         const x = (i / (values.length - 1)) * drawWidth;
-        const y = chartHeight - (v / maxVal) * chartHeight;
+        const y = chartHeight - (v / chartMax) * chartHeight;
         return [x, y];
     });
 
@@ -36,15 +38,15 @@ function RevenueChart({ data }) {
     const areaPath = `${smoothPath} L${lastPoint[0]},${chartHeight} L${firstPoint[0]},${chartHeight} Z`;
 
     const maxIdx = values.indexOf(maxVal);
-    const tooltipX = (maxIdx / (values.length - 1)) * drawWidth;
-    const tooltipY = chartHeight - (maxVal / maxVal) * chartHeight;
+    const tooltipX = hasData ? (maxIdx / (values.length - 1)) * drawWidth : 0;
+    const tooltipY = hasData ? chartHeight - (maxVal / chartMax) * chartHeight : 0;
 
     return (
         <div style={{ position: 'relative', height: chartHeight + 30, marginTop: 8 }}>
             <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none">
                 <defs>
                     <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#fb6d3a" stopOpacity="0.3" />
+                        <stop offset="0%" stopColor="#fb6d3a" stopOpacity="0.4" />
                         <stop offset="100%" stopColor="#fb6d3a" stopOpacity="0" />
                     </linearGradient>
                 </defs>
@@ -57,20 +59,18 @@ function RevenueChart({ data }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
+                {hasData && (
+                    <circle cx={points[maxIdx][0]} cy={points[maxIdx][1]} r="3" fill="#fb6d3a" />
+                )}
             </svg>
-            {maxVal > 0 && (
+            {hasData && (
                 <div style={{
-                    position: 'absolute', left: tooltipX - 30, top: tooltipY - 30,
-                    background: '#32343e', borderRadius: 5, padding: '4px 8px',
+                    position: 'absolute', left: tooltipX - 33, top: tooltipY - 38,
+                    background: '#32343e', borderRadius: 5, padding: '4px 10px',
                     color: '#ffffff', fontSize: 14, fontWeight: 700, fontFamily: 'Sen, sans-serif',
                     whiteSpace: 'nowrap',
                 }}>
                     ${Math.round(maxVal).toLocaleString('en-US')}
-                    <div style={{
-                        position: 'absolute', bottom: -4, left: '50%', transform: 'translateX(-50%)',
-                        width: 0, height: 0, borderLeft: '5px solid transparent',
-                        borderRight: '5px solid transparent', borderTop: '5px solid #32343e',
-                    }} />
                 </div>
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
@@ -151,18 +151,20 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Stat Cards */}
-                <div style={{ display: 'flex', gap: 13, padding: '0 24px', marginBottom: 16 }}>
+                <div style={{ display: 'flex', gap: 11, padding: '0 24px', marginBottom: 16 }}>
                     <div style={{
-                        flex: 1, background: '#ffffff', borderRadius: 20, padding: '16px 12px',
+                        flex: 1, background: '#ffffff', borderRadius: 24, padding: '16px 12px',
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                     }}>
                         <span style={{ fontSize: 52, fontWeight: 700, color: '#32343e', lineHeight: 1 }}>{stats.runningOrders}</span>
                         <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center', textTransform: 'uppercase' }}>Pesanan diterima</span>
                     </div>
 
                     <div style={{
-                        flex: 1, background: '#ffffff', borderRadius: 20, padding: '16px 12px',
+                        flex: 1, background: '#ffffff', borderRadius: 24, padding: '16px 12px',
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                     }}>
                         <span style={{ fontSize: 52, fontWeight: 700, color: '#32343e', lineHeight: 1 }}>{stats.orderRequests}</span>
                         <span style={{ fontSize: 13, fontWeight: 700, color: '#838799', marginTop: 8, textAlign: 'center', textTransform: 'uppercase' }}>
@@ -172,7 +174,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Revenue Card */}
-                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 20, padding: 16 }}>
+                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 24, padding: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Total Revenue</span>
                         <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See Details</span>
@@ -194,7 +196,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 </div>
 
                 {/* Reviews Card */}
-                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 20, padding: 16 }}>
+                <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 24, padding: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Reviews</span>
                         <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See All Reviews</span>
