@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             CateringSeeder::class,
             MenuSeeder::class,
             CourierSeeder::class,
+            OrderSeeder::class,
+            ReviewSeeder::class,
         ]);
 
         // Assign couriers to orders after orders exist

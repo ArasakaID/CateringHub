@@ -80,4 +80,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/lokasi/{id}/active', [LocationController::class, 'setActive'])->name('location.set-active');
 });
 
+Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Seller\SellerDashboardController::class, 'index'])->name('dashboard');
+});
+
 require __DIR__.'/auth.php';

@@ -14,12 +14,14 @@ class CateringSeeder extends Seeder
             'name' => 'Admin CateringHub',
             'email' => 'admin@cateringhub.com',
             'password' => bcrypt('password'),
+            'role' => 'seller',
         ]);
 
         // Ensure admin user has a known password even if already exists
         if (User::where('email', 'admin@cateringhub.com')->exists()) {
             User::where('email', 'admin@cateringhub.com')->update([
                 'password' => bcrypt('password'),
+                'role' => 'seller',
             ]);
         }
 
