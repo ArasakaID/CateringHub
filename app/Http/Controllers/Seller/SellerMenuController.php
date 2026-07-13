@@ -84,6 +84,8 @@ class SellerMenuController extends Controller
             'price' => $validated['price'],
             'unit' => $validated['unit'] ?? 'Box',
             'ingredients' => $validated['ingredients'] ? explode("\n", $validated['ingredients']) : [],
+            'badges' => [],
+            'location' => $catering->address ?? '',
             'extras' => $validated['extras'] ?? '',
             'images' => $validated['images'] ?? [],
             'is_available' => true,

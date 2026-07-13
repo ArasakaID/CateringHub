@@ -49,7 +49,12 @@ export default function FoodDetails({ menu }) {
     }
 
     const menuData = menu;
-    const { ingredients = [], badges = [], location = '', description = '', rating = 0, review_count = 0 } = menuData;
+    const ingredients = menuData.ingredients ?? [];
+    const badges = menuData.badges ?? [];
+    const location = menuData.location ?? '';
+    const description = menuData.description ?? '';
+    const rating = menuData.rating ?? 0;
+    const review_count = menuData.review_count ?? 0;
 
     return (
         <>
