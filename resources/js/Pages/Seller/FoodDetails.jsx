@@ -36,7 +36,7 @@ function IngredientCircle({ icon, name, allergy }) {
             }}>
                 {ingredientIcons[icon] || ingredientIcons.salt}
             </div>
-            <span style={{ fontSize: 12, color: '#747783', textAlign: 'center', lineHeight: '14px' }}>
+            <span style={{ fontSize: 12, color: '#747783', textAlign: 'center', lineHeight: '14px', fontWeight: 700 }}>
                 {name}{allergy ? <span style={{ color: '#fb6d3a', fontSize: 10 }}> (Alergy)</span> : ''}
             </span>
         </div>
@@ -75,9 +75,10 @@ export default function FoodDetails({ menu }) {
                             fontSize: 14, fontWeight: 500, color: '#fb6d3a',
                             background: 'none', border: 'none', cursor: 'pointer',
                             fontFamily: 'Poppins, sans-serif', padding: 0,
+                            textTransform: 'uppercase',
                         }}
                     >
-                        Edit
+                        EDIT
                     </button>
                 </div>
 
@@ -140,7 +141,7 @@ export default function FoodDetails({ menu }) {
                 {/* Ingredients */}
                 {ingredients.length > 0 && (
                     <div style={{ padding: '20px 24px 0' }}>
-                        <span style={{ fontSize: 14, color: '#32343e', marginBottom: 16, display: 'block' }}>ingridents</span>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: '#32343e', marginBottom: 16, display: 'block' }}>INGRIDENTS</span>
                         {/* Row 1 */}
                         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                             {ingredients.slice(0, 5).map((ing, i) => (
