@@ -57,7 +57,7 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
                 {/* Tab Bar */}
                 <div style={{ marginTop: 32, padding: '0 24px' }}>
                     <div style={{ display: 'flex', gap: 42, borderBottom: '1px solid #f6f8fa', paddingBottom: 16, position: 'relative' }}>
-                        {['All', 'Acara', 'Harian', 'Snack'].map((tab) => {
+                        {['All', 'Acara', 'Harian', 'Snack', 'Minuman'].map((tab) => {
                             const slug = tab.toLowerCase();
                             const isActive = activeTab === slug;
                             return (
@@ -181,17 +181,35 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
                         onClick={() => setSidebarOpen(false)}
                         style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 100 }}
                     >
-                        <div
-                            onClick={(e) => e.stopPropagation()}
-                            style={{ width: 280, height: '100%', background: '#fff', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}
-                        >
-                            <button
-                                onClick={() => { router.post('/logout'); }}
-                                style={{ fontSize: 16, color: '#7d82a0', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', fontFamily: 'Sen, sans-serif' }}
-                            >
-                                Keluar
-                            </button>
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ width: 280, height: '100%', background: '#fff', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}
+                    >
+                        <div style={{ fontSize: 18, fontWeight: 700, color: '#181c2e', fontFamily: 'Sen, sans-serif', marginBottom: 8 }}>
+                            Menu
                         </div>
+                        {[
+                            { label: 'Dashboard', path: '/seller/dashboard' },
+                            { label: 'My Food', path: '/seller/my-food' },
+                            { label: 'Running Orders', path: '/seller/running-orders' },
+                            { label: 'Reviews', path: '/seller/reviews' },
+                            { label: 'Settings', path: '/seller/menu' },
+                        ].map(link => (
+                            <button
+                                key={link.label}
+                                onClick={() => { setSidebarOpen(false); router.visit(link.path); }}
+                                style={{ fontSize: 16, color: '#32343e', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', fontFamily: 'Sen, sans-serif', padding: '4px 0' }}
+                            >
+                                {link.label}
+                            </button>
+                        ))}
+                        <button
+                            onClick={() => { setSidebarOpen(false); router.post('/logout'); }}
+                            style={{ fontSize: 16, color: '#7d82a0', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', fontFamily: 'Sen, sans-serif', padding: '4px 0', marginTop: 16 }}
+                        >
+                            Keluar
+                        </button>
+                    </div>
                     </div>
                 )}
 

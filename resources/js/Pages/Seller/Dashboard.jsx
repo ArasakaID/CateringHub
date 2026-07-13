@@ -1,5 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import SellerTabBar from '@/Components/SellerTabBar';
 
 function formatRupiah(amount) {
@@ -106,8 +106,21 @@ function PopularItem({ item }) {
     );
 }
 
+const periodOptions = ['Daily', 'Weekly', 'Monthly'];
+
 export default function SellerDashboard({ catering, stats, totalRevenue, revenueChartData, reviewsSummary, popularItems }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [period, setPeriod] = useState('Daily');
+    const [periodOpen, setPeriodOpen] = useState(false);
+    const periodRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (periodRef.current && !periodRef.current.contains(e.target)) setPeriodOpen(false);
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const pageStyle = {
         fontFamily: 'Sen, sans-serif',
@@ -184,20 +197,46 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 28, padding: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Total Revenue</span>
-                        <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See Details</span>
+                        <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => router.visit('/seller/revenue-details')}>See Details</span>
                     </div>
                     <div style={{ fontSize: 22, fontWeight: 700, color: '#32343e', marginBottom: 8 }}>
                         {formatRupiah(totalRevenue)}
                     </div>
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 5, minWidth: 76,
-                        border: '1px solid #e8eaed', borderRadius: 7, padding: '6px 8px',
-                        marginBottom: 8,
-                    }}>
-                        <span style={{ fontSize: 12, color: '#9c9ba6', fontFamily: 'Sen, sans-serif' }}>Daily</span>
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M4 5.5L7 8.5L10 5.5" stroke="#181c2e" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                    <div ref={periodRef} style={{ position: 'relative', display: 'inline-block', marginBottom: 8 }}>
+                        <div
+                            onClick={() => setPeriodOpen(!periodOpen)}
+                            style={{
+                                display: 'inline-flex', alignItems: 'center', gap: 5, minWidth: 76,
+                                border: '1px solid #e8eaed', borderRadius: 7, padding: '6px 8px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            <span style={{ fontSize: 12, color: '#9c9ba6', fontFamily: 'Sen, sans-serif' }}>{period}</span>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M4 5.5L7 8.5L10 5.5" stroke="#181c2e" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        {periodOpen && (
+                            <div style={{
+                                position: 'absolute', top: '100%', left: 0, zIndex: 10,
+                                background: '#ffffff', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                                minWidth: 100, overflow: 'hidden',
+                            }}>
+                                {periodOptions.map(p => (
+                                    <div
+                                        key={p} onClick={() => { setPeriod(p); setPeriodOpen(false); }}
+                                        style={{
+                                            padding: '10px 12px', fontSize: 12, fontFamily: 'Sen, sans-serif',
+                                            color: period === p ? '#ff7622' : '#32343e',
+                                            background: period === p ? '#fff1f2' : 'transparent',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        {p}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     <RevenueChart data={revenueChartData} />
                 </div>
@@ -206,7 +245,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 <div style={{ margin: '0 24px 16px', background: '#ffffff', borderRadius: 28, padding: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Reviews</span>
-                        <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See All Reviews</span>
+                        <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => router.visit('/seller/reviews')}>See All Reviews</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         {reviewsSummary.count > 0 ? (
@@ -229,7 +268,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                 <div style={{ margin: '0 24px', background: '#ffffff', borderRadius: 28, padding: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <span style={{ fontSize: 14, color: '#32343e' }}>Populer Items This Weeks</span>
-                        <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }}>See All</span>
+                        <span style={{ fontSize: 14, color: '#fb6d3a', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => router.visit('/seller/my-food')}>See All</span>
                     </div>
                     {popularItems.length > 0 ? (
                         <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8 }}>
@@ -285,6 +324,16 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                                         {link.label}
                                     </button>
                                 ))}
+                                <button
+                                    onClick={() => { setSidebarOpen(false); router.visit('/seller/reviews'); }}
+                                    style={{
+                                        background: 'none', border: 'none', textAlign: 'left',
+                                        fontSize: 16, color: '#32343e', fontFamily: 'Sen, sans-serif',
+                                        cursor: 'pointer', padding: '8px 0',
+                                    }}
+                                >
+                                    Reviews
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -93,6 +93,11 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(
     Route::get('/food/{menu}', [\App\Http\Controllers\Seller\SellerFoodController::class, 'show'])->name('food.show');
     Route::get('/food/{menu}/edit', [\App\Http\Controllers\Seller\SellerFoodController::class, 'edit'])->name('food.edit');
     Route::delete('/menu/{menu}', [\App\Http\Controllers\Seller\SellerMenuController::class, 'destroy'])->name('menu.destroy');
+    Route::get('/revenue-details', function () { return Inertia::render('Seller/RevenueDetails'); })->name('revenue-details');
+    Route::get('/reviews', function () { return Inertia::render('Seller/Reviews'); })->name('reviews');
+    Route::get('/personal-info', function () { return Inertia::render('Seller/PersonalInfo'); })->name('personal-info');
+    Route::get('/settings', function () { return Inertia::render('Seller/Settings'); })->name('settings');
+    Route::get('/withdrawal-history', function () { return Inertia::render('Seller/WithdrawalHistory'); })->name('withdrawal-history');
 });
 
 require __DIR__.'/auth.php';

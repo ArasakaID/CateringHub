@@ -94,7 +94,7 @@ export default function Profile({ user, orderCount }) {
 
                     {/* Withdraw Button */}
                     <div style={{ position: 'absolute', top: 204, left: '50%', transform: 'translateX(-50%)' }}>
-                        <button style={{ width: 100, height: 37, borderRadius: 10, border: '1px solid #ffffff', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
+                        <button onClick={() => router.visit('/seller/withdraw/success')} style={{ width: 100, height: 37, borderRadius: 10, border: '1px solid #ffffff', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
                             <span style={{ fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#ffffff' }}>Withdraw</span>
                         </button>
                     </div>
@@ -108,12 +108,14 @@ export default function Profile({ user, orderCount }) {
                             icon={<UserIcon />}
                             label="Personal Info"
                             right={<ChevronRight />}
+                            onClick={() => router.visit('/seller/personal-info')}
                         />
                         <div style={dividerStyle} />
                         <MenuRow
                             icon={<SettingsIcon />}
                             label="Settings"
                             right={<ChevronRight />}
+                            onClick={() => router.visit('/seller/settings')}
                         />
                     </div>
 
@@ -123,6 +125,7 @@ export default function Profile({ user, orderCount }) {
                             icon={<WithdrawalIcon />}
                             label="Withdrawal History"
                             right={<ChevronRight />}
+                            onClick={() => router.visit('/seller/withdrawal-history')}
                         />
                         <div style={dividerStyle} />
                         <MenuRow
@@ -138,6 +141,7 @@ export default function Profile({ user, orderCount }) {
                             icon={<CommandIcon />}
                             label="User Reviews"
                             right={<ChevronRight />}
+                            onClick={() => router.visit('/seller/reviews')}
                         />
                     </div>
 
