@@ -82,6 +82,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Seller\SellerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/my-food', [\App\Http\Controllers\Seller\SellerMenuController::class, 'index'])->name('my-food');
+    Route::delete('/menu/{menu}', [\App\Http\Controllers\Seller\SellerMenuController::class, 'destroy'])->name('menu.destroy');
 });
 
 require __DIR__.'/auth.php';
