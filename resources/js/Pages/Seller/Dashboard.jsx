@@ -15,7 +15,7 @@ function RevenueChart({ data }) {
     const maxVal = Math.max(...rawValues);
     const hasData = maxVal > 0;
 
-    const chartMax = hasData ? maxVal : 1;
+    const chartMax = hasData ? maxVal * 1.2 : 1;
     const chartWidth = 290;
     const chartHeight = 80;
     const drawWidth = chartWidth;
