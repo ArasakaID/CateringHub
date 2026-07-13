@@ -77,6 +77,23 @@ class SellerMenuController extends Controller
             'images.*' => 'nullable|string',
         ]);
 
+        $imagePaths = [];
+        $mainImage = null;
+
+        if (!empty($validated['images'])) {
+            foreach ($validated['images'] as $base64) {
+                if (!$base64 || !str_starts_with($base64, 'data:image')) continue;
+                $imageData = base64_decode(explode(',', $base64)[1] ?? '');
+                if (!$imageData) continue;
+                $ext = explode('/', explode(';', $base64)[0])[1] ?? 'jpg';
+                $filename = 'menu_' . uniqid() . '.' . $ext;
+                $path = 'menus/' . $filename;
+                \Illuminate\Support\Facades\Storage::disk('public')->put($path, $imageData);
+                $imagePaths[] = $path;
+                if (!$mainImage) $mainImage = $path;
+            }
+        }
+
         $menu = Menu::create([
             'catering_id' => $catering->id,
             'category_id' => $validated['category_id'],
@@ -87,7 +104,8 @@ class SellerMenuController extends Controller
             'badges' => [],
             'location' => $catering->address ?? '',
             'extras' => $validated['extras'] ?? '',
-            'images' => $validated['images'] ?? [],
+            'image' => $mainImage,
+            'images' => $imagePaths,
             'is_available' => true,
         ]);
 
