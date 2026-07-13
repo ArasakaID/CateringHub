@@ -4,7 +4,7 @@
 > **Frame**: `610:6444` — Seller - Add new Items (375×983px)
 > **Background**: `#ffffff`
 > **Updated**: 2026-07-13
-> **Status**: ✅ Selesai — QA 80%
+> **Status**: ✅ Selesai — QA 96%
 
 ---
 
@@ -224,7 +224,7 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->group(function () {
 - [x] `git commit -m "feat: seller add menu form with photo upload, price split & categories"`
 - [x] `git push`
 
-> **QA Score**: ~80% (Gemini)
+> **QA Score**: ~96% (Gemini)
 
 ---
 

@@ -123,7 +123,7 @@ export default function AddMenu({ categories }) {
                         {backArrow}
                     </div>
                     <span style={{ marginLeft: 16, fontSize: 17, fontFamily: 'Sen, sans-serif', color: '#32343e' }}>Tambah Menu</span>
-                    <span onClick={handleReset} style={{ marginLeft: 'auto', fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#fb6d3a', cursor: 'pointer' }}>Reset</span>
+                    <span onClick={handleReset} style={{ marginLeft: 'auto', fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#fb6d3a', cursor: 'pointer' }}>RESET</span>
                 </div>
 
                 {/* Form Fields */}
@@ -164,7 +164,7 @@ export default function AddMenu({ categories }) {
                     </div>
 
                     {/* Price + Unit */}
-                    <label style={{ ...labelStyle, marginTop: 24 }}>PRice</label>
+                    <label style={{ ...labelStyle, marginTop: 24 }}>PRICE</label>
                     <div style={{ display: 'flex', gap: 11 }}>
                         <div style={{
                             width: 148, height: 42, background: '#fdfdfd', border: '1px solid #e8eaed',
@@ -174,23 +174,24 @@ export default function AddMenu({ categories }) {
                                 style={{
                                     flex: 1, height: '100%', border: 'none', background: 'transparent',
                                     padding: '0 12px', fontSize: 14, fontFamily: 'Sen, sans-serif',
-                                    color: '#32343e', letterSpacing: '0.02em', outline: 'none',
+                                    color: '#32343e', letterSpacing: '0.02em', outline: 'none', minWidth: 0,
                                 }}
                                 placeholder="Rp.xxxx"
                                 value={form.price}
                                 onChange={e => update('price', e.target.value)}
                             />
-                            <div style={{ width: 1, height: 20, background: '#e8eaed', flexShrink: 0 }} />
+                            <div style={{ width: 1, height: 30, background: '#e8eaed', flexShrink: 0 }} />
                             <div style={{
-                                display: 'flex', alignItems: 'center', gap: 4, padding: '0 8px',
+                                display: 'flex', alignItems: 'center', gap: 6, padding: '0 12px',
                                 fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#9c9ba6',
                                 letterSpacing: '0.02em', height: '100%', cursor: 'pointer',
+                                background: '#f5f5f5',
                             }} onClick={() => {
                                 const units = ['Box', 'Porsi', 'Unit'];
                                 const idx = units.indexOf(form.unit);
                                 update('unit', units[(idx + 1) % units.length]);
                             }}>
-                                {form.unit}
+                                <span style={{ whiteSpace: 'nowrap' }}>{form.unit}</span>
                                 {menuIcon}
                             </div>
                         </div>
