@@ -80,27 +80,31 @@ class SellerDashboardController extends Controller
 
     private function getRevenueChartData(int $cateringId): array
     {
-        $hours = [];
-        $now = now();
-
+        $data = [];
         for ($i = 10; $i <= 16; $i++) {
-            $hourStart = $now->copy()->setHour($i)->setMinute(0)->setSecond(0);
-            $hourEnd = $hourStart->copy()->addHour();
+            $data[$i] = 0;
+        }
 
-            $revenue = Order::where('catering_id', $cateringId)
-                ->where('payment_status', 'paid')
-                ->whereBetween('created_at', [$hourStart, $hourEnd])
-                ->sum('total');
+        $orders = Order::where('catering_id', $cateringId)
+            ->where('payment_status', 'paid')
+            ->get(['total', 'created_at']);
 
-            $label = $i <= 12 ? $i . 'AM' : ($i - 12) . 'PM';
-            if ($i < 10) $label = '0' . $label;
+        foreach ($orders as $order) {
+            $hour = (int) $order->created_at->format('G');
+            if (isset($data[$hour])) {
+                $data[$hour] += (float) $order->total;
+            }
+        }
 
-            $hours[] = [
+        $result = [];
+        foreach ($data as $hour => $revenue) {
+            $label = $hour <= 12 ? $hour . 'AM' : ($hour - 12) . 'PM';
+            $result[] = [
                 'label' => $label,
-                'value' => (float) $revenue,
+                'value' => $revenue,
             ];
         }
 
-        return $hours;
+        return $result;
     }
 }

@@ -44,7 +44,7 @@ function RevenueChart({ data }) {
     const firstPoint = points[0];
     const areaPath = `${smoothPath} L${lastPoint[0]},${chartHeight} L${firstPoint[0]},${chartHeight} Z`;
 
-    const maxIdx = values.indexOf(maxVal);
+    const maxIdx = hasData ? values.indexOf(Math.max(...values)) : -1;
     const tooltipX = hasData ? (maxIdx / (values.length - 1)) * drawWidth : 0;
     const tooltipY = hasData ? chartHeight - (maxVal / chartMax) * chartHeight : 0;
 
