@@ -19,10 +19,19 @@ const MoreIcon = () => (
 export default function MyFood({ menus, categories, activeTab: initialTab, totalItems }) {
     const [activeTab, setActiveTab] = useState(initialTab || 'all');
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [openMenu, setOpenMenu] = useState(null);
 
     const handleTabClick = (slug) => {
         setActiveTab(slug);
         router.get('/seller/my-food', { category: slug }, { preserveState: true, preserveScroll: true, replace: true });
+    };
+
+    const handleDelete = (menuId, e) => {
+        e.stopPropagation();
+        if (confirm('Hapus menu ini?')) {
+            router.delete('/seller/menu/' + menuId, { preserveScroll: true });
+        }
+        setOpenMenu(null);
     };
 
     return (
@@ -97,30 +106,67 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
                         </div>
                     ) : (
                         menus.map((menu) => (
-                            <div key={menu.id} style={{ display: 'flex', gap: 12 }}>
-                                <img
-                                    src={menu.image ? (menu.image.startsWith('http') ? menu.image : '/storage/' + menu.image) : 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="102" height="102"><rect width="102" height="102" fill="#98a8b8" rx="20"/></svg>')}
-                                    alt={menu.name}
-                                    style={{ width: 102, height: 102, borderRadius: 20, objectFit: 'cover', flexShrink: 0, background: '#98a8b8' }}
-                                    onError={(e) => { e.target.style.display = 'none'; }}
-                                />
-                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
-                                    <span style={{ fontSize: 14, fontWeight: 700, color: '#32343e' }}>{menu.name}</span>
-                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,118,34,0.2)', borderRadius: 29, padding: '4px 12px', alignSelf: 'flex-start' }}>
-                                        <span style={{ fontSize: 13.67, color: '#ff7622', lineHeight: '20px' }}>{menu.category?.name || 'Menu'}</span>
+                            <div key={menu.id} style={{ position: 'relative' }}>
+                                <div
+                                    onClick={() => router.get('/seller/food/' + menu.id)}
+                                    style={{ display: 'flex', gap: 12, cursor: 'pointer' }}
+                                >
+                                    <img
+                                        src={menu.image ? (menu.image.startsWith('http') ? menu.image : '/storage/' + menu.image) : 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="102" height="102"><rect width="102" height="102" fill="#98a8b8" rx="20"/></svg>')}
+                                        alt={menu.name}
+                                        style={{ width: 102, height: 102, borderRadius: 20, objectFit: 'cover', flexShrink: 0, background: '#98a8b8' }}
+                                        onError={(e) => { e.target.style.display = 'none'; }}
+                                    />
+                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
+                                        <span style={{ fontSize: 14, fontWeight: 700, color: '#32343e' }}>{menu.name}</span>
+                                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,118,34,0.2)', borderRadius: 29, padding: '4px 12px', alignSelf: 'flex-start' }}>
+                                            <span style={{ fontSize: 13.67, color: '#ff7622', lineHeight: '20px' }}>{menu.category?.name || 'Menu'}</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                            <StarIcon />
+                                            <span style={{ fontSize: 13.67, fontWeight: 700, color: '#fb6d3a' }}>{menu.rating || '0.0'}</span>
+                                            <span style={{ fontSize: 13.67, color: '#afafaf' }}>({menu.review_count || 0} Review)</span>
+                                        </div>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                        <StarIcon />
-                                        <span style={{ fontSize: 13.67, fontWeight: 700, color: '#fb6d3a' }}>{menu.rating || '0.0'}</span>
-                                        <span style={{ fontSize: 13.67, color: '#afafaf' }}>({menu.review_count || 0} Review)</span>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: 8 }}>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); setOpenMenu(openMenu === menu.id ? null : menu.id); }}
+                                            style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
+                                        >
+                                            <MoreIcon />
+                                        </button>
+                                        <span style={{ fontSize: 14, fontWeight: 700, color: '#32343e', textAlign: 'right' }}>
+                                            Rp{parseInt(menu.price).toLocaleString('en-US')}/Box
+                                        </span>
                                     </div>
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: 8 }}>
-                                    <MoreIcon />
-                                    <span style={{ fontSize: 14, fontWeight: 700, color: '#32343e', textAlign: 'right' }}>
-                                        Rp{parseInt(menu.price).toLocaleString('en-US')}/Box
-                                    </span>
-                                </div>
+                                {openMenu === menu.id && (
+                                    <>
+                                        <div
+                                            onClick={() => setOpenMenu(null)}
+                                            style={{ position: 'fixed', inset: 0, zIndex: 99 }}
+                                        />
+                                        <div style={{
+                                            position: 'absolute', right: 0, top: 30, zIndex: 100,
+                                            background: '#fff', borderRadius: 12,
+                                            boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                                            padding: '8px 0', minWidth: 120,
+                                        }}>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); router.get('/seller/food/' + menu.id + '/edit'); setOpenMenu(null); }}
+                                                style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#32343e' }}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={(e) => handleDelete(menu.id, e)}
+                                                style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#e74c3c' }}
+                                            >
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         ))
                     )}
