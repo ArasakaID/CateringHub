@@ -93,11 +93,13 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(
     Route::get('/food/{menu}', [\App\Http\Controllers\Seller\SellerFoodController::class, 'show'])->name('food.show');
     Route::get('/food/{menu}/edit', [\App\Http\Controllers\Seller\SellerFoodController::class, 'edit'])->name('food.edit');
     Route::delete('/menu/{menu}', [\App\Http\Controllers\Seller\SellerMenuController::class, 'destroy'])->name('menu.destroy');
-    Route::get('/revenue-details', function () { return Inertia::render('Seller/RevenueDetails'); })->name('revenue-details');
-    Route::get('/reviews', function () { return Inertia::render('Seller/Reviews'); })->name('reviews');
-    Route::get('/personal-info', function () { return Inertia::render('Seller/PersonalInfo'); })->name('personal-info');
-    Route::get('/settings', function () { return Inertia::render('Seller/Settings'); })->name('settings');
-    Route::get('/withdrawal-history', function () { return Inertia::render('Seller/WithdrawalHistory'); })->name('withdrawal-history');
+    Route::get('/revenue-details', [\App\Http\Controllers\Seller\SellerRevenueController::class, 'index'])->name('revenue-details');
+    Route::get('/reviews', [\App\Http\Controllers\Seller\SellerReviewController::class, 'index'])->name('reviews');
+    Route::get('/personal-info', [\App\Http\Controllers\Seller\SellerPersonalInfoController::class, 'index'])->name('personal-info');
+    Route::put('/personal-info', [\App\Http\Controllers\Seller\SellerPersonalInfoController::class, 'update'])->name('personal-info.update');
+    Route::get('/settings', [\App\Http\Controllers\Seller\SellerSettingController::class, 'index'])->name('settings');
+    Route::post('/settings', [\App\Http\Controllers\Seller\SellerSettingController::class, 'update'])->name('settings.update');
+    Route::get('/withdrawal-history', [\App\Http\Controllers\Seller\SellerWithdrawController::class, 'history'])->name('withdrawal-history');
 });
 
 require __DIR__.'/auth.php';
