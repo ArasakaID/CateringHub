@@ -5,7 +5,7 @@
 > **Background**: `#ffffff`
 > **Updated**: 2026-07-13
 > **Status**: ✅ Selesai — deployed ke https://catering.apep.dev/seller/food/{id}
-> **QA Score**: ~90% (Groq)
+> **QA Score**: ~90% (Gemini API)
 
 ---
 
