@@ -15,18 +15,13 @@ function RevenueChart({ data }) {
     const maxVal = Math.max(...rawValues);
     const hasData = maxVal > 0;
 
-    const values = rawValues.map((v, i) => {
-        if (i === 0 || i === rawValues.length - 1) return v;
-        return (rawValues[i - 1] + v + rawValues[i + 1]) / 3;
-    });
-
     const chartMax = hasData ? maxVal : 1;
     const chartWidth = 290;
     const chartHeight = 80;
     const drawWidth = chartWidth;
 
-    const points = values.map((v, i) => {
-        const x = (i / (values.length - 1)) * drawWidth;
+    const points = rawValues.map((v, i) => {
+        const x = (i / (rawValues.length - 1)) * drawWidth;
         const y = chartHeight - (v / chartMax) * chartHeight;
         return [x, y];
     });
