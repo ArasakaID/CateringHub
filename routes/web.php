@@ -83,6 +83,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Seller\SellerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-food', [\App\Http\Controllers\Seller\SellerMenuController::class, 'index'])->name('my-food');
+    Route::get('/add-menu', [\App\Http\Controllers\Seller\SellerMenuController::class, 'create'])->name('add-menu');
+    Route::post('/menu', [\App\Http\Controllers\Seller\SellerMenuController::class, 'store'])->name('menu.store');
     Route::get('/menu', [\App\Http\Controllers\Seller\SellerProfileController::class, 'index'])->name('menu');
     Route::get('/food/{menu}', [\App\Http\Controllers\Seller\SellerFoodController::class, 'show'])->name('food.show');
     Route::get('/food/{menu}/edit', [\App\Http\Controllers\Seller\SellerFoodController::class, 'edit'])->name('food.edit');

@@ -52,6 +52,47 @@ class SellerMenuController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $categories = Category::active()->get();
+
+        return Inertia::render('Seller/AddMenu', [
+            'categories' => $categories,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $user = $request->user();
+        $catering = Catering::where('user_id', $user->id)->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'unit' => 'nullable|string|max:50',
+            'category_id' => 'required|exists:categories,id',
+            'ingredients' => 'nullable|string',
+            'extras' => 'nullable|string',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|string',
+        ]);
+
+        $menu = Menu::create([
+            'catering_id' => $catering->id,
+            'category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'price' => $validated['price'],
+            'unit' => $validated['unit'] ?? 'Box',
+            'ingredients' => $validated['ingredients'] ? explode("\n", $validated['ingredients']) : [],
+            'extras' => $validated['extras'] ?? '',
+            'images' => $validated['images'] ?? [],
+            'is_available' => true,
+        ]);
+
+        return redirect()->route('seller.food.show', $menu)
+            ->with('success', 'Menu berhasil ditambahkan');
+    }
+
     public function destroy(Menu $menu)
     {
         $menu->delete();

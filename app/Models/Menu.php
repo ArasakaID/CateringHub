@@ -10,14 +10,15 @@ class Menu extends Model
 {
     protected $fillable = [
         'catering_id', 'category_id', 'name', 'description',
-        'price', 'image', 'options', 'is_available',
-        'ingredients', 'badges', 'location',
+        'price', 'image', 'images', 'unit', 'options', 'is_available',
+        'ingredients', 'badges', 'location', 'extras',
     ];
 
     protected $casts = [
         'options' => 'array',
         'ingredients' => 'array',
         'badges' => 'array',
+        'images' => 'array',
         'price' => 'decimal:2',
     ];
 
