@@ -1,4 +1,4 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 import SellerTabBar from '@/Components/SellerTabBar';
 
@@ -109,8 +109,12 @@ function PopularItem({ item }) {
 const periodOptions = ['Daily', 'Weekly', 'Monthly'];
 
 export default function SellerDashboard({ catering, stats, totalRevenue, revenueChartData, reviewsSummary, popularItems }) {
+    const { url } = usePage();
+    const urlParams = new URLSearchParams(url.split('?')[1] || '');
+    const initialPeriod = urlParams.get('period') || 'daily';
+    const periodLabel = initialPeriod.charAt(0).toUpperCase() + initialPeriod.slice(1);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [period, setPeriod] = useState('Daily');
+    const [period, setPeriod] = useState(periodLabel);
     const [periodOpen, setPeriodOpen] = useState(false);
     const periodRef = useRef(null);
 
@@ -224,7 +228,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                             }}>
                                 {periodOptions.map(p => (
                                     <div
-                                        key={p} onClick={() => { setPeriod(p); setPeriodOpen(false); }}
+                                        key={p} onClick={() => { setPeriod(p); setPeriodOpen(false); router.get('/seller/dashboard', { period: p.toLowerCase() }, { preserveState: true, preserveScroll: true, replace: true }); }}
                                         style={{
                                             padding: '10px 12px', fontSize: 12, fontFamily: 'Sen, sans-serif',
                                             color: period === p ? '#ff7622' : '#32343e',
