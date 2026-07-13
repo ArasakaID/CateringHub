@@ -15,7 +15,6 @@ function RevenueChart({ data }) {
     const maxVal = Math.max(...rawValues);
     const hasData = maxVal > 0;
 
-    // Smooth values using moving average for more natural curve
     const values = rawValues.map((v, i) => {
         if (i === 0 || i === rawValues.length - 1) return v;
         return (rawValues[i - 1] + v + rawValues[i + 1]) / 3;
@@ -44,13 +43,23 @@ function RevenueChart({ data }) {
     const firstPoint = points[0];
     const areaPath = `${smoothPath} L${lastPoint[0]},${chartHeight} L${firstPoint[0]},${chartHeight} Z`;
 
-    const maxIdx = hasData ? values.indexOf(Math.max(...values)) : -1;
-    const tooltipX = hasData ? (maxIdx / (values.length - 1)) * drawWidth : 0;
-    const tooltipY = hasData ? chartHeight - (maxVal / chartMax) * chartHeight : 0;
+    const [hoverIdx, setHoverIdx] = useState(-1);
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const step = drawWidth / (data.length - 1);
+        const idx = Math.round(mx / step);
+        setHoverIdx(Math.max(0, Math.min(data.length - 1, idx)));
+    };
+
+    const handleMouseLeave = () => setHoverIdx(-1);
+
+    const gap = drawWidth / (data.length - 1);
 
     return (
-        <div style={{ position: 'relative', height: chartHeight + 30, marginTop: 8 }}>
-            <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none">
+        <div style={{ position: 'relative', height: chartHeight + 30, marginTop: 8 }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+            <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none" style={{ pointerEvents: 'none' }}>
                 <defs>
                     <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#fb6d3a" stopOpacity="0.4" />
@@ -66,21 +75,25 @@ function RevenueChart({ data }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
-                {hasData && (
-                    <circle cx={points[maxIdx][0]} cy={points[maxIdx][1]} r="3" fill="#fb6d3a" />
+                {hasData && hoverIdx >= 0 && (
+                    <>
+                        <line x1={points[hoverIdx][0]} y1={0} x2={points[hoverIdx][0]} y2={chartHeight} stroke="#fb6d3a" strokeWidth="1" strokeDasharray="3,3" opacity="0.5" />
+                        <circle cx={points[hoverIdx][0]} cy={points[hoverIdx][1]} r="4" fill="#ffffff" stroke="#fb6d3a" strokeWidth="2" />
+                    </>
                 )}
             </svg>
-            {hasData && (
+            {hasData && hoverIdx >= 0 && data[hoverIdx].value > 0 && (
                 <div style={{
-                    position: 'absolute', left: tooltipX - 33, top: -36,
+                    position: 'absolute', left: Math.min(Math.max(points[hoverIdx][0] - 50, 0), chartWidth - 100),
+                    top: -8,
                     background: '#32343e', borderRadius: 8, padding: '6px 12px',
                     color: '#ffffff', fontSize: 14, fontWeight: 700, fontFamily: 'Sen, sans-serif',
-                    whiteSpace: 'nowrap',
+                    whiteSpace: 'nowrap', zIndex: 10,
                 }}>
-                    ${Math.round(maxVal).toLocaleString('en-US')}
+                    {formatRupiah(data[hoverIdx].value)}
                 </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, position: 'relative' }}>
                 {data.map((d, i) => (
                     <span key={i} style={{ fontSize: 9, color: '#9c9ba6', fontFamily: 'Sen, sans-serif', width: 26, textAlign: 'center', textTransform: 'uppercase' }}>
                         {d.label}
