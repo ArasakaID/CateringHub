@@ -15,7 +15,7 @@ const ingredientIcons = {
 
 const StarIcon = () => (
     <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-        <path d="M8.5 1.5L10.6 6.1L15.5 6.8L11.9 10.3L12.8 15.2L8.5 12.9L4.2 15.2L5.1 10.3L1.5 6.8L6.4 6.1L8.5 1.5Z" stroke="#fb6d3a" strokeWidth="1" fill="#fb6d3a" />
+        <path d="M8.5 1.5L10.6 6.1L15.5 6.8L11.9 10.3L12.8 15.2L8.5 12.9L4.2 15.2L5.1 10.3L1.5 6.8L6.4 6.1L8.5 1.5Z" stroke="#fb6d3a" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
@@ -93,9 +93,9 @@ export default function FoodDetails({ menu }) {
                         }}
                         onError={(e) => { e.target.style.background = '#98a8b8'; }}
                     />
-                    {/* Badges */}
-                    {badges.length > 0 && (
-                        <div style={{ position: 'absolute', bottom: 16, left: 16, display: 'flex', gap: 8 }}>
+                    {/* Badges + Carousel dots row */}
+                    <div style={{ position: 'absolute', bottom: 16, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
+                        <div style={{ display: 'flex', gap: 8 }}>
                             {badges.map((badge, i) => (
                                 <span key={i} style={{
                                     background: 'rgba(255,255,255,0.8)',
@@ -106,13 +106,12 @@ export default function FoodDetails({ menu }) {
                                 </span>
                             ))}
                         </div>
-                    )}
-                    {/* Carousel dots */}
-                    <div style={{ position: 'absolute', bottom: 16, right: 16, display: 'flex', gap: 4 }}>
-                        <div style={{ width: 21, height: 10, borderRadius: 22, background: '#ffffff' }} />
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff' }} />
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff' }} />
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff' }} />
+                        <div style={{ display: 'flex', gap: 4 }}>
+                            <div style={{ width: 21, height: 10, borderRadius: 22, background: '#ffffff' }} />
+                            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff' }} />
+                            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff' }} />
+                            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff' }} />
+                        </div>
                     </div>
                 </div>
 
