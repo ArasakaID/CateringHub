@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Seller\SellerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/my-food', [\App\Http\Controllers\Seller\SellerMenuController::class, 'index'])->name('my-food');
+    Route::get('/withdraw/success', [\App\Http\Controllers\Seller\SellerWithdrawController::class, 'success'])->name('withdraw.success');
     Route::get('/running-orders', [\App\Http\Controllers\Seller\SellerOrderController::class, 'index'])->name('running-orders');
     Route::post('/orders/{order}/done', [\App\Http\Controllers\Seller\SellerOrderController::class, 'markDone'])->name('orders.done');
     Route::post('/orders/{order}/cancel', [\App\Http\Controllers\Seller\SellerOrderController::class, 'cancel'])->name('orders.cancel');
