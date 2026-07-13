@@ -81,8 +81,8 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
                                         <div style={{
                                             position: 'absolute',
                                             bottom: -17,
-                                            left: -14,
-                                            width: 47,
+                                            left: 0,
+                                            right: 0,
                                             height: 2,
                                             background: '#fb6d3a',
                                         }} />
