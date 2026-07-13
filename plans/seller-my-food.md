@@ -4,7 +4,8 @@
 > **Frame**: `610:6511` — Seller - My Food (375×812px)
 > **Background**: `#ffffff`
 > **Updated**: 2026-07-13
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Selesai — deployed ke https://catering.apep.dev/seller/my-food
+> **QA Score**: 95% (Gemini)
 
 ---
 
@@ -143,58 +144,58 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->group(function () {
 ## Milestone Implementasi
 
 ### ⬜ Phase 1: Database & Backend
-- [ ] **🔍 Analisis Figma**: Data yang dibutuhkan: menu list per seller, filter kategori, rating aggregation
-- [ ] **🎨 Cek resource Figma**: Ekstrak star icon, more-vertical icon dari frame `610:6511`
-- [ ] Buat `SellerMenuController` (jika belum ada dari Add Menu plan)
-- [ ] Tambah route `/seller/my-food` dan `DELETE /seller/menu/{menu}`
-- [ ] Query: menus milik seller + eager load category + reviews aggregation
-- [ ] Pass data: `menus`, `categories`, `activeTab`, `totalItems`
+- [x] **🔍 Analisis Figma**: Data yang dibutuhkan: menu list per seller, filter kategori, rating aggregation
+- [x] **🎨 Cek resource Figma**: Ekstrak star icon, more-vertical icon dari frame `610:6511`
+- [x] Buat `SellerMenuController` (jika belum ada dari Add Menu plan)
+- [x] Tambah route `/seller/my-food` dan `DELETE /seller/menu/{menu}`
+- [x] Query: menus milik seller + eager load category + reviews aggregation
+- [x] Pass data: `menus`, `categories`, `activeTab`, `totalItems`
 
 ### ⬜ Phase 2: Top Bar & Tab Filter
-- [ ] Buat `resources/js/Pages/Seller/MyFood.jsx`
-- [ ] Back button — `#ecf0f4`, arrow `#181c2e`
-- [ ] Title "List Catering" — Sen 17px `#181c2e`
-- [ ] Tab bar: All (active `#fb6d3a` Bold), Acara, Harian, Snack (`#32343e` Regular)
-- [ ] Active indicator line `#fb6d3a`
-- [ ] Tab switching → filter via Inertia visit atau local state
-- [ ] "Total X items" — Sen 14px `#9c9ba6`
+- [x] Buat `resources/js/Pages/Seller/MyFood.jsx`
+- [x] Back button — `#ecf0f4`, arrow `#181c2e`
+- [x] Title "List Catering" — Sen 17px `#181c2e`
+- [x] Tab bar: All (active `#fb6d3a` Bold), Acara, Harian, Snack (`#32343e` Regular)
+- [x] Active indicator line `#fb6d3a`
+- [x] Tab switching → filter via Inertia visit atau local state
+- [x] "Total X items" — Sen 14px `#9c9ba6`
 
 ### ⬜ Phase 3: Food Cards
-- [ ] List rendering dari data `menus`
-- [ ] Image 102×102, radius 20
-- [ ] Nama menu — Sen 14px Bold `#32343e`
-- [ ] Badge pill — bg `#ff7622` opacity 0.2, text `#ff7622`
-- [ ] Rating: star icon + "4.9" + "(10 Review)"
-- [ ] Harga — Sen 14px Bold, right-aligned
-- [ ] More (⋮) — 3 dots vertikal `#32343e`
+- [x] List rendering dari data `menus`
+- [x] Image 102×102, radius 20
+- [x] Nama menu — Sen 14px Bold `#32343e`
+- [x] Badge pill — bg `#ff7622` opacity 0.2, text `#ff7622`
+- [x] Rating: star icon + "4.9" + "(10 Review)"
+- [x] Harga — Sen 14px Bold, right-aligned
+- [x] More (⋮) — 3 dots vertikal `#32343e`
 
 ### ⬜ Phase 4: Actions
-- [ ] Tap card → navigasi ke Food Details
-- [ ] Tap More (⋮) → dropdown: Edit / Hapus
-- [ ] Hapus → konfirmasi dialog → `DELETE /seller/menu/{id}`
-- [ ] Empty state jika belum ada menu
-- [ ] Center FAB (+) → navigasi ke Add Menu
+- [x] Tap card → navigasi ke Food Details
+- [x] Tap More (⋮) → dropdown: Edit / Hapus
+- [x] Hapus → konfirmasi dialog → `DELETE /seller/menu/{id}`
+- [x] Empty state jika belum ada menu
+- [x] Center FAB (+) → navigasi ke Add Menu
 
 ### ⬜ Phase 5: Bottom Tab Bar
-- [ ] Shared component `SellerTabBar.jsx`
-- [ ] Active tab: Menu icon (📋) stroke `#ff7622`
+- [x] Shared component `SellerTabBar.jsx`
+- [x] Active tab: Menu icon (📋) stroke `#ff7622`
 
 ### ⬜ Phase 6: Validasi Error (Browser)
-- [ ] Buka halaman di browser
-- [ ] Cek console logs
-- [ ] Cek responsiveness
-- [ ] Test tab switching
-- [ ] Test more menu dropdown
-- [ ] Test hapus menu
+- [x] Buka halaman di browser
+- [x] Cek console logs
+- [x] Cek responsiveness
+- [x] Test tab switching
+- [x] Test more menu dropdown
+- [x] Test hapus menu
 
 ### ⬜ Phase 7: Figma Design Comparison
-- [ ] Screenshot Figma frame `610:6511`
-- [ ] Screenshot Web
-- [ ] Bandingkan — target ≥ 90%
+- [x] Screenshot Figma frame `610:6511`
+- [x] Screenshot Web
+- [x] Bandingkan — target ≥ 90%
 
 ### ⬜ Phase 8: Git Commit & Push
-- [ ] `git commit -m "feat: seller my food list with category filter & CRUD actions"`
-- [ ] `git push`
+- [x] `git commit -m "feat: seller my food list with category filter & CRUD actions"`
+- [x] `git push`
 
 ---
 
@@ -206,3 +207,31 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->group(function () {
 - **Active tab** "All" menggunakan Bold + `#fb6d3a`, lainnya Regular + `#32343e`
 - **Bottom tab** active di icon Menu (📋), bukan Grid
 - **🎨 Figma Resources**: Ekstrak star icon dan more-vertical icon dari frame `610:6511`
+
+---
+
+## ✅ Implementation Log (2026-07-13)
+
+### Backend
+- **Controller**: `app/Http/Controllers/Seller/SellerMenuController.php`
+  - `index()`: filter menus by category (all/acara/harian/snack), attach rating/review aggregation
+  - `destroy(Menu $menu)`: delete menu → redirect back
+- **Routes**: `GET /seller/my-food`, `DELETE /seller/menu/{menu}` in `routes/web.php`
+
+### Frontend
+- **Page**: `resources/js/Pages/Seller/MyFood.jsx`
+  - Top bar: back button (circle 45x45 #ecf0f4), "List Catering" Sen 17px #181c2e
+  - Tab bar: All (active #fb6d3a Bold), Acara/Harian/Snack (#32343e Regular), inline indicator line
+  - Total items: "Total XX items" Sen 14px #9c9ba6
+  - Food cards: image 102x102 radius 20, name (14px Bold #32343e), badge pill (#ff7622 20% opacity bg), solid star + rating + review count, price right-aligned, horizontal more icon (3 dots)
+  - Empty state: "Belum ada menu" with CTA
+  - Bottom tab bar: SellerTabBar with active="menu" (ListIcon highlighted #ff7622)
+
+### Icons
+- `public/images/icons/seller-star.svg` (reused from Dashboard)
+- `public/images/icons/seller-more-vertical.svg` (extracted from Figma 610:6520)
+- `public/images/icons/seller-back-arrow.svg` (extracted from Figma 610:6575)
+
+### QA
+- Design compare: 85% → 95% (v1→v4, Gemini)
+- Fixes: solid star fill, horizontal more icon, tab indicator per-button positioning
