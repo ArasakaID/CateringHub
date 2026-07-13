@@ -1,10 +1,21 @@
 import { Head, router, useForm } from '@inertiajs/react';
+import { useState, useRef, useEffect } from 'react';
 import SellerTabBar from '@/Components/SellerTabBar';
 
 export default function SellerSettings({ user, catering }) {
     const { data, setData, post, processing } = useForm({
         is_open: catering?.is_open !== false,
     });
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const SettingsRow = ({ icon, label, right, onClick }) => (
         <div onClick={onClick} style={{ display: 'flex', alignItems: 'center', padding: '16px 16px', cursor: onClick ? 'pointer' : 'default' }}>
@@ -33,8 +44,26 @@ export default function SellerSettings({ user, catering }) {
                         <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M6 11L1 6L6 1" stroke="#32343E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                     </div>
                     <div style={{ flex: 1, fontSize: 17, color: '#181c2e' }}>Profile</div>
-                    <div style={{ width: 45, height: 45, borderRadius: '50%', background: '#ecf0f4', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                    <div ref={menuRef} style={{ position: 'relative', width: 45, height: 45, borderRadius: '50%', background: '#ecf0f4', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} onClick={() => setMenuOpen(!menuOpen)}>
                         <svg width="16" height="4" viewBox="0 0 16 4" fill="none"><circle cx="2" cy="2" r="2" fill="#181c2e"/><circle cx="8" cy="2" r="2" fill="#181c2e"/><circle cx="14" cy="2" r="2" fill="#181c2e"/></svg>
+                        {menuOpen && (
+                            <div style={{
+                                position: 'absolute', top: 50, right: 0, zIndex: 50,
+                                background: '#ffffff', borderRadius: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                                minWidth: 160, overflow: 'hidden',
+                            }}>
+                                {[
+                                    { label: 'Edit Profile', path: '/seller/personal-info' },
+                                    { label: 'FAQ', path: '/seller/faq' },
+                                    { label: 'Buka Catering', path: '/seller/settings' },
+                                ].map(item => (
+                                    <div key={item.label} onClick={() => { setMenuOpen(false); router.visit(item.path); }}
+                                        style={{ padding: '12px 16px', fontSize: 14, fontFamily: 'Sen, sans-serif', color: '#32343e', cursor: 'pointer', borderBottom: '1px solid #f0f0f0' }}>
+                                        {item.label}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -51,7 +80,7 @@ export default function SellerSettings({ user, catering }) {
                 <div style={{ margin: '24px 24px 0', background: '#f6f8fa', borderRadius: 16 }}>
                     <SettingsRow icon={<PersonIcon />} label="Informasi Pribadi" right={<ChevronRight />} onClick={() => router.visit('/seller/personal-info')} />
                     {divider}
-                    <SettingsRow icon={<MapIcon />} label="Alamat Pengiriman" right={<ChevronRight />} />
+                    <SettingsRow icon={<MapIcon />} label="Alamat Pengiriman" right={<ChevronRight />} onClick={() => router.visit('/seller/menu')} />
                 </div>
 
                 {/* Card 2 */}
@@ -75,7 +104,7 @@ export default function SellerSettings({ user, catering }) {
                         </div>
                     } />
                     {divider}
-                    <SettingsRow icon={<CartIcon />} label="Metode Pembayaran" right={<ChevronRight />} />
+                    <SettingsRow icon={<CartIcon />} label="Metode Pembayaran" right={<ChevronRight />} onClick={() => router.visit('/seller/menu')} />
                 </div>
 
                 <SellerTabBar currentPath="/seller/menu" />
