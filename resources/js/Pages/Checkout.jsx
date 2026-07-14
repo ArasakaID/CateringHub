@@ -299,7 +299,7 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                 {!showPopup && (
                     <div
                         className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-10"
-                        style={{}}
+                        style={{ maxWidth: '430px' }}
                     >
                         <div className="px-6 pb-[36px]">
                             {infoContent}
@@ -334,6 +334,7 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                             ref={popupRef}
                             className="relative bg-white w-full rounded-t-[24px] px-6 pb-[32px] pt-0 select-none"
                             style={{
+                                maxWidth: '430px',
                                 maxHeight: popupExpanded ? '85vh' : 'auto',
                                 transform: `translateY(${Math.max(0, dragY)}px)`,
                                 transition: isDragging ? 'none' : 'transform 0.3s ease-out, max-height 0.3s ease-out',
