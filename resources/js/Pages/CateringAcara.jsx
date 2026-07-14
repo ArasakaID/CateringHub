@@ -79,11 +79,29 @@ export default function CateringAcara({ catering, keywords }) {
                                 </svg>
                             </div>
                         </div>
+
+                        {/* ===== PROFILE PHOTO OVERLAY ===== */}
+                        <div className="absolute -bottom-[40px] left-[26px] w-[80px] h-[80px] rounded-full border-[4px] border-white overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.15)] bg-white">
+                            {catering.logo ? (
+                                <img
+                                    src={catering.logo}
+                                    alt={catering.name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                />
+                            ) : null}
+                            <div className={`w-full h-full ${catering.logo ? 'hidden' : 'flex'} items-center justify-center bg-[#fc6e2a] text-white text-[28px] font-bold`}>
+                                {catering.name.charAt(0).toUpperCase()}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {/* ===== RESTAURANT INFO ===== */}
-                <div className="px-6 mt-[32px]">
+                <div className="px-6 mt-[40px]">
                     <h1 className="text-[#181c2e] text-[24px] font-bold">
                         {catering.name}
                     </h1>
