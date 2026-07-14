@@ -13,7 +13,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
 
     // Drag handlers (based on vh units for card height)
     const COLLAPSED_VH = 18;
-    const EXPANDED_VH = 85;
+    const EXPANDED_VH = 65;
 
     const handleDragStart = (clientY) => {
         setIsDragging(true);
@@ -312,6 +312,11 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                             <div className="w-[70px] h-[7px] rounded-[80px]"
                                 style={{ backgroundColor: '#d8e3ed' }}
                             />
+                            <span className="ml-2 text-[10px] text-[#a0a5ba] cursor-pointer select-none"
+                                onClick={() => alert(`cardHeightPx: ${Math.round(cardHeightPx)}vh\nisExpanded: ${isExpanded}\nisDragging: ${isDragging}\nEXPANDED_VH: ${EXPANDED_VH}\nCOLLAPSED_VH: ${COLLAPSED_VH}`)}
+                            >
+                                debug
+                            </span>
                         </div>
 
                         <div className="px-[24px] pb-[20px] overflow-y-auto styled-scrollbar"
