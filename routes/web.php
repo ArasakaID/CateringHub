@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pesanan/{order}/chat', [TrackingController::class, 'chat'])->name('tracking.chat');
     Route::post('/pesanan/{order}/chat/send', [TrackingController::class, 'sendMessage'])->name('tracking.chat.send');
     Route::get('/pesanan/{order}/chat/messages', [TrackingController::class, 'fetchNewMessages'])->name('tracking.chat.messages');
+    Route::post('/pesanan/{order}/tracking/advance', [TrackingController::class, 'advanceStatus'])->name('tracking.advance');
     Route::get('/groq-test', function () {
         $key = config('services.groq.api_key');
         if (!$key) return 'GROQ_API_KEY not set in .env';
@@ -81,7 +82,6 @@ Route::middleware('auth')->group(function () {
         } catch (\Exception $e) {
             return 'ERROR: ' . $e->getMessage();
         }
-    Route::post('/pesanan/{order}/tracking/advance', [TrackingController::class, 'advanceStatus'])->name('tracking.advance');
     });
 });
 
