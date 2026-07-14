@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Services\CartService;
 use Inertia\Inertia;
 
 class MenuController extends Controller
 {
-    public function show($id)
+    public function show($id, CartService $cart)
     {
         $menu = Menu::with(['catering' => function ($query) {
             $query->active();
@@ -31,6 +32,7 @@ class MenuController extends Controller
             'menu' => $menu,
             'catering' => $menu->catering,
             'relatedMenus' => $relatedMenus,
+            'cartCount' => $cart->getCount(),
         ]);
     }
 }

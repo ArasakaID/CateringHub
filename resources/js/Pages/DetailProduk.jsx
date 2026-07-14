@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function DetailProduk({ menu, catering, relatedMenus }) {
+export default function DetailProduk({ menu, catering, relatedMenus, cartCount = 0 }) {
     const [qty, setQty] = useState(1);
     const [optionQtys, setOptionQtys] = useState({});
     const [isSaved, setIsSaved] = useState(false);
@@ -375,14 +375,21 @@ export default function DetailProduk({ menu, catering, relatedMenus }) {
                             {/* Icon cart (navigate to checkout) */}
                             <button
                                 onClick={() => router.get(route('checkout'))}
-                                className="w-[62px] h-[62px] rounded-[12px] flex items-center justify-center cursor-pointer transition active:scale-[0.98] shrink-0"
-                                style={{ backgroundColor: '#ecf0f4' }}
+                                className="relative w-[62px] h-[62px] rounded-[12px] flex items-center justify-center cursor-pointer transition active:scale-[0.98] shrink-0"
+                                style={{ backgroundColor: 'rgb(18, 18, 35)' }}
                             >
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                                    <path d="M1 1H4L6.5 15H20L23 4H5" stroke="#181c2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <circle cx="7" cy="21" r="2" stroke="#181c2e" strokeWidth="2"/>
-                                    <circle cx="19" cy="21" r="2" stroke="#181c2e" strokeWidth="2"/>
+                                    <path d="M1 1H4L6.5 15H20L23 4H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <circle cx="7" cy="21" r="2" stroke="white" strokeWidth="2"/>
+                                    <circle cx="19" cy="21" r="2" stroke="white" strokeWidth="2"/>
                                 </svg>
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-[6px] -right-[6px] min-w-[20px] h-[20px] rounded-full bg-[#ff7622] text-white text-[10px] font-bold flex items-center justify-center px-[5px]"
+                                        style={{ lineHeight: '1' }}
+                                    >
+                                        {cartCount}
+                                    </span>
+                                )}
                             </button>
                         </div>
                     </div>
