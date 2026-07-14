@@ -10,16 +10,14 @@ export default function MessageScreen({ order, courier, messages }) {
     const pollRef = useRef(null);
     const latestIdRef = useRef(0);
 
-    // Track latest message ID
+    // Track latest message ID and auto-scroll
     useEffect(() => {
         if (localMessages.length > 0) {
             latestIdRef.current = localMessages[localMessages.length - 1].id;
         }
-    }, [localMessages]);
-
-    // Auto-scroll to latest message
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
+        }, 50);
     }, [localMessages]);
 
     // Sync when server data changes
