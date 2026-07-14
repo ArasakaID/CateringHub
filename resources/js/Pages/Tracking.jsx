@@ -516,7 +516,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                             {!courier && (
                                 <div className="mt-[24px] pt-[16px] text-center" style={{ borderTop: '1px solid #eef2f6' }}>
                                     <p className="text-[14px]" style={{ color: '#a0a5ba' }}>
-                                        {order.status === 'pending' ? 'Mencari driver...' : 'Menghubungkan kurir...'}
+                                        {order.status === 'pending' ? 'Mencari driver...' : 'Driver akan segera ditugaskan'}
                                     </p>
                                 </div>
                             )}

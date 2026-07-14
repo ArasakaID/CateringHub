@@ -22,6 +22,17 @@ class TrackingController extends Controller
 
         $order->load(['catering', 'items', 'couriers', 'trackingLogs']);
 
+        // Auto-assign a courier if order is past pending but has none
+        if ($order->status !== 'pending' && $order->couriers()->count() === 0) {
+            $courier = Courier::inRandomOrder()->first();
+            if ($courier) {
+                $order->couriers()->attach($courier->id, [
+                    'assigned_at' => now(),
+                    'status' => 'assigned',
+                ]);
+            }
+        }
+
         $courier = $order->courier();
         $trackingLogs = $order->trackingLogs;
 
