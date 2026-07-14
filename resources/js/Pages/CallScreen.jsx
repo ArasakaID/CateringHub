@@ -12,28 +12,12 @@ export default function CallScreen({ order, courier }) {
     const courierPhoto = courier?.photo || null;
     const courierName = courier?.name || 'Courier';
 
-    // Audio playback
+    // Audio playback — play at status transitions
     useEffect(() => {
-        const audio = new Audio('/calls/grup apa ini.mp3');
-        audio.loop = true;
-        audio.volume = 0.7;
-        audioRef.current = audio;
-
-        if (callStatus === 'ringing') {
+        if (callStatus === 'connected') {
+            const audio = new Audio('/calls/grup apa ini.mp3');
+            audio.volume = 0.7;
             audio.play().catch(() => {});
-        }
-
-        return () => {
-            audio.pause();
-            audio.currentTime = 0;
-        };
-    }, []);
-
-    // Stop ringing when connected/ended
-    useEffect(() => {
-        if (callStatus !== 'ringing' && audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
         }
     }, [callStatus]);
 
