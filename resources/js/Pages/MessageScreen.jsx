@@ -222,17 +222,6 @@ export default function MessageScreen({ order, courier, messages }) {
                         </button>
                     </form>
                 </div>
-
-                {/* Debug: simulate courier message */}
-                <div className="px-6 pb-[8px] flex justify-center">
-                    <button
-                        onClick={() => router.post(route('tracking.chat.courier-say', order.id), { message: 'Halo kak, pesanan sudah dalam perjalanan nih' })}
-                        className="text-[11px] px-[12px] py-[6px] rounded-[8px] cursor-pointer hover:opacity-80 transition"
-                        style={{ backgroundColor: '#ecf0f4', color: '#747783' }}
-                    >
-                        🔔 Simulate Courier Message
-                    </button>
-                </div>
             </div>
         </>
     );
