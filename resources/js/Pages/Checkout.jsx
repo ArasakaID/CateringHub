@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 
 export default function Checkout({ items, total, catering, userAddress, userPhone, userAddresses, activeAddress }) {
@@ -191,12 +191,7 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                         Keranjang Belanja
                     </span>
 
-                    <Link
-                        href={route('menu.show', { id: items[0]?.menu_id || 1 })}
-                        className="text-[#ff7622] text-[14px] underline cursor-pointer hover:opacity-80 transition shrink-0"
-                    >
-                        EDIT Items
-                    </Link>
+                    <div className="w-[45px]" />
                 </div>
 
                 {/* ===== CATERING HEADER ===== */}
