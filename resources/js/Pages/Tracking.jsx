@@ -2,37 +2,19 @@ import { Head, Link, router } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
-    const EXPANDED_VH = 65;
-    const MIN_COLLAPSED_VH = 22;
-
     const [pageLoading, setPageLoading] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(isAdvanced);
     const [isDragging, setIsDragging] = useState(false);
-    const [cardHeightPx, setCardHeightPx] = useState(MIN_COLLAPSED_VH);
+    const [cardHeightPx, setCardHeightPx] = useState(isAdvanced ? 85 : 22);
     const startY = useRef(0);
-    const currentHeight = useRef(MIN_COLLAPSED_VH);
-    const cardHeightRef = useRef(MIN_COLLAPSED_VH);
+    const currentHeight = useRef(isAdvanced ? 85 : 22);
+    const cardHeightRef = useRef(isAdvanced ? 85 : 22);
     const contentRef = useRef(null);
-    const contentInnerRef = useRef(null);
 
-    // Measure content height and set collapsed size
-    useEffect(() => {
-        if (contentInnerRef.current && !isDragging) {
-            const inner = contentInnerRef.current;
-            const padding = 40;
-            requestAnimationFrame(() => {
-                const contentH = inner.scrollHeight + padding;
-                const vh = (contentH / window.innerHeight) * 100;
-                const collapsed = Math.max(MIN_COLLAPSED_VH, Math.min(vh, EXPANDED_VH));
-                cardHeightRef.current = collapsed;
-                currentHeight.current = collapsed;
-                setCardHeightPx(collapsed);
-            });
-        }
-    }, [order.status, isDragging]);
+    const COLLAPSED_VH = 22;
+    const EXPANDED_VH = 65;
 
     // Drag handlers (based on vh units for card height)
-    const COLLAPSED_VH = cardHeightPx !== null ? Math.min(cardHeightPx, EXPANDED_VH) : MIN_COLLAPSED_VH;
 
     const handleDragStart = (clientY) => {
         setIsDragging(true);
@@ -347,8 +329,8 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                         className="bg-white rounded-t-[24px] shadow-lg relative overflow-hidden"
                         style={{
                             boxShadow: '0 -2px 40px rgba(58, 119, 153, 0.15)',
-                            height: cardHeightPx !== null ? `${cardHeightPx}vh` : 'auto',
-                            maxHeight: cardHeightPx !== null ? `${cardHeightPx}vh` : 'auto',
+                            height: `${cardHeightPx}vh`,
+                            maxHeight: `${cardHeightPx}vh`,
                             transition: isDragging ? 'none' : 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             overflow: 'hidden',
                         }}
@@ -367,9 +349,9 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                             />
                         </div>
 
-                        <div ref={contentInnerRef} className="px-[24px] pb-[20px] overflow-y-auto styled-scrollbar"
+                        <div className="px-[24px] pb-[20px] overflow-y-auto styled-scrollbar"
                             style={{
-                                height: cardHeightPx !== null ? `calc(${cardHeightPx}vh - 30px)` : 'auto',
+                                height: `calc(${cardHeightPx}vh - 30px)`,
                                 WebkitOverflowScrolling: 'touch',
                             }}
                         >
