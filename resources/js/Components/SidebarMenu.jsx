@@ -57,9 +57,9 @@ export default function SidebarMenu({ user, show, onClose }) {
         </svg>
     );
 
-    const BellIcon = () => (
-        <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
-            <path d="M12 10.5C12.8284 10.5 13.5 11.1716 13.5 12C13.5 12.8284 12.8284 13.5 12 13.5H1.5C0.671573 13.5 0 12.8284 0 12C0 11.1716 0.671573 10.5 1.5 10.5V6C1.5 3.51472 3.51472 1.5 6 1.5C8.48528 1.5 10.5 3.51472 10.5 6V10.5H12Z" stroke="#ffaa2a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    const ChatIcon = () => (
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 7C13 10.3137 10.3137 13 7 13C5.90729 13 4.87143 12.7446 3.9464 12.29C3.63665 12.135 3.44468 12.0575 3.30363 12.0159C3.16769 11.9757 3.10498 11.9648 2.98162 11.9551C2.85256 11.945 2.67745 11.9563 2.4685 11.9758L1.3459 12.0779C1.05517 12.1047 0.909806 12.118 0.809291 12.0479C0.720308 11.9865 0.665178 11.8889 0.659801 11.7832C0.653656 11.6617 0.722914 11.4866 0.861429 11.1364L1.35957 9.88513C1.44553 9.67895 1.48851 9.57586 1.49529 9.46319C1.50119 9.36472 1.48778 9.26903 1.45232 9.17753C1.40694 9.06095 1.32075 8.92701 1.14839 8.65914C0.76525 8.06271 0.55 7.35759 0.55 6.6C0.55 3.38614 3.2697 0.599998 7 0.599998C10.7303 0.599998 13 3.38614 13 6.6V7Z" stroke="#ffaa2a" strokeWidth="1.1"/>
         </svg>
     );
 
@@ -218,14 +218,19 @@ export default function SidebarMenu({ user, show, onClose }) {
                             href={route('home')}
                         />
                         <MenuItem
-                            icon={<BellIcon />}
-                            label="Notifikasi"
-                            href={route('pesanan')}
+                            icon={<ChatIcon />}
+                            label="Messages"
+                            href={route('messages.index')}
                         />
                         <MenuItem
                             icon={<CardIcon />}
                             label="Metode Pembayaran"
                             href={route('home')}
+                        />
+                        <MenuItem
+                            icon={<BellIcon />}
+                            label="Messages"
+                            href={route('messages.index')}
                         />
                     </div>
 
@@ -239,7 +244,7 @@ export default function SidebarMenu({ user, show, onClose }) {
                         <MenuItem
                             icon={<ChefIcon />}
                             label="Buka Catering"
-                            href={route('register')}
+                            href={route('register.catering')}
                         />
                         <MenuItem
                             icon={<GearIcon />}

@@ -6,7 +6,7 @@
 >   - `610:3263` — Massages (375×812px) — Variant layout
 > **Background**: `#ffffff`
 > **Updated**: 2026-07-14
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Selesai — Messages.jsx, MessageController, route `/messages`
 
 ---
 

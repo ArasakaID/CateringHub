@@ -8,7 +8,7 @@
 > **Background**: `#ffffff`
 > **Multi-step**: Ya — 3 step dengan step indicator (1 ●─●─● 3)
 > **Updated**: 2026-07-14
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Selesai — RegisterCatering.jsx (3-step), CateringRegistrationController, migration, routes
 
 ---
 

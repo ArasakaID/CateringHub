@@ -1,20 +1,25 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CateringRegistrationController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SplashController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [SplashController::class, 'index'])->name('splash');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/catering/{slug}', [HomeController::class, 'showCatering'])->name('catering.show');
 Route::get('/api/caterings/filter', [HomeController::class, 'filter'])->name('caterings.filter');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
@@ -35,6 +40,22 @@ Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])-
 Route::get('/checkout/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran');
 Route::post('/checkout/pembayaran/proses', [PembayaranController::class, 'proses'])->name('pembayaran.proses');
 Route::get('/checkout/berhasil/{order}', [PembayaranController::class, 'sukses'])->name('pembayaran.sukses');
+
+// Messages
+Route::middleware('auth')->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+});
+
+// Reviews
+Route::get('/catering/{catering}/reviews', [ReviewController::class, 'index'])->name('catering.reviews');
+
+// Catering Registration
+Route::middleware('auth')->group(function () {
+    Route::get('/register/catering', [CateringRegistrationController::class, 'create'])->name('register.catering');
+    Route::post('/register/catering/step1', [CateringRegistrationController::class, 'store'])->name('register.catering.step1');
+    Route::post('/register/catering/step2', [CateringRegistrationController::class, 'storeStep2'])->name('register.catering.step2');
+    Route::post('/register/catering/submit', [CateringRegistrationController::class, 'submit'])->name('register.catering.submit');
+});
 
 // Pesanan
 Route::middleware('auth')->group(function () {

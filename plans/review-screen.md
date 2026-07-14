@@ -6,7 +6,7 @@
 >   - `610:3118` — Review Screen (375×812px) — Variant (layout alternatif)
 > **Background**: `#ffffff`
 > **Updated**: 2026-07-14
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Selesai — ReviewScreen.jsx, ReviewController, route `/catering/{catering}/reviews`
 
 ---
 

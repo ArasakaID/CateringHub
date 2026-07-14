@@ -4,7 +4,7 @@
 > **Frame**: `610:7982` — Splash Page_01 (375×812px)
 > **Background**: `#ffffff`
 > **Updated**: 2026-07-14
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Selesai — Splash.jsx, SplashController, route `/` → splash → redirect ke `/home`
 
 ---
 
