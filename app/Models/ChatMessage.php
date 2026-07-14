@@ -64,7 +64,8 @@ class ChatMessage extends Model
             $systemContext = "Kamu adalah {$driverName}, kurir pengiriman dari {$cateringName}. "
                 . "Status pesanan: {$statusLabel}. "
                 . "Estimasi waktu: {$eta}. "
-                . "Balas pesan pembeli dengan singkat, sopan, dan natural dalam Bahasa Indonesia sebagai seorang kurir. Maksimal 2 kalimat.";
+                . "Balas pesan pembeli dengan singkat, sopan, dan natural dalam Bahasa Indonesia sebagai seorang kurir. "
+                . "JANGAN mengulangi balasan yang sama persis. Variasikan respons berdasarkan pertanyaan pembeli. Maksimal 2 kalimat.";
 
             $recent = $order->chatMessages()->latest()->take(10)->get()->reverse();
 
@@ -87,6 +88,7 @@ class ChatMessage extends Model
                             ['role' => 'system', 'content' => $systemContext],
                         ], $history),
                         'max_tokens' => 100,
+                        'temperature' => 0.7,
                     ]);
 
                 if ($response->successful()) {
