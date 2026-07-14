@@ -139,8 +139,10 @@ export default function MessageScreen({ order, courier, messages }) {
             <Head title="Chat - CateringHub" />
 
             <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Sen, sans-serif' }}>
-                {/* ===== TOP BAR (sticky) ===== */}
-                <div className="sticky top-0 z-10 bg-white px-6 pt-[50px] pb-[16px] flex items-center justify-between">
+                {/* ===== TOP BAR (fixed at top of screen) ===== */}
+                <div className="fixed top-0 left-1/2 z-10 bg-white w-full max-w-md px-6 pt-[50px] pb-[16px] flex items-center justify-between"
+                    style={{ transform: 'translateX(-50%)' }}
+                >
                     {/* Close button */}
                     <Link
                         href={route('tracking.show', order.id)}
@@ -160,7 +162,7 @@ export default function MessageScreen({ order, courier, messages }) {
                 </div>
 
                 {/* ===== CHAT MESSAGES ===== */}
-                <div ref={messagesRef} className="flex-1 px-6 overflow-y-auto pb-[20px] flex flex-col">
+                <div ref={messagesRef} className="flex-1 px-6 overflow-y-auto flex flex-col" style={{ paddingTop: '90px', paddingBottom: '20px' }}>
                     {localMessages.length === 0 && !polling ? (
                         /* Empty state */
                         <div className="flex flex-col items-center justify-center flex-1 text-center">
