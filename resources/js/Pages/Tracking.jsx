@@ -64,21 +64,30 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
         };
     }, [isDragging]);
 
-    // Auto-advance order status every 60 seconds
+    // Auto-advance order status with per-step timing
     useEffect(() => {
         if (order.status === 'delivered' || order.status === 'completed' || order.status === 'cancelled') {
             return;
         }
-        const interval = setInterval(() => {
+
+        const delay = ({
+            'pending': 3000,
+            'confirmed': 3000,
+            'preparing': 3000,
+            'picked_up': 60000,
+            'arriving_soon': 120000,
+        })[order.status] || 60000;
+
+        const timer = setTimeout(() => {
             router.post(route('tracking.advance', order.id), {}, {
                 preserveScroll: true,
                 onSuccess: () => {
                     router.reload({ preserveScroll: true, only: ['order', 'trackingLogs', 'isAdvanced'] });
                 },
             });
-        }, 60000);
-        return () => clearInterval(interval);
-    }, [order.id]);
+        }, delay);
+        return () => clearTimeout(timer);
+    }, [order.id, order.status]);
 
     // ===== LOADING SKELETON =====
     if (pageLoading) {

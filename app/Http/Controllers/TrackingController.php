@@ -196,6 +196,17 @@ class TrackingController extends Controller
         $nextStatus = $flow[$currentIdx + 1];
         $order->update(['status' => $nextStatus]);
 
+        // Auto-assign a courier when status reaches 'confirmed'
+        if ($nextStatus === 'confirmed' && $order->couriers()->count() === 0) {
+            $courier = Courier::inRandomOrder()->first();
+            if ($courier) {
+                $order->couriers()->attach($courier->id, [
+                    'assigned_at' => now(),
+                    'status' => 'assigned',
+                ]);
+            }
+        }
+
         // Update/create tracking log for each completed step
         for ($i = 1; $i <= $currentIdx + 1; $i++) {
             \App\Models\OrderTrackingLog::updateOrCreate(
