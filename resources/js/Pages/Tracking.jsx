@@ -225,10 +225,13 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
         (trackingLogs || []).filter(l => l.is_completed).map(l => l.status)
     );
 
-    const steps = FLOW.map(s => ({
+    const steps = FLOW.map((s, i) => ({
         label: s.label,
         status: s.status,
         isCompleted: completedStatuses.has(s.status),
+        isActive: !completedStatuses.has(s.status) && (
+            i === 0 || completedStatuses.has(FLOW[i - 1].status)
+        ),
     }));
 
     return (
@@ -415,14 +418,12 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                                             <div
                                                 className="w-[17px] h-[17px] rounded-full flex items-center justify-center shrink-0"
                                                 style={{
-                                                    backgroundColor: step.isCompleted ? '#ff7622' : (index === 1 ? '#ff7622' : '#bfbcba'),
-                                                    width: index === 0 ? '17px' : '16px',
-                                                    height: index === 0 ? '17px' : '16px',
+                                                    backgroundColor: step.isCompleted || step.isActive ? '#ff7622' : '#bfbcba',
                                                 }}
                                             >
                                                 {step.isCompleted ? (
                                                     <CheckIcon color="white" />
-                                                ) : index === 1 ? (
+                                                ) : step.isActive ? (
                                                     <LoaderIcon />
                                                 ) : (
                                                     <CheckIcon color="white" />
@@ -442,8 +443,8 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                                         {/* Step label */}
                                         <div className="flex-1 pb-[8px]">
                                             <p className="text-[13px]" style={{
-                                                color: index === 0 ? '#ff7622' : '#a0a5ba',
-                                                fontWeight: index === 0 ? 600 : 400,
+                                                color: step.isActive ? '#ff7622' : '#a0a5ba',
+                                                fontWeight: step.isActive ? 700 : 400,
                                             }}>
                                                 {step.label}
                                             </p>
