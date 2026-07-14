@@ -180,8 +180,8 @@ export default function MessageScreen({ order, courier, messages }) {
                 </div>
 
                 {/* ===== INPUT BAR ===== */}
-                <div className="px-6 pb-[32px] pt-[12px] flex items-center gap-2">
-                    <form onSubmit={handleSend} className="flex items-center flex-1"
+                <div className="px-6 pb-[32px] pt-[12px]">
+                    <form onSubmit={handleSend} className="flex items-center"
                         style={{
                             backgroundColor: '#f0f5fa',
                             borderRadius: '12px',
@@ -221,19 +221,6 @@ export default function MessageScreen({ order, courier, messages }) {
                             <SendIcon />
                         </button>
                     </form>
-
-                    {/* Auto Reply button */}
-                    <button
-                        onClick={() => router.post(route('tracking.chat.auto-reply', order.id))}
-                        className="shrink-0 cursor-pointer hover:opacity-80 transition"
-                        style={{ width: 45, height: 45, borderRadius: '50%', backgroundColor: '#ff7622', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        title="Auto Reply"
-                    >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="white" strokeWidth="2"/>
-                            <path d="M8 12L11 15L16 9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </button>
                 </div>
             </div>
         </>

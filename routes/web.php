@@ -63,7 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/pesanan/{order}/call', [TrackingController::class, 'initiateCall'])->name('tracking.call');
     Route::get('/pesanan/{order}/chat', [TrackingController::class, 'chat'])->name('tracking.chat');
     Route::post('/pesanan/{order}/chat/send', [TrackingController::class, 'sendMessage'])->name('tracking.chat.send');
-    Route::post('/pesanan/{order}/chat/auto-reply', [TrackingController::class, 'autoReply'])->name('tracking.chat.auto-reply');
 });
 
 // Location routes (all require auth)
