@@ -212,19 +212,24 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     // Restaurant image fallback
     const restaurantImage = order.catering?.image || null;
 
-    // Steps configuration
-    const steps = trackingLogs && trackingLogs.length > 0
-        ? trackingLogs.map(log => ({
-            label: log.label,
-            status: log.status,
-            isCompleted: log.is_completed,
-        }))
-        : [
-            { label: 'Your order has been received', isCompleted: true },
-            { label: 'The restaurant is preparing your food', isCompleted: false },
-            { label: 'Your order has been picked up for delivery', isCompleted: false },
-            { label: 'Order arriving soon!', isCompleted: false },
-        ];
+    // Steps configuration — always show in fixed order, mark completed via logs
+    const FLOW = [
+        { status: 'confirmed', label: 'Your order has been received' },
+        { status: 'preparing', label: 'The restaurant is preparing your food' },
+        { status: 'picked_up', label: 'Your order has been picked up for delivery' },
+        { status: 'arriving_soon', label: 'Order arriving soon!' },
+        { status: 'delivered', label: 'Order delivered' },
+    ];
+
+    const completedStatuses = new Set(
+        (trackingLogs || []).filter(l => l.is_completed).map(l => l.status)
+    );
+
+    const steps = FLOW.map(s => ({
+        label: s.label,
+        status: s.status,
+        isCompleted: completedStatuses.has(s.status),
+    }));
 
     return (
         <>

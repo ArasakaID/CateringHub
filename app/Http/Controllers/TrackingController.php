@@ -207,20 +207,21 @@ class TrackingController extends Controller
             }
         }
 
-        // Update/create tracking log for each completed step
-        for ($i = 1; $i <= $currentIdx + 1; $i++) {
-            \App\Models\OrderTrackingLog::updateOrCreate(
-                ['order_id' => $order->id, 'status' => $flow[$i]],
-                ['label' => match($flow[$i]) {
-                    'confirmed' => 'Your order has been received',
-                    'preparing' => 'The restaurant is preparing your food',
-                    'picked_up' => 'Your order has been picked up for delivery',
-                    'arriving_soon' => 'Order arriving soon!',
-                    'delivered' => 'Order delivered',
-                    default => $flow[$i],
-                }, 'is_completed' => true, 'completed_at' => now()]
-            );
-        }
+        // Create a single tracking log for the newly completed step
+        $logLabels = [
+            'confirmed' => 'Your order has been received',
+            'preparing' => 'The restaurant is preparing your food',
+            'picked_up' => 'Your order has been picked up for delivery',
+            'arriving_soon' => 'Order arriving soon!',
+            'delivered' => 'Order delivered',
+        ];
+        \App\Models\OrderTrackingLog::create([
+            'order_id' => $order->id,
+            'status' => $nextStatus,
+            'label' => $logLabels[$nextStatus] ?? $nextStatus,
+            'is_completed' => true,
+            'completed_at' => now(),
+        ]);
 
         return response()->json(['status' => $nextStatus]);
     }
