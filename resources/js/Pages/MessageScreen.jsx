@@ -154,10 +154,10 @@ export default function MessageScreen({ order, courier, messages }) {
                 </div>
 
                 {/* ===== CHAT MESSAGES ===== */}
-                <div className="flex-1 px-6 overflow-y-auto pb-[20px]">
-                    {localMessages.length === 0 ? (
+                <div className="flex-1 px-6 overflow-y-auto pb-[20px] flex flex-col">
+                    {localMessages.length === 0 && !polling ? (
                         /* Empty state */
-                        <div className="flex flex-col items-center justify-center mt-[80px] text-center">
+                        <div className="flex flex-col items-center justify-center flex-1 text-center">
                             <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
                                 <path d="M21 11.5C21 16 17 19 12 19C10.5 19 9.1 18.7 7.8 18.2L3 20L4.8 15.3C4.8 15.3 3 13.5 3 11.5C3 7 7 4 12 4C17 4 21 7 21 11.5Z" stroke="#a0a5ba" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -167,6 +167,27 @@ export default function MessageScreen({ order, courier, messages }) {
                             <p className="text-[#a0a5ba] text-[13px] mt-[4px]">
                                 Mulai percakapan dengan kurir
                             </p>
+                        </div>
+                    ) : localMessages.length === 0 && polling ? (
+                        /* Typing indicator centered when no messages yet */
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="flex items-center gap-[12px]">
+                                <div className="w-[40px] h-[40px] rounded-full overflow-hidden shrink-0" style={{ backgroundColor: '#c4c4c4' }}>
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="8" r="4" stroke="white" strokeWidth="2"/>
+                                            <path d="M4 20C4 17 8 15 12 15C16 15 20 17 20 20" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div className="px-[14px] py-[10px]" style={{ backgroundColor: '#f0f5fa', borderRadius: '16px 16px 16px 4px' }}>
+                                    <div className="flex gap-[4px]">
+                                        <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0s' }} />
+                                        <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.2s' }} />
+                                        <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.4s' }} />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     ) : (
                         <div className="flex flex-col mt-[8px]">
