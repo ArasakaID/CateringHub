@@ -14,7 +14,7 @@ export default function CallScreen({ order, courier }) {
 
     // Audio playback — play at status transitions
     useEffect(() => {
-        if (callStatus === 'connected') {
+        if (callStatus === 'connected' || callStatus === 'ended') {
             const audio = new Audio('/calls/grup apa ini.mp3');
             audio.volume = 0.7;
             audio.play().catch(() => {});
