@@ -146,6 +146,17 @@ export default function CateringAcara({ catering, keywords }) {
                             <span className="text-[#181c2e] text-[14px]">{catering.delivery_time}</span>
                         </div>
                     </div>
+
+                    {/* Review link */}
+                    <button
+                        onClick={() => router.visit(route('catering.reviews', catering.slug))}
+                        className="mt-[14px] text-[#ff7622] text-[14px] font-bold flex items-center gap-1.5"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 1L12.47 6.98L19 7.57L14 12.18L15.53 19L10 15.48L4.47 19L6 12.18L1 7.57L7.53 6.98L10 1Z" fill="#ff7622"/>
+                        </svg>
+                        Lihat Review ({catering.review_count})
+                    </button>
                 </div>
 
                 {/* ===== KEYWORDS ===== */}

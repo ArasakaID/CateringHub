@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Reviews
-Route::get('/catering/{catering}/reviews', [ReviewController::class, 'index'])->name('catering.reviews');
+Route::get('/catering/{slug}/reviews', [ReviewController::class, 'index'])->name('catering.reviews');
 
 // Catering Registration
 Route::middleware('auth')->group(function () {

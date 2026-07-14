@@ -7,10 +7,12 @@ use Inertia\Inertia;
 
 class ReviewController extends Controller
 {
-    public function index(Catering $catering)
+    public function index($slug)
     {
+        $catering = Catering::where('slug', $slug)->active()->firstOrFail();
+
         $reviews = $catering->reviews()
-            ->with('user')
+            ->with('user:id,name,avatar')
             ->latest()
             ->paginate(10);
 
