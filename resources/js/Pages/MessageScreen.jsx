@@ -187,6 +187,7 @@ export default function MessageScreen({ order, courier, messages }) {
                             borderRadius: '12px',
                             padding: '0 16px',
                             height: '55px',
+                            border: 'none',
                         }}
                     >
                         {/* Smile icon */}
@@ -200,10 +201,13 @@ export default function MessageScreen({ order, courier, messages }) {
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Ketikan pesan"
-                            className="flex-1 bg-transparent outline-none text-[16px] px-[12px]"
+                            className="flex-1 bg-transparent text-[16px] px-[12px]"
                             style={{
                                 color: '#181c2e',
                                 fontFamily: 'Sen, sans-serif',
+                                outline: 'none',
+                                border: 'none',
+                                boxShadow: 'none',
                             }}
                         />
 
