@@ -76,8 +76,10 @@ export default function MessageScreen({ order, courier, messages }) {
             // Replace temp message with real one
             setLocalMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
             latestIdRef.current = data.message.id;
-            // Start polling for auto-reply
-            setPolling(true);
+            // Add AI reply instantly if returned
+            if (data.ai_reply) {
+                setLocalMessages(prev => [...prev, data.ai_reply]);
+            }
         } catch (err) {
             // Remove optimistically added message on error
             setLocalMessages(prev => prev.filter(m => m.id !== tempId));

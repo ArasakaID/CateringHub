@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Courier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Http;
 
 class TrackingController extends Controller
 {
@@ -89,13 +90,81 @@ class TrackingController extends Controller
             'message' => 'required|string|max:1000',
         ]);
 
+        // Save user message
         $message = $order->chatMessages()->create([
             'sender_type' => 'user',
             'message' => $validated['message'],
             'is_read' => false,
         ]);
 
-        return response()->json(['message' => $message->load('order')]);
+        // Generate AI reply synchronously
+        $groqKey = config('services.groq.api_key');
+        $aiReply = null;
+
+        if ($groqKey) {
+            $order->loadMissing(['catering', 'couriers']);
+            $courier = $order->courier();
+            $cateringName = $order->catering?->name ?? 'Catering';
+            $driverName = $courier?->name ?? 'Kurir';
+            $statusLabel = match ($order->status) {
+                'confirmed' => 'pesanan dikonfirmasi, sedang dipersiapkan',
+                'preparing' => 'sedang dimasak',
+                'picked_up' => 'sedang dalam perjalanan',
+                'arriving_soon' => 'akan segera tiba',
+                'delivered', 'completed' => 'sudah diantar',
+                default => 'dalam proses',
+            };
+            $eta = in_array($order->status, ['picked_up', 'arriving_soon']) ? '20 menit' : 'sedang diproses';
+
+            $systemContext = "Kamu adalah {$driverName}, kurir pengiriman dari {$cateringName}. "
+                . "Status pesanan: {$statusLabel}. "
+                . "Estimasi waktu: {$eta}. "
+                . "Balas pesan pembeli dengan singkat, sopan, dan natural dalam Bahasa Indonesia sebagai seorang kurir. "
+                . "Variasikan respons berdasarkan pertanyaan pembeli. Maksimal 2 kalimat.";
+
+            $recent = $order->chatMessages()->latest()->take(10)->get()->reverse();
+
+            $history = [];
+            foreach ($recent as $m) {
+                $history[] = [
+                    'role' => $m->sender_type === 'courier' ? 'assistant' : 'user',
+                    'content' => $m->message,
+                ];
+            }
+
+            try {
+                $response = Http::withOptions(['verify' => false])
+                    ->withHeaders([
+                        'Authorization' => 'Bearer ' . $groqKey,
+                        'Content-Type' => 'application/json',
+                    ])->timeout(15)->post('https://api.groq.com/openai/v1/chat/completions', [
+                        'model' => 'llama-3.3-70b-versatile',
+                        'messages' => array_merge([
+                            ['role' => 'system', 'content' => $systemContext],
+                        ], $history),
+                        'max_tokens' => 100,
+                        'temperature' => 0.8,
+                    ]);
+
+                if ($response->successful()) {
+                    $reply = $response->json('choices.0.message.content');
+                    if ($reply) {
+                        $aiReply = $order->chatMessages()->create([
+                            'sender_type' => 'courier',
+                            'message' => trim($reply),
+                            'is_read' => true,
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                // Silently fail — user message was still sent
+            }
+        }
+
+        return response()->json([
+            'message' => $message,
+            'ai_reply' => $aiReply,
+        ]);
     }
 
     /**
