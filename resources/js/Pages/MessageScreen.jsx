@@ -252,32 +252,24 @@ export default function MessageScreen({ order, courier, messages }) {
                                     </div>
                                 );
                             })}
-                            {/* Typing indicator */}
-                            {polling && (
-                                <div className="flex justify-start mb-[16px]">
-                                    <div className="flex items-end" style={{ gap: '8px', maxWidth: '75%' }}>
-                                        <div className="w-[40px] h-[40px] rounded-full shrink-0 overflow-hidden mb-[4px]" style={{ backgroundColor: '#c4c4c4' }}>
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                                    <circle cx="12" cy="8" r="4" stroke="white" strokeWidth="2"/>
-                                                    <path d="M4 20C4 17 8 15 12 15C16 15 20 17 20 20" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div className="px-[14px] py-[10px]" style={{ backgroundColor: '#f0f5fa', borderRadius: '16px 16px 16px 4px' }}>
-                                            <div className="flex gap-[4px]">
-                                                <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0s' }} />
-                                                <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.2s' }} />
-                                                <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.4s' }} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
                             <div ref={messagesEndRef} />
                         </div>
                     )}
                 </div>
+
+                {/* ===== TYPING INDICATOR (floating above input) ===== */}
+                {polling && localMessages.length > 0 && (
+                    <div className="px-6 pb-[4px]">
+                        <div className="flex items-center gap-[8px]">
+                            <span className="text-[11px]" style={{ color: '#a0a5ba' }}>Kurir sedang mengetik</span>
+                            <div className="flex gap-[3px]">
+                                <span className="w-[4px] h-[4px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0s' }} />
+                                <span className="w-[4px] h-[4px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.2s' }} />
+                                <span className="w-[4px] h-[4px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.4s' }} />
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* ===== INPUT BAR ===== */}
                 <div className="px-6 pb-[32px] pt-[12px]">
