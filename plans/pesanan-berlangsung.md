@@ -3,7 +3,7 @@
 > **File Figma**: `unsaved-mqs49lag-zcqi8mlr`
 > **Frame**: `610:4056` — Pesanan - Berlangsung (375×844px)
 > **Background**: `#ffffff` (white), cornerRadius 20
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Sudah diimplementasi — `Pesanan.jsx` (302 lines, 2 tabs)
 
 ---
 

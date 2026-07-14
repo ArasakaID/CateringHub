@@ -4,7 +4,7 @@
 > **Frame**: `610:3790` — Detail Produk (375×844px)
 > **Background**: `#ffffff`
 > **Updated**: 2026-06-24
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Sudah diimplementasi — `DetailProduk.jsx` (338 lines)
 
 ---
 

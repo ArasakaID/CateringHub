@@ -9,7 +9,7 @@
 >   - `610:4753` — Daftar Lokasi (375×812px)
 > **Background**: `#ffffff`
 > **Updated**: 2026-06-26
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Sudah diimplementasi — `Lokasi/` (5 pages)
 
 ---
 

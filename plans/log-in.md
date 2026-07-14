@@ -4,6 +4,7 @@
 > **Frame**: `610:3874` — Log In (375×812px)
 > **Background**: `#131927` (dark), cornerRadius 24
 > **Updated**: 2026-06-24
+> **Status**: ✅ Sudah diimplementasi — `Auth/Login.jsx`
 
 ---
 

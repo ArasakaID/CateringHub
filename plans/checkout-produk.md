@@ -5,7 +5,7 @@
 > **Variants**: Checkout Produk (base) + Checkout Produk + Jadwal Button
 > **Background**: `#131927` (dark)
 > **Updated**: 2026-06-24
-> **Status**: 🔜 Belum diimplementasi
+> **Status**: ✅ Sudah diimplementasi — `Checkout.jsx` (446 lines), `CheckoutController`
 
 ---
 

@@ -4,6 +4,7 @@
 > **Frame**: `610:3951` — Reset Password (375×812px)
 > **Background**: `#131927` (dark), cornerRadius 20
 > **Updated**: 2026-06-24
+> **Status**: ✅ Sudah diimplementasi — `Auth/ResetPassword.jsx`
 
 ---
 
