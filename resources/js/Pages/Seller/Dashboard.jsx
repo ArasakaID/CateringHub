@@ -306,11 +306,12 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
 
                 {/* Sidebar overlay */}
                 {sidebarOpen && (
+                    <>
                     <div style={{
                         position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 60,
-                    }} onClick={() => setSidebarOpen(false)}>
+                    }} onClick={() => setSidebarOpen(false)} />
                         <div style={{
-                            position: 'fixed', left: 'max(0px, calc((100vw - 448px) / 2))', top: 0, bottom: 0, width: 280,
+                            position: 'fixed', left: 'max(0px, calc((100vw - 448px) / 2))', top: 0, bottom: 0, width: 280, zIndex: 61,
                             background: '#ffffff', padding: 24,
                         }} onClick={e => e.stopPropagation()}>
                             <div style={{ fontSize: 18, fontWeight: 700, color: '#181c2e', fontFamily: 'Sen, sans-serif', marginBottom: 24 }}>
@@ -348,7 +349,7 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </>
                 )}
 
                 <SellerTabBar currentPath="/seller/dashboard" />

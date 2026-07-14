@@ -177,13 +177,14 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
 
                 {/* Sidebar Overlay */}
                 {sidebarOpen && (
+                    <>
                     <div
                         onClick={() => setSidebarOpen(false)}
                         style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 100 }}
-                    >
+                    />
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        style={{ position: 'fixed', top: 0, height: '100%', width: 280, background: '#fff', padding: 40, display: 'flex', flexDirection: 'column', gap: 24, left: 'max(0px, calc((100vw - 448px) / 2))' }}
+                        style={{ position: 'fixed', left: 'max(0px, calc((100vw - 448px) / 2))', top: 0, height: '100%', width: 280, zIndex: 101, background: '#fff', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}
                     >
                         <div style={{ fontSize: 18, fontWeight: 700, color: '#181c2e', fontFamily: 'Sen, sans-serif', marginBottom: 8 }}>
                             Menu
@@ -210,7 +211,7 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
                             Keluar
                         </button>
                     </div>
-                    </div>
+                    </>
                 )}
 
                 {/* Bottom Tab Bar */}
