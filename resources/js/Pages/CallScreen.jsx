@@ -7,16 +7,25 @@ export default function CallScreen({ order, courier }) {
     const [callStatus, setCallStatus] = useState('ringing');
     const [callDuration, setCallDuration] = useState(0);
     const timerRef = useRef(null);
-    const audioRef = useRef(null);
+    const connectedAudioRef = useRef(null);
 
     const courierPhoto = courier?.photo || null;
     const courierName = courier?.name || 'Courier';
 
     // Audio playback — play at status transitions
+
     useEffect(() => {
-        if (callStatus === 'connected' || callStatus === 'ended') {
+        // Stop connected audio if still playing
+        if (connectedAudioRef.current) {
+            connectedAudioRef.current.pause();
+            connectedAudioRef.current.currentTime = 0;
+            connectedAudioRef.current = null;
+        }
+
+        if (callStatus === 'connected') {
             const audio = new Audio('/calls/grup apa ini.mp3');
             audio.volume = 0.7;
+            connectedAudioRef.current = audio;
             audio.play().catch(() => {});
         }
     }, [callStatus]);
