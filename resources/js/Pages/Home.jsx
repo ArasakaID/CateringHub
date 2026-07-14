@@ -281,7 +281,7 @@ export default function Home({ auth, categories, caterings, cartCount, userAddre
                                     <div
                                         key={catering.id}
                                         onClick={() => router.visit(route('catering.show', { slug: catering.slug }))}
-                                        className="bg-white border border-gray-100/80 shadow-[0_12px_30px_rgba(150,150,154,0.15)] hover:shadow-[0_12px_30px_rgba(150,150,154,0.25)] transition-all duration-200 cursor-pointer hover:-translate-y-0.5"
+                                        className="bg-white border border-gray-100/80 shadow-[0_12px_30px_rgba(150,150,154,0.15)] hover:shadow-[0_12px_30px_rgba(150,150,154,0.25)] transition-all duration-200 cursor-pointer hover:-translate-y-0.5 rounded-[10px]"
                                     >
                                         {/* Image */}
                                         <div className="h-[137px] relative rounded-[10px] overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 mx-[1px] mt-[1px]">
