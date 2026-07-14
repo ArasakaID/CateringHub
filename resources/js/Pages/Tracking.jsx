@@ -289,12 +289,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                     className="fixed bottom-0 left-1/2 z-20 w-full max-w-md"
                     style={{
                         transform: 'translateX(-50%)',
-                        touchAction: 'none',
                     }}
-                    onTouchStart={onTouchStart}
-                    onTouchMove={onTouchMove}
-                    onTouchEnd={onTouchEnd}
-                    onMouseDown={onMouseDown}
                 >
                     <div
                         ref={contentRef}
@@ -304,19 +299,21 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                             height: `${cardHeightPx}vh`,
                             maxHeight: `${cardHeightPx}vh`,
                             transition: isDragging ? 'none' : 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            overflow: isExpanded ? 'hidden' : 'hidden',
+                            overflow: 'hidden',
                         }}
                     >
-                        {/* Drag Handle — only starts the drag, events bubble up */}
-                        <div className="flex justify-center pt-[8px] pb-[2px] cursor-grab active:cursor-grabbing">
+                        {/* Drag Handle — only this area triggers drag */}
+                        <div
+                            className="flex justify-center pt-[8px] pb-[2px] cursor-grab active:cursor-grabbing"
+                            style={{ touchAction: 'none' }}
+                            onTouchStart={onTouchStart}
+                            onTouchMove={onTouchMove}
+                            onTouchEnd={onTouchEnd}
+                            onMouseDown={onMouseDown}
+                        >
                             <div className="w-[70px] h-[7px] rounded-[80px]"
                                 style={{ backgroundColor: '#d8e3ed' }}
                             />
-                            <span className="ml-2 text-[10px] text-[#a0a5ba] cursor-pointer select-none"
-                                onClick={() => alert(`cardHeightPx: ${Math.round(cardHeightPx)}vh\nisExpanded: ${isExpanded}\nisDragging: ${isDragging}\nEXPANDED_VH: ${EXPANDED_VH}\nCOLLAPSED_VH: ${COLLAPSED_VH}`)}
-                            >
-                                debug
-                            </span>
                         </div>
 
                         <div className="px-[24px] pb-[20px] overflow-y-auto styled-scrollbar"
