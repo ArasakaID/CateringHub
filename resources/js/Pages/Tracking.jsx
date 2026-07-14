@@ -425,9 +425,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                                                     <CheckIcon color="white" />
                                                 ) : step.isActive ? (
                                                     <LoaderIcon />
-                                                ) : (
-                                                    <CheckIcon color="white" />
-                                                )}
+                                                ) : null}
                                             </div>
 
                                             {/* Connecting line */}
