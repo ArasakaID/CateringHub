@@ -36,13 +36,17 @@ class ChatMessage extends Model
                 return;
             }
 
+            \Illuminate\Support\Facades\Log::info('Auto-reply triggered for message: ' . $msg->id);
+
             $groqKey = config('services.groq.api_key');
             if (!$groqKey) {
+                \Illuminate\Support\Facades\Log::warning('GROQ_API_KEY not set in config/services.php');
                 return;
             }
 
             $order = $msg->order;
             if (!$order) {
+                \Illuminate\Support\Facades\Log::warning('Order not found for message: ' . $msg->id);
                 return;
             }
 
@@ -72,15 +76,20 @@ class ChatMessage extends Model
                 if ($response->successful()) {
                     $reply = $response->json('choices.0.message.content');
                     if ($reply) {
-                        $order->chatMessages()->create([
+                        $saved = $order->chatMessages()->create([
                             'sender_type' => 'user',
                             'message' => trim($reply),
                             'is_read' => false,
                         ]);
+                        \Illuminate\Support\Facades\Log::info('Auto-reply saved: ' . $saved->id);
+                    } else {
+                        \Illuminate\Support\Facades\Log::warning('Groq returned empty reply');
                     }
+                } else {
+                    \Illuminate\Support\Facades\Log::error('Groq API failed: ' . $response->status() . ' - ' . $response->body());
                 }
             } catch (\Exception $e) {
-                // Silently fail — don't block message creation
+                \Illuminate\Support\Facades\Log::error('Auto-reply exception: ' . $e->getMessage());
             }
         });
     }
