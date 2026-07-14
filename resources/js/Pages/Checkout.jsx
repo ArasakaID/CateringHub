@@ -345,7 +345,7 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                         {/* Popup card — white, rounded-t-[24px], draggable */}
                         <div
                             ref={popupRef}
-                            className="relative bg-white w-full max-w-md rounded-t-[24px] overflow-y-auto"
+                            className="relative bg-white w-full max-w-md rounded-t-[24px] overflow-y-auto styled-scrollbar"
                             style={{
                                 maxHeight: '85vh',
                                 transform: `translateY(${Math.max(0, dragY)}px)`,
