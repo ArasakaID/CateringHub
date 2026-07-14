@@ -1,9 +1,79 @@
 import { Head, Link } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
-    const [cardExpanded, setCardExpanded] = useState(false);
     const [pageLoading, setPageLoading] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+    const [translateY, setTranslateY] = useState(0);
+    const startY = useRef(0);
+    const currentY = useRef(0);
+    const cardRef = useRef(null);
+
+    // Collapsed: card shows only restaurant info (translate ~55% of viewport)
+    // Expanded: card shows full content (translate ~2% of viewport)
+    const COLLAPSED_Y = 55;
+    const EXPANDED_Y = 2;
+    const cardHeight = useRef(COLLAPSED_Y);
+
+    // Snap to position
+    const snapTo = (expanded) => {
+        setIsExpanded(expanded);
+        setTranslateY(expanded ? EXPANDED_Y : COLLAPSED_Y);
+        cardHeight.current = expanded ? EXPANDED_Y : COLLAPSED_Y;
+    };
+
+    // Drag handlers
+    const handleDragStart = (clientY) => {
+        setIsDragging(true);
+        startY.current = clientY;
+        currentY.current = translateY;
+    };
+
+    const handleDragMove = (clientY) => {
+        if (!isDragging) return;
+        const delta = clientY - startY.current;
+        const vh = window.innerHeight;
+        const deltaPercent = (delta / vh) * 100;
+        const newY = Math.max(EXPANDED_Y, Math.min(COLLAPSED_Y, currentY.current + deltaPercent));
+        setTranslateY(newY);
+    };
+
+    const handleDragEnd = () => {
+        if (!isDragging) return;
+        setIsDragging(false);
+        // Snap to nearest position
+        const midPoint = (COLLAPSED_Y + EXPANDED_Y) / 2;
+        snapTo(translateY < midPoint);
+    };
+
+    // Touch events
+    const onTouchStart = (e) => handleDragStart(e.touches[0].clientY);
+    const onTouchMove = (e) => handleDragMove(e.touches[0].clientY);
+    const onTouchEnd = () => handleDragEnd();
+
+    // Mouse events
+    const onMouseDown = (e) => { e.preventDefault(); handleDragStart(e.clientY); };
+    const onMouseMove = (e) => { if (isDragging) handleDragMove(e.clientY); };
+    const onMouseUp = () => handleDragEnd();
+
+    // Global mouse listener for drag outside element
+    useEffect(() => {
+        if (!isDragging) return;
+        const handleGlobalMouseMove = (e) => handleDragMove(e.clientY);
+        const handleGlobalMouseUp = () => handleDragEnd();
+        window.addEventListener('mousemove', handleGlobalMouseMove);
+        window.addEventListener('mouseup', handleGlobalMouseUp);
+        return () => {
+            window.removeEventListener('mousemove', handleGlobalMouseMove);
+            window.removeEventListener('mouseup', handleGlobalMouseUp);
+        };
+    }, [isDragging]);
+
+    // Initial snap
+    useEffect(() => {
+        snapTo(isAdvanced);
+    }, []);
 
     // ===== LOADING SKELETON =====
     if (pageLoading) {
@@ -225,29 +295,41 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                     <div className="w-[56px]" />
                 </div>
 
-                {/* ===== BOTTOM CARD ===== */}
-                <div className="fixed bottom-0 left-1/2 z-20 w-full max-w-md"
+                {/* ===== BOTTOM CARD (Draggable) ===== */}
+                <div
+                    ref={cardRef}
+                    className="fixed bottom-0 left-1/2 z-20 w-full max-w-md"
                     style={{
-                        transform: 'translateX(-50%)',
+                        transform: `translateX(-50%) translateY(${translateY}vh)`,
+                        transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        touchAction: 'none',
                     }}
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                    onMouseDown={onMouseDown}
                 >
                     <div
-                        className="bg-white rounded-t-[24px] shadow-lg relative transition-all duration-300"
+                        className="bg-white rounded-t-[24px] shadow-lg relative"
                         style={{
                             boxShadow: '0 -2px 40px rgba(58, 119, 153, 0.15)',
-                            maxHeight: cardExpanded ? '85vh' : 'auto',
+                            maxHeight: isExpanded ? '98vh' : '50vh',
+                            overflow: 'hidden',
                         }}
                     >
                         {/* Drag Handle */}
-                        <div className="flex justify-center pt-[8px] pb-[2px]">
-                            <button
-                                onClick={() => setCardExpanded(!cardExpanded)}
-                                className="w-[70px] h-[7px] rounded-[80px] cursor-pointer"
+                        <div className="flex justify-center pt-[8px] pb-[2px] cursor-grab active:cursor-grabbing"
+                            onTouchStart={onTouchStart}
+                            onTouchMove={onTouchMove}
+                            onTouchEnd={onTouchEnd}
+                            onMouseDown={onMouseDown}
+                        >
+                            <div className="w-[70px] h-[7px] rounded-[80px]"
                                 style={{ backgroundColor: '#d8e3ed' }}
                             />
                         </div>
 
-                        <div className="px-[24px] pb-[20px] overflow-y-auto" style={{ maxHeight: cardExpanded ? 'calc(85vh - 20px)' : 'none' }}>
+                        <div className="px-[24px] pb-[20px] overflow-y-auto" style={{ maxHeight: isExpanded ? 'calc(98vh - 20px)' : 'calc(50vh - 20px)' }}>
                             {/* ===== RESTAURANT INFO ===== */}
                             <div className="flex items-start gap-[14px] mt-[4px]">
                                 {/* Restaurant image */}
