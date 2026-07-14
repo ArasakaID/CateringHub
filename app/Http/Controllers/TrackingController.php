@@ -20,7 +20,7 @@ class TrackingController extends Controller
             abort(403);
         }
 
-        $order->load(['catering', 'items', 'couriers', 'trackingLogs']);
+        $order->load(['catering', 'items', 'trackingLogs']);
 
         // Auto-assign a courier if order is past pending but has none
         if ($order->status !== 'pending' && $order->couriers()->count() === 0) {
@@ -33,6 +33,7 @@ class TrackingController extends Controller
             }
         }
 
+        $order->load(['couriers']);
         $courier = $order->courier();
         $trackingLogs = $order->trackingLogs;
 
