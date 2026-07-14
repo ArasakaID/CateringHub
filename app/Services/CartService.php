@@ -18,10 +18,19 @@ class CartService
 
     /**
      * Add an item to cart (or increase qty if same menu+options exist).
+     * If cart has items from a different catering, it will be cleared first.
      */
     public function addItem(int $menuId, string $menuName, string $menuImage, float $menuPrice, int $quantity, array $options = [], int $cateringId = null, string $cateringName = null): array
     {
         $items = $this->getItems();
+
+        // Check for catering mismatch — if cart has items from a different catering, clear it
+        if (!empty($items) && $cateringId !== null) {
+            $existingCateringId = $items[0]['catering_id'] ?? null;
+            if ($existingCateringId !== null && $existingCateringId !== $cateringId) {
+                $items = [];
+            }
+        }
 
         // Check if same menu+options already exists
         foreach ($items as &$item) {
@@ -51,6 +60,20 @@ class CartService
         session([self::SESSION_KEY => $items]);
 
         return $item;
+    }
+
+    /**
+     * Get the catering info from cart (returns first item's catering).
+     */
+    public function getCateringInfo(): ?array
+    {
+        $items = $this->getItems();
+        if (empty($items)) return null;
+
+        return [
+            'id' => $items[0]['catering_id'] ?? null,
+            'name' => $items[0]['catering_name'] ?? null,
+        ];
     }
 
     /**

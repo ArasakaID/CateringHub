@@ -58,6 +58,7 @@ class CheckoutController extends Controller
         return Inertia::render('Checkout', [
             'items' => $items,
             'total' => $total,
+            'catering' => $this->cart->getCateringInfo(),
             'userAddress' => $activeAddress
                 ? ($activeAddress['address'] . ($activeAddress['detail'] ? ', ' . $activeAddress['detail'] : ''))
                 : ($userAddress ?? ''),

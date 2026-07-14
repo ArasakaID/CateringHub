@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState, useMemo, useCallback, useRef } from 'react';
 
-export default function Checkout({ items, total, userAddress, userPhone, userAddresses, activeAddress }) {
+export default function Checkout({ items, total, catering, userAddress, userPhone, userAddresses, activeAddress }) {
     const [cartItems, setCartItems] = useState(items);
     const [showJadwal, setShowJadwal] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
@@ -199,6 +199,20 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                         EDIT Items
                     </Link>
                 </div>
+
+                {/* ===== CATERING HEADER ===== */}
+                {catering?.name && (
+                    <div className="px-6 mt-[24px]">
+                        <div className="flex items-center gap-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 3H21V21H3V3Z" stroke="#ff7622" strokeWidth="1.5"/>
+                                <path d="M9 12C10.66 12 12 10.66 12 9C12 7.34 10.66 6 9 6C7.34 6 6 7.34 6 9C6 10.66 7.34 12 9 12Z" stroke="#ff7622" strokeWidth="1.5"/>
+                                <path d="M21 15L16 10L5 21" stroke="#ff7622" strokeWidth="1.5"/>
+                            </svg>
+                            <span className="text-white text-[14px] font-bold">{catering.name}</span>
+                        </div>
+                    </div>
+                )}
 
                 {/* ===== FOOD ITEMS LIST ===== */}
                 <div className="px-6 mt-[36px] space-y-[37px] pb-4">

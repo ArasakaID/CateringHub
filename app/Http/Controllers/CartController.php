@@ -45,6 +45,7 @@ class CartController extends Controller
                 'success' => true,
                 'item' => $item,
                 'count' => $this->cart->getCount(),
+                'catering' => $this->cart->getCateringInfo(),
             ]);
         }
 
