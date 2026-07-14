@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function DetailProduk({ menu, catering, relatedMenus }) {
@@ -358,18 +358,8 @@ export default function DetailProduk({ menu, catering, relatedMenus }) {
                             </div>
                         </div>
 
-                        {/* Bottom row: icon button + Masuk keranjang */}
+                        {/* Bottom row: Masuk keranjang + icon cart */}
                         <div className="flex items-center gap-[10px]">
-                            {/* Icon button (square) */}
-                            <button
-                                className="w-[62px] h-[62px] rounded-[12px] flex items-center justify-center cursor-pointer transition active:scale-[0.98] shrink-0"
-                                style={{ backgroundColor: '#ecf0f4' }}
-                            >
-                                <svg width="22" height="20" viewBox="0 0 22 20" fill="none">
-                                    <path d="M11 19C11 19 1 14 1 6C1 3.2 3.2 1 6 1C8 1 10 2.5 11 4C12 2.5 14 1 16 1C18.8 1 21 3.2 21 6C21 14 11 19 11 19Z" stroke="#181c2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                            </button>
-
                             {/* Masuk keranjang button */}
                             <button
                                 onClick={handleAddToCart}
@@ -380,6 +370,19 @@ export default function DetailProduk({ menu, catering, relatedMenus }) {
                                 <span className="text-white text-[16px] font-bold uppercase tracking-wide">
                                     {addedToCart ? '✓ Ditambahkan' : addingToCart ? 'Menambahkan...' : 'Masuk keranjang'}
                                 </span>
+                            </button>
+
+                            {/* Icon cart (navigate to checkout) */}
+                            <button
+                                onClick={() => router.get(route('checkout'))}
+                                className="w-[62px] h-[62px] rounded-[12px] flex items-center justify-center cursor-pointer transition active:scale-[0.98] shrink-0"
+                                style={{ backgroundColor: '#ecf0f4' }}
+                            >
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                    <path d="M1 1H4L6.5 15H20L23 4H5" stroke="#181c2e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <circle cx="7" cy="21" r="2" stroke="#181c2e" strokeWidth="2"/>
+                                    <circle cx="19" cy="21" r="2" stroke="#181c2e" strokeWidth="2"/>
+                                </svg>
                             </button>
                         </div>
                     </div>
