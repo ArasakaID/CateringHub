@@ -81,6 +81,12 @@ Route::middleware('auth')->group(function () {
             return 'ERROR: ' . $e->getMessage();
         }
     });
+    Route::post('/pesanan/{order}/chat/courier-say', function (\App\Models\Order $order) {
+        if ($order->user_id !== auth()->id()) abort(403);
+        $msg = \Illuminate\Support\Facades\Request::input('message', 'Halo, pesanan sudah dalam perjalanan');
+        $order->chatMessages()->create(['sender_type' => 'courier', 'message' => $msg, 'is_read' => false]);
+        return redirect()->route('tracking.chat', $order->id);
+    })->name('tracking.chat.courier-say');
 });
 
 // Location routes (all require auth)
