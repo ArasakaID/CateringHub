@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
         } catch (\Exception $e) {
             return 'ERROR: ' . $e->getMessage();
         }
+    Route::post('/pesanan/{order}/tracking/advance', [TrackingController::class, 'advanceStatus'])->name('tracking.advance');
     });
 });
 

@@ -64,6 +64,29 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
         };
     }, [isDragging]);
 
+    // Auto-advance order status every 60 seconds
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch(`/pesanan/${order.id}/tracking/advance`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content },
+                });
+                const data = await res.json();
+                if (data.done) {
+                    clearInterval(interval);
+                } else {
+                    // Reload page to reflect new status
+                    window.location.reload();
+                }
+            } catch (e) {
+                // ignore
+            }
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, [order.id]);
+
     // ===== LOADING SKELETON =====
     if (pageLoading) {
         return (

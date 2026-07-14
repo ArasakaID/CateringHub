@@ -176,4 +176,49 @@ class TrackingController extends Controller
 
         return response()->json(['messages' => $messages]);
     }
+
+    /**
+     * Advance order status to next step (for auto-progress demo).
+     */
+    public function advanceStatus(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $next = match ($order->status) {
+            'pending' => 'confirmed',
+            'confirmed' => 'preparing',
+            'preparing' => 'picked_up',
+            'picked_up' => 'arriving_soon',
+            'arriving_soon' => 'delivered',
+            default => null,
+        };
+
+        if (!$next) {
+            return response()->json(['done' => true]);
+        }
+
+        $order->update(['status' => $next]);
+
+        // Also update tracking logs
+        $stepIndex = array_search($next, ['confirmed', 'preparing', 'picked_up', 'arriving_soon']);
+        $steps = [
+            ['status' => 'confirmed', 'label' => 'Your order has been received'],
+            ['status' => 'preparing', 'label' => 'The restaurant is preparing your food'],
+            ['status' => 'picked_up', 'label' => 'Your order has been picked up for delivery'],
+            ['status' => 'arriving_soon', 'label' => 'Order arriving soon!'],
+        ];
+
+        if ($stepIndex !== false) {
+            for ($i = 0; $i <= $stepIndex; $i++) {
+                \App\Models\OrderTrackingLog::updateOrCreate(
+                    ['order_id' => $order->id, 'status' => $steps[$i]['status']],
+                    ['label' => $steps[$i]['label'], 'is_completed' => true, 'completed_at' => now()]
+                );
+            }
+        }
+
+        return response()->json(['status' => $next]);
+    }
 }
