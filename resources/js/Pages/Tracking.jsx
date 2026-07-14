@@ -330,7 +330,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                         style={{
                             boxShadow: '0 -2px 40px rgba(58, 119, 153, 0.15)',
                             height: `${cardHeightPx}vh`,
-                            maxHeight: `${cardHeightPx}vh`,
+                            maxHeight: '85vh',
                             transition: isDragging ? 'none' : 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             overflow: 'hidden',
                         }}
