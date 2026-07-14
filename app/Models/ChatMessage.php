@@ -36,7 +36,7 @@ class ChatMessage extends Model
                 return;
             }
 
-            $groqKey = env('GROQ_API_KEY');
+            $groqKey = config('services.groq.api_key');
             if (!$groqKey) {
                 return;
             }
