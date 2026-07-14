@@ -221,17 +221,13 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
         { status: 'delivered', label: 'Order delivered' },
     ];
 
-    const completedStatuses = new Set(
-        (trackingLogs || []).filter(l => l.is_completed).map(l => l.status)
-    );
+    const currentStepIdx = FLOW.findIndex(f => f.status === order.status);
 
     const steps = FLOW.map((s, i) => ({
         label: s.label,
         status: s.status,
-        isCompleted: completedStatuses.has(s.status),
-        isActive: !completedStatuses.has(s.status) && (
-            i === 0 || completedStatuses.has(FLOW[i - 1].status)
-        ),
+        isCompleted: i < currentStepIdx,
+        isActive: i === currentStepIdx,
     }));
 
     return (
