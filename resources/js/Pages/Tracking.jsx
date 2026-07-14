@@ -2,6 +2,9 @@ import { Head, Link, router } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
+    const EXPANDED_VH = 65;
+    const MIN_COLLAPSED_VH = 22;
+
     const [pageLoading, setPageLoading] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
@@ -11,9 +14,6 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const cardHeightRef = useRef(0);
     const contentRef = useRef(null);
     const contentInnerRef = useRef(null);
-
-    const EXPANDED_VH = 65;
-    const MIN_COLLAPSED_VH = 22;
 
     // Measure content height and set initial collapsed size
     useEffect(() => {
