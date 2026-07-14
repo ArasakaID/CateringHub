@@ -38,21 +38,13 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
 
     const DRAG_THRESHOLD = 120;
 
-    const handleCheckToggle = (itemId) => {
-        setCartItems(prev => prev.map(item =>
-            item.id === itemId
-                ? { ...item, checked: !(item.checked ?? true) }
-                : item
-        ));
-        fetch(route('cart.toggle'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ item_id: itemId }),
-        }).catch(() => {});
-    };
-
     const handleRemoveItem = (itemId) => {
-        setCartItems(prev => prev.filter(item => item.id !== itemId));
+        const remaining = cartItems.filter(item => item.id !== itemId);
+        if (remaining.length === 0) {
+            router.get(route('home'));
+            return;
+        }
+        setCartItems(remaining);
         fetch(route('cart.remove'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -260,23 +252,9 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        {/* Check icon */}
-                                        <div
-                                            className="w-[22px] h-[22px] rounded-full flex items-center justify-center cursor-pointer transition shrink-0"
-                                            style={{ backgroundColor: (item.checked ?? true) ? '#059c6a' : '#999999' }}
-                                            onClick={() => handleCheckToggle(item.id)}
-                                        >
-                                            {(item.checked ?? true) && (
-                                                <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
-                                                    <path d="M3 7L5.5 9.5L11 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                </svg>
-                                            )}
-                                        </div>
-                                        <span className="text-white text-[20px] font-bold">
-                                            Rp {Number(item.price).toLocaleString('id-ID')}
-                                        </span>
-                                    </div>
+                                    <span className="text-white text-[20px] font-bold">
+                                        Rp {Number(item.price).toLocaleString('id-ID')}
+                                    </span>
 
                                     <div className="flex items-center gap-[6px]">
                                         {/* Qty selector */}
