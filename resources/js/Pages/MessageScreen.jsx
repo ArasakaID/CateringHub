@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 
-export default function MessageScreen({ order, messages }) {
+export default function MessageScreen({ order, courier, messages }) {
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
     const messagesEndRef = useRef(null);
@@ -89,7 +89,7 @@ export default function MessageScreen({ order, messages }) {
 
                     {/* Title */}
                     <span className="text-[#181c2e] text-[17px]" style={{ lineHeight: '22px' }}>
-                        {order.catering?.name || 'Chat'}
+                        {courier?.name || 'Chat'}
                     </span>
 
                     {/* Spacer */}

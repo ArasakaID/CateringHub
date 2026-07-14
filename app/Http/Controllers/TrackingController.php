@@ -67,8 +67,11 @@ class TrackingController extends Controller
 
         $order->load(['chatMessages', 'catering']);
 
+        $courier = $order->courier();
+
         return Inertia::render('MessageScreen', [
             'order' => $order,
+            'courier' => $courier,
             'messages' => $order->chatMessages,
         ]);
     }
