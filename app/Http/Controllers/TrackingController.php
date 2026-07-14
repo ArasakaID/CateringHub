@@ -127,7 +127,7 @@ class TrackingController extends Controller
             'content' => 'Kamu adalah asisten chat untuk pembeli catering. Balas pesan kurir dengan singkat, sopan, dan natural dalam Bahasa Indonesia. Maksimal 2 kalimat.',
         ];
 
-        $response = Http::withHeaders([
+        $response = Http::withOptions(['verify' => false])->withHeaders([
             'Authorization' => 'Bearer ' . $groqKey,
             'Content-Type' => 'application/json',
         ])->post('https://api.groq.com/openai/v1/chat/completions', [
