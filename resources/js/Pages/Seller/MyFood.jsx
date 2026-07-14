@@ -184,7 +184,7 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
                     />
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        style={{ position: 'fixed', left: 'max(0px, calc((100vw - 448px) / 2))', top: 0, height: '100%', width: 280, zIndex: 101, background: '#fff', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}
+                        style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: 280, zIndex: 101, background: '#fff', padding: 40, display: 'flex', flexDirection: 'column', gap: 24 }}
                     >
                         <div style={{ fontSize: 18, fontWeight: 700, color: '#181c2e', fontFamily: 'Sen, sans-serif', marginBottom: 8 }}>
                             Menu
