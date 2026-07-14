@@ -62,7 +62,7 @@ export default function SimpanLokasiSukses({ from = '' }) {
                     </p>
 
                     <button
-                        onClick={() => router.get(route('location.index'))}
+                        onClick={() => router.visit(route('location.index'), { replace: true })}
                         className="w-full flex items-center justify-center"
                         style={{
                             marginTop: '55px',
