@@ -175,7 +175,7 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
         <>
             <Head title="Keranjang Belanja - CateringHub" />
 
-            <div className="min-h-screen bg-[#131927] mx-auto relative" style={{ fontFamily: 'Sen, sans-serif' }}>
+            <div className="min-h-screen bg-[#131927] mx-auto relative max-w-md" style={{ fontFamily: 'Sen, sans-serif' }}>
                 {/* ===== TOP BAR ===== */}
                 <div className="px-6 pt-[50px] flex items-center justify-between">
                     <Link
@@ -298,8 +298,8 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                 {/* ===== BASE STATE: INFO + KONFIRMASI BUTTON (WHITE TEXT ON DARK BG) ===== */}
                 {!showPopup && (
                     <div
-                        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-10"
-                        style={{ maxWidth: '430px' }}
+                        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-10 max-w-md"
+                        style={{}}
                     >
                         <div className="px-6 pb-[36px]">
                             {infoContent}
@@ -332,9 +332,8 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
                         {/* Popup card — white, rounded-t-[24px], draggable */}
                         <div
                             ref={popupRef}
-                            className="relative bg-white w-full rounded-t-[24px] px-6 pb-[32px] pt-0 select-none"
+                            className="relative bg-white w-full max-w-md rounded-t-[24px] px-6 pb-[32px] pt-0 select-none"
                             style={{
-                                maxWidth: '430px',
                                 maxHeight: popupExpanded ? '85vh' : 'auto',
                                 transform: `translateY(${Math.max(0, dragY)}px)`,
                                 transition: isDragging ? 'none' : 'transform 0.3s ease-out, max-height 0.3s ease-out',
