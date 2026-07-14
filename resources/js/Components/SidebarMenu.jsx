@@ -227,11 +227,6 @@ export default function SidebarMenu({ user, show, onClose }) {
                             label="Metode Pembayaran"
                             href={route('home')}
                         />
-                        <MenuItem
-                            icon={<BellIcon />}
-                            label="Messages"
-                            href={route('messages.index')}
-                        />
                     </div>
 
                     {/* Group 3: Lainnya */}
