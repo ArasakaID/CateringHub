@@ -1,5 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import SellerTabBar from '@/Components/SellerTabBar';
 
 const backArrow = (
@@ -35,8 +36,18 @@ export default function RunningOrders({ runningOrders, runningCount, orderReques
         });
     };
 
-    const handleCancel = (order) => {
-        if (confirm('Cancel order ' + order.order_number + '?')) {
+    const handleCancel = async (order) => {
+        const result = await Swal.fire({
+            title: 'Cancel Order',
+            text: 'Cancel order ' + order.order_number + '?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#fc6e2a',
+            cancelButtonColor: '#a0a5ba',
+            confirmButtonText: 'Cancel',
+            cancelButtonText: 'Batal',
+        });
+        if (result.isConfirmed) {
             router.post('/seller/orders/' + order.id + '/cancel', {}, {
                 preserveScroll: true,
                 onSuccess: () => { if (runningOrders.length <= 1) setShowOverlay(false); },

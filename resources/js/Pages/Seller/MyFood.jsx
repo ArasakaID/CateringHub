@@ -1,5 +1,6 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import SellerTabBar from '@/Components/SellerTabBar';
 
 const StarIcon = () => (
@@ -26,9 +27,19 @@ export default function MyFood({ menus, categories, activeTab: initialTab, total
         router.get('/seller/my-food', { category: slug }, { preserveState: true, preserveScroll: true, replace: true });
     };
 
-    const handleDelete = (menuId, e) => {
+    const handleDelete = async (menuId, e) => {
         e.stopPropagation();
-        if (confirm('Hapus menu ini?')) {
+        const result = await Swal.fire({
+            title: 'Hapus Menu',
+            text: 'Hapus menu ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#fc6e2a',
+            cancelButtonColor: '#a0a5ba',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal',
+        });
+        if (result.isConfirmed) {
             router.delete('/seller/menu/' + menuId, { preserveScroll: true });
         }
         setOpenMenu(null);

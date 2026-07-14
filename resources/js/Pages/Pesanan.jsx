@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import ConfirmDialog from '@/Components/ConfirmDialog';
 
 export default function Pesanan({ orders }) {
@@ -44,7 +45,12 @@ export default function Pesanan({ orders }) {
     };
 
     const handleRate = () => {
-        alert('Fitur rating akan segera tersedia.');
+        Swal.fire({
+            icon: 'info',
+            title: 'Info',
+            text: 'Fitur rating akan segera tersedia.',
+            confirmButtonColor: '#fc6e2a',
+        });
     };
 
     const formatPrice = (price) => {

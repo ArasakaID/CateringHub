@@ -1,4 +1,5 @@
 import { Head, router } from '@inertiajs/react';
+import Swal from 'sweetalert2';
 import SellerTabBar from '@/Components/SellerTabBar';
 
 const backArrow = (
@@ -151,8 +152,18 @@ export default function Profile({ user, orderCount }) {
                             icon={<LogoutIcon />}
                             label="Log Out"
                             right={<ChevronRight />}
-                            onClick={() => {
-                                if (confirm('Are you sure you want to log out?')) {
+                            onClick={async () => {
+                                const result = await Swal.fire({
+                                    title: 'Log Out',
+                                    text: 'Are you sure you want to log out?',
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#fc6e2a',
+                                    cancelButtonColor: '#a0a5ba',
+                                    confirmButtonText: 'Yes',
+                                    cancelButtonText: 'Cancel',
+                                });
+                                if (result.isConfirmed) {
                                     router.post('/logout');
                                 }
                             }}
