@@ -215,17 +215,17 @@ export default function SidebarMenu({ user, show, onClose }) {
                         <MenuItem
                             icon={<HeartIcon />}
                             label="Menu Favorit"
-                            onClick={() => {}}
+                            href={route('home')}
                         />
                         <MenuItem
                             icon={<BellIcon />}
-                            label="Notivikasi"
-                            onClick={() => {}}
+                            label="Notifikasi"
+                            href={route('pesanan')}
                         />
                         <MenuItem
                             icon={<CardIcon />}
                             label="Metode Pembayaran"
-                            onClick={() => {}}
+                            href={route('home')}
                         />
                     </div>
 
@@ -234,17 +234,17 @@ export default function SidebarMenu({ user, show, onClose }) {
                         <MenuItem
                             icon={<FaqIcon />}
                             label="Tanya Jawab (FAQ)"
-                            onClick={() => {}}
+                            href={route('home')}
                         />
                         <MenuItem
                             icon={<ChefIcon />}
                             label="Buka Catering"
-                            onClick={() => {}}
+                            href={route('register')}
                         />
                         <MenuItem
                             icon={<GearIcon />}
                             label="Pengaturan"
-                            onClick={() => {}}
+                            href={route('profile.edit')}
                         />
                     </div>
 
