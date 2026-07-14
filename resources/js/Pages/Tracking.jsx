@@ -78,13 +78,16 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
             'arriving_soon': 120000,
         })[order.status] || 60000;
 
-        const timer = setTimeout(() => {
-            router.post(route('tracking.advance', order.id), {}, {
-                preserveScroll: true,
-                onSuccess: () => {
-                    router.reload({ preserveScroll: true, only: ['order', 'trackingLogs', 'isAdvanced'] });
-                },
-            });
+        const timer = setTimeout(async () => {
+            try {
+                await fetch(route('tracking.advance', order.id), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                });
+                router.reload({ preserveScroll: true, only: ['order', 'trackingLogs', 'isAdvanced', 'courier'] });
+            } catch (e) {
+                // Silently fail
+            }
         }, delay);
         return () => clearTimeout(timer);
     }, [order.id, order.status]);
