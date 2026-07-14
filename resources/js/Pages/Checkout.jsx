@@ -335,7 +335,7 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                         {/* Popup card — white, rounded-t-[24px], draggable */}
                         <div
                             ref={popupRef}
-                            className="relative bg-white w-full max-w-md rounded-t-[24px] px-6 pb-[32px] pt-0 select-none"
+                            className="relative bg-white w-full max-w-md rounded-t-[24px] overflow-y-auto"
                             style={{
                                 maxHeight: popupExpanded ? '85vh' : 'auto',
                                 transform: `translateY(${Math.max(0, dragY)}px)`,
@@ -350,17 +350,22 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                             onMouseUp={handleTouchEnd}
                             onMouseLeave={handleTouchEnd}
                         >
-                            {/* Drag Handle — 3 garis horizontal #131927 — gesture grab only from handle */}
-                            <div className="flex justify-center pt-[14px] pb-[12px] cursor-grab active:cursor-grabbing"
+                            {/* Drag Handle — sticky at top */}
+                            <div className="sticky top-0 z-10 bg-white"
                                 onTouchStart={handleTouchStart}
                                 onMouseDown={handleTouchStart}
                             >
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <path d="M3 8H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
-                                    <path d="M3 12H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
-                                    <path d="M3 16H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
-                                </svg>
+                                <div className="flex justify-center pt-[14px] pb-[12px] cursor-grab active:cursor-grabbing">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M3 8H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <path d="M3 12H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <path d="M3 16H21" stroke="#131927" strokeWidth="1.5" strokeLinecap="round"/>
+                                    </svg>
+                                </div>
                             </div>
+
+                            {/* Content area with padding */}
+                            <div className="px-6 pb-[32px]">
 
                             {/* ALAMAT PENGIRIMAN */}
                             <div className="flex items-center justify-between mb-[12px]">
@@ -471,6 +476,7 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                                     {placing ? 'Memproses...' : 'Place ORder'}
                                 </span>
                             </button>
+                            </div>
                         </div>
 
                         <style>{`
