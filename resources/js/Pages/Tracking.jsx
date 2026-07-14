@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
@@ -66,24 +66,17 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
 
     // Auto-advance order status every 60 seconds
     useEffect(() => {
-        const interval = setInterval(async () => {
-            try {
-                const res = await fetch(`/pesanan/${order.id}/tracking/advance`, {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content },
-                });
-                const data = await res.json();
-                if (data.done) {
-                    clearInterval(interval);
-                } else {
-                    // Reload page to reflect new status
-                    window.location.reload();
-                }
-            } catch (e) {
-                // ignore
-            }
+        if (order.status === 'delivered' || order.status === 'completed' || order.status === 'cancelled') {
+            return;
+        }
+        const interval = setInterval(() => {
+            router.post(route('tracking.advance', order.id), {}, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    router.reload({ preserveScroll: true, only: ['order', 'trackingLogs', 'isAdvanced'] });
+                },
+            });
         }, 60000);
-
         return () => clearInterval(interval);
     }, [order.id]);
 

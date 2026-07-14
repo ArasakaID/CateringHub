@@ -186,39 +186,31 @@ class TrackingController extends Controller
             abort(403);
         }
 
-        $next = match ($order->status) {
-            'pending' => 'confirmed',
-            'confirmed' => 'preparing',
-            'preparing' => 'picked_up',
-            'picked_up' => 'arriving_soon',
-            'arriving_soon' => 'delivered',
-            default => null,
-        };
+        $flow = ['pending', 'confirmed', 'preparing', 'picked_up', 'arriving_soon', 'delivered'];
+        $currentIdx = array_search($order->status, $flow);
 
-        if (!$next) {
-            return response()->json(['done' => true]);
+        if ($currentIdx === false || $currentIdx >= count($flow) - 1) {
+            return response()->json(['done' => true, 'status' => $order->status]);
         }
 
-        $order->update(['status' => $next]);
+        $nextStatus = $flow[$currentIdx + 1];
+        $order->update(['status' => $nextStatus]);
 
-        // Also update tracking logs
-        $stepIndex = array_search($next, ['confirmed', 'preparing', 'picked_up', 'arriving_soon']);
-        $steps = [
-            ['status' => 'confirmed', 'label' => 'Your order has been received'],
-            ['status' => 'preparing', 'label' => 'The restaurant is preparing your food'],
-            ['status' => 'picked_up', 'label' => 'Your order has been picked up for delivery'],
-            ['status' => 'arriving_soon', 'label' => 'Order arriving soon!'],
-        ];
-
-        if ($stepIndex !== false) {
-            for ($i = 0; $i <= $stepIndex; $i++) {
-                \App\Models\OrderTrackingLog::updateOrCreate(
-                    ['order_id' => $order->id, 'status' => $steps[$i]['status']],
-                    ['label' => $steps[$i]['label'], 'is_completed' => true, 'completed_at' => now()]
-                );
-            }
+        // Update/create tracking log for each completed step
+        for ($i = 1; $i <= $currentIdx + 1; $i++) {
+            \App\Models\OrderTrackingLog::updateOrCreate(
+                ['order_id' => $order->id, 'status' => $flow[$i]],
+                ['label' => match($flow[$i]) {
+                    'confirmed' => 'Your order has been received',
+                    'preparing' => 'The restaurant is preparing your food',
+                    'picked_up' => 'Your order has been picked up for delivery',
+                    'arriving_soon' => 'Order arriving soon!',
+                    'delivered' => 'Order delivered',
+                    default => $flow[$i],
+                }, 'is_completed' => true, 'completed_at' => now()]
+            );
         }
 
-        return response()->json(['status' => $next]);
+        return response()->json(['status' => $nextStatus]);
     }
 }
