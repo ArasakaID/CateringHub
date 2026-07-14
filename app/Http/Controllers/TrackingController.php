@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Courier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Http;
 
 class TrackingController extends Controller
 {
@@ -92,6 +93,61 @@ class TrackingController extends Controller
         $message = $order->chatMessages()->create([
             'sender_type' => 'user',
             'message' => $validated['message'],
+            'is_read' => false,
+        ]);
+
+        return redirect()->route('tracking.chat', $order->id);
+    }
+
+    /**
+     * Auto-reply using Groq AI.
+     */
+    public function autoReply(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $order->load(['chatMessages']);
+        $messages = $order->chatMessages->take(-10);
+
+        $groqKey = env('GROQ_API_KEY');
+        if (!$groqKey) {
+            return response()->json(['error' => 'GROQ_API_KEY not configured'], 500);
+        }
+
+        $history = [];
+        foreach ($messages as $msg) {
+            $role = $msg->sender_type === 'courier' ? 'assistant' : 'user';
+            $history[] = ['role' => $role, 'content' => $msg->message];
+        }
+
+        $systemPrompt = [
+            'role' => 'system',
+            'content' => 'Kamu adalah asisten chat untuk pembeli catering. Balas pesan kurir dengan singkat, sopan, dan natural dalam Bahasa Indonesia. Maksimal 2 kalimat.',
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $groqKey,
+            'Content-Type' => 'application/json',
+        ])->post('https://api.groq.com/openai/v1/chat/completions', [
+            'model' => 'llama-3.3-70b-versatile',
+            'messages' => array_merge([$systemPrompt], $history),
+            'max_tokens' => 100,
+        ]);
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'Groq API error'], 500);
+        }
+
+        $reply = $response->json('choices.0.message.content');
+        if (!$reply) {
+            return response()->json(['error' => 'Empty response from Groq'], 500);
+        }
+
+        $order->chatMessages()->create([
+            'sender_type' => 'user',
+            'message' => trim($reply),
             'is_read' => false,
         ]);
 
