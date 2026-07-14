@@ -63,6 +63,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/pesanan/{order}/call', [TrackingController::class, 'initiateCall'])->name('tracking.call');
     Route::get('/pesanan/{order}/chat', [TrackingController::class, 'chat'])->name('tracking.chat');
     Route::post('/pesanan/{order}/chat/send', [TrackingController::class, 'sendMessage'])->name('tracking.chat.send');
+    Route::get('/groq-test', function () {
+        $key = config('services.groq.api_key');
+        if (!$key) return 'GROQ_API_KEY not set in .env';
+        try {
+            $res = \Illuminate\Support\Facades\Http::withOptions(['verify' => false])
+                ->withHeaders(['Authorization' => "Bearer $key"])
+                ->timeout(10)
+                ->post('https://api.groq.com/openai/v1/chat/completions', [
+                    'model' => 'llama-3.3-70b-versatile',
+                    'messages' => [['role' => 'user', 'content' => 'Say hello in 3 words']],
+                    'max_tokens' => 20,
+                ]);
+            if ($res->successful()) return 'OK: ' . $res->json('choices.0.message.content');
+            return 'HTTP ' . $res->status() . ': ' . $res->body();
+        } catch (\Exception $e) {
+            return 'ERROR: ' . $e->getMessage();
+        }
+    });
 });
 
 // Location routes (all require auth)
