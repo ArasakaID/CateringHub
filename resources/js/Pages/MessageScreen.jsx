@@ -11,13 +11,19 @@ export default function MessageScreen({ order, courier, messages }) {
     const latestIdRef = useRef(0);
 
     // Track latest message ID and auto-scroll
+    const messagesRef = useRef(null);
+
     useEffect(() => {
         if (localMessages.length > 0) {
             latestIdRef.current = localMessages[localMessages.length - 1].id;
         }
-        setTimeout(() => {
-            messagesEndRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
-        }, 50);
+        // Scroll messages container to bottom
+        const el = messagesRef.current;
+        if (el) {
+            requestAnimationFrame(() => {
+                el.scrollTop = el.scrollHeight;
+            });
+        }
     }, [localMessages]);
 
     // Sync when server data changes
@@ -133,8 +139,8 @@ export default function MessageScreen({ order, courier, messages }) {
             <Head title="Chat - CateringHub" />
 
             <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Sen, sans-serif' }}>
-                {/* ===== TOP BAR ===== */}
-                <div className="px-6 pt-[50px] pb-[16px] flex items-center justify-between">
+                {/* ===== TOP BAR (sticky) ===== */}
+                <div className="sticky top-0 z-10 bg-white px-6 pt-[50px] pb-[16px] flex items-center justify-between">
                     {/* Close button */}
                     <Link
                         href={route('tracking.show', order.id)}
@@ -154,7 +160,7 @@ export default function MessageScreen({ order, courier, messages }) {
                 </div>
 
                 {/* ===== CHAT MESSAGES ===== */}
-                <div className="flex-1 px-6 overflow-y-auto pb-[20px] flex flex-col">
+                <div ref={messagesRef} className="flex-1 px-6 overflow-y-auto pb-[20px] flex flex-col">
                     {localMessages.length === 0 && !polling ? (
                         /* Empty state */
                         <div className="flex flex-col items-center justify-center flex-1 text-center">
