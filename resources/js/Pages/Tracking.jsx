@@ -3,9 +3,9 @@ import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
     const [pageLoading, setPageLoading] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(isAdvanced);
     const [isDragging, setIsDragging] = useState(false);
-    const [translateY, setTranslateY] = useState(0);
+    const [translateY, setTranslateY] = useState(isAdvanced ? EXPANDED_Y : COLLAPSED_Y);
     const startY = useRef(0);
     const currentY = useRef(0);
     const cardRef = useRef(null);
@@ -69,11 +69,6 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
             window.removeEventListener('mouseup', handleGlobalMouseUp);
         };
     }, [isDragging]);
-
-    // Initial snap
-    useEffect(() => {
-        snapTo(isAdvanced);
-    }, []);
 
     // ===== LOADING SKELETON =====
     if (pageLoading) {
