@@ -313,9 +313,9 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                 {!showPopup && (
                     <div
                         className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-10 max-w-md"
-                        style={{}}
+                        style={{ backgroundColor: '#131927' }}
                     >
-                        <div className="px-6 pb-[36px]">
+                        <div className="px-6 pb-[36px] pt-[16px]">
                             {infoContent}
 
                             {/* KONFIRMASI button — langsung di atas background gelap (tanpa white card) */}
