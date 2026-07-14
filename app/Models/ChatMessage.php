@@ -36,11 +36,8 @@ class ChatMessage extends Model
                 return;
             }
 
-            \Illuminate\Support\Facades\Log::info('Auto-reply (AI driver) triggered for message: ' . $msg->id);
-
             $groqKey = config('services.groq.api_key');
             if (!$groqKey) {
-                \Illuminate\Support\Facades\Log::warning('GROQ_API_KEY not set');
                 return;
             }
 
@@ -48,6 +45,26 @@ class ChatMessage extends Model
             if (!$order) {
                 return;
             }
+
+            // Load relations for context
+            $order->loadMissing(['catering', 'couriers']);
+            $courier = $order->courier();
+            $cateringName = $order->catering?->name ?? 'Catering';
+            $driverName = $courier?->name ?? 'Kurir';
+            $statusLabel = match ($order->status) {
+                'confirmed' => 'pesanan dikonfirmasi, sedang dipersiapkan',
+                'preparing' => 'sedang dimasak',
+                'picked_up' => 'sedang dalam perjalanan',
+                'arriving_soon' => 'akan segera tiba',
+                'delivered', 'completed' => 'sudah diantar',
+                default => 'dalam proses',
+            };
+            $eta = in_array($order->status, ['picked_up', 'arriving_soon']) ? '20 menit' : 'sedang diproses';
+
+            $systemContext = "Kamu adalah {$driverName}, kurir pengiriman dari {$cateringName}. "
+                . "Status pesanan: {$statusLabel}. "
+                . "Estimasi waktu: {$eta}. "
+                . "Balas pesan pembeli dengan singkat, sopan, dan natural dalam Bahasa Indonesia sebagai seorang kurir. Maksimal 2 kalimat.";
 
             $recent = $order->chatMessages()->latest()->take(10)->get()->reverse();
 
@@ -67,7 +84,7 @@ class ChatMessage extends Model
                     ])->timeout(15)->post('https://api.groq.com/openai/v1/chat/completions', [
                         'model' => 'llama-3.3-70b-versatile',
                         'messages' => array_merge([
-                            ['role' => 'system', 'content' => 'Kamu adalah kurir pengiriman catering. Balas pesan pembeli dengan singkat, sopan, dan natural dalam Bahasa Indonesia. Maksimal 2 kalimat.'],
+                            ['role' => 'system', 'content' => $systemContext],
                         ], $history),
                         'max_tokens' => 100,
                     ]);
