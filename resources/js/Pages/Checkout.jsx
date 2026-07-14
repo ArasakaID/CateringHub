@@ -131,16 +131,6 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                         Rp {totalWithFee.toLocaleString('id-ID')}
                     </span>
                 </div>
-
-                <button
-                    onClick={() => router.get(route('location.index'))}
-                    className="flex items-center gap-1 text-[#ff7622] text-[14px] cursor-pointer hover:opacity-80 transition shrink-0"
-                >
-                    <span>Alamat</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M4 3L7 6L4 9" stroke="#ff7622" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </button>
             </div>
 
             <p className="text-[#a0a5ba] text-[10px] mb-[4px]">
