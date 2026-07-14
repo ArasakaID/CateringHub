@@ -94,7 +94,7 @@ export default function MessageScreen({ order, courier, messages }) {
 
     // Close icon
     const CloseIcon = () => (
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
             <path d="M1 1L13 13M13 1L1 13" stroke="#181c2e" strokeWidth="2" strokeLinecap="round"/>
         </svg>
     );
@@ -140,29 +140,29 @@ export default function MessageScreen({ order, courier, messages }) {
 
             <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: 'Sen, sans-serif' }}>
                 {/* ===== TOP BAR (fixed at top of screen) ===== */}
-                <div className="fixed top-0 left-1/2 z-10 bg-white w-full max-w-md px-6 pt-[50px] pb-[16px] flex items-center justify-between"
+                <div className="fixed top-0 left-1/2 z-10 bg-white w-full max-w-md px-6 pt-[40px] pb-[8px] flex items-center justify-between"
                     style={{ transform: 'translateX(-50%)' }}
                 >
                     {/* Close button */}
                     <Link
                         href={route('tracking.show', order.id)}
-                        className="w-[45px] h-[45px] rounded-full flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition"
+                        className="w-[36px] h-[36px] rounded-full flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition"
                         style={{ backgroundColor: '#ecf0f4' }}
                     >
                         <CloseIcon />
                     </Link>
 
                     {/* Title */}
-                    <span className="text-[#181c2e] text-[17px]" style={{ lineHeight: '22px' }}>
+                    <span className="text-[#181c2e] text-[15px]" style={{ lineHeight: '18px' }}>
                         {courier?.name || 'Chat'}
                     </span>
 
                     {/* Spacer */}
-                    <div className="w-[45px]" />
+                    <div className="w-[36px]" />
                 </div>
 
                 {/* ===== CHAT MESSAGES ===== */}
-                <div ref={messagesRef} className="flex-1 px-6 overflow-y-auto flex flex-col" style={{ paddingTop: '90px', paddingBottom: '20px' }}>
+                <div ref={messagesRef} className="flex-1 px-6 overflow-y-auto flex flex-col" style={{ paddingTop: '84px', paddingBottom: '20px' }}>
                     {localMessages.length === 0 && !polling ? (
                         /* Empty state */
                         <div className="flex flex-col items-center justify-center flex-1 text-center">
