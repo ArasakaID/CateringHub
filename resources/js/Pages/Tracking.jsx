@@ -2,6 +2,11 @@ import { Head, Link } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
+    // Collapsed: card shows only restaurant info (translate ~55% of viewport)
+    // Expanded: card shows full content (translate ~2% of viewport)
+    const COLLAPSED_Y = 55;
+    const EXPANDED_Y = 2;
+
     const [pageLoading, setPageLoading] = useState(false);
     const [isExpanded, setIsExpanded] = useState(isAdvanced);
     const [isDragging, setIsDragging] = useState(false);
@@ -10,17 +15,10 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const currentY = useRef(0);
     const cardRef = useRef(null);
 
-    // Collapsed: card shows only restaurant info (translate ~55% of viewport)
-    // Expanded: card shows full content (translate ~2% of viewport)
-    const COLLAPSED_Y = 55;
-    const EXPANDED_Y = 2;
-    const cardHeight = useRef(COLLAPSED_Y);
-
     // Snap to position
     const snapTo = (expanded) => {
         setIsExpanded(expanded);
         setTranslateY(expanded ? EXPANDED_Y : COLLAPSED_Y);
-        cardHeight.current = expanded ? EXPANDED_Y : COLLAPSED_Y;
     };
 
     // Drag handlers
