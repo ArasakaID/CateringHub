@@ -89,7 +89,7 @@ export default function MessageScreen({ order, messages }) {
 
                     {/* Title */}
                     <span className="text-[#181c2e] text-[17px]" style={{ lineHeight: '22px' }}>
-                        Amanda Katering
+                        {order.catering?.name || 'Chat'}
                     </span>
 
                     {/* Spacer */}

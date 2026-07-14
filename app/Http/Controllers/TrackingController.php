@@ -65,7 +65,7 @@ class TrackingController extends Controller
             abort(403);
         }
 
-        $order->load(['chatMessages']);
+        $order->load(['chatMessages', 'catering']);
 
         return Inertia::render('MessageScreen', [
             'order' => $order,

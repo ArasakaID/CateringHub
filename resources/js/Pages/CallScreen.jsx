@@ -86,7 +86,7 @@ export default function CallScreen({ order, courier }) {
 
                         {/* Status */}
                         <p className="text-[16px] mt-[4px]" style={{ color: '#979797' }}>
-                            Berderding.......
+                            Berdering.......
                         </p>
 
                         {/* ===== CALL ACTION BUTTONS ===== */}
