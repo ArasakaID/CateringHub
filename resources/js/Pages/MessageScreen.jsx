@@ -4,29 +4,86 @@ import { useState, useRef, useEffect } from 'react';
 export default function MessageScreen({ order, courier, messages }) {
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
+    const [localMessages, setLocalMessages] = useState(messages || []);
+    const [polling, setPolling] = useState(false);
     const messagesEndRef = useRef(null);
+    const pollRef = useRef(null);
+    const latestIdRef = useRef(0);
 
-    const chatMessages = messages || [];
+    // Track latest message ID
+    useEffect(() => {
+        if (localMessages.length > 0) {
+            latestIdRef.current = localMessages[localMessages.length - 1].id;
+        }
+    }, [localMessages]);
 
     // Auto-scroll to latest message
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [chatMessages]);
+    }, [localMessages]);
 
-    const handleSend = (e) => {
+    // Sync when server data changes
+    useEffect(() => {
+        setLocalMessages(messages || []);
+    }, [messages]);
+
+    // Poll for new messages (auto-reply from AI driver)
+    useEffect(() => {
+        if (!polling) return;
+
+        pollRef.current = setInterval(async () => {
+            try {
+                const res = await fetch(`/pesanan/${order.id}/chat/messages?after=${latestIdRef.current}`);
+                const data = await res.json();
+                if (data.messages && data.messages.length > 0) {
+                    setLocalMessages(prev => [...prev, ...data.messages]);
+                    latestIdRef.current = data.messages[data.messages.length - 1].id;
+                }
+            } catch (e) {
+                // ignore
+            }
+        }, 2000);
+
+        return () => clearInterval(pollRef.current);
+    }, [polling, order.id]);
+
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!newMessage.trim() || sending) return;
 
+        const text = newMessage.trim();
         setSending(true);
-        router.post(route('tracking.chat.send', order.id), {
-            message: newMessage.trim(),
-        }, {
-            onFinish: () => {
-                setNewMessage('');
-                setSending(false);
-            },
-            preserveScroll: true,
-        });
+        setNewMessage('');
+
+        // Optimistically add user message
+        const tempId = -Date.now();
+        const userMsg = {
+            id: tempId,
+            sender_type: 'user',
+            message: text,
+            created_at: new Date().toISOString(),
+            is_read: false,
+        };
+        setLocalMessages(prev => [...prev, userMsg]);
+
+        try {
+            const res = await fetch(`/pesanan/${order.id}/chat/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content },
+                body: JSON.stringify({ message: text }),
+            });
+            const data = await res.json();
+            // Replace temp message with real one
+            setLocalMessages(prev => prev.map(m => m.id === tempId ? data.message : m));
+            latestIdRef.current = data.message.id;
+            // Start polling for auto-reply
+            setPolling(true);
+        } catch (err) {
+            // Remove optimistically added message on error
+            setLocalMessages(prev => prev.filter(m => m.id !== tempId));
+        } finally {
+            setSending(false);
+        }
     };
 
     // Close icon
@@ -98,7 +155,7 @@ export default function MessageScreen({ order, courier, messages }) {
 
                 {/* ===== CHAT MESSAGES ===== */}
                 <div className="flex-1 px-6 overflow-y-auto pb-[20px]">
-                    {chatMessages.length === 0 ? (
+                    {localMessages.length === 0 ? (
                         /* Empty state */
                         <div className="flex flex-col items-center justify-center mt-[80px] text-center">
                             <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
@@ -113,11 +170,11 @@ export default function MessageScreen({ order, courier, messages }) {
                         </div>
                     ) : (
                         <div className="flex flex-col mt-[8px]">
-                            {chatMessages.map((msg, index) => {
+                            {localMessages.map((msg, index) => {
                                 const isUser = msg.sender_type === 'user';
                                 const isLastFromCourier = !isUser && (
-                                    index === chatMessages.length - 1 ||
-                                    chatMessages[index + 1]?.sender_type !== 'courier'
+                                    index === localMessages.length - 1 ||
+                                    localMessages[index + 1]?.sender_type !== 'courier'
                                 );
 
                                 return (
@@ -174,6 +231,28 @@ export default function MessageScreen({ order, courier, messages }) {
                                     </div>
                                 );
                             })}
+                            {/* Typing indicator */}
+                            {polling && (
+                                <div className="flex justify-start mb-[16px]">
+                                    <div className="flex items-end" style={{ gap: '8px', maxWidth: '75%' }}>
+                                        <div className="w-[40px] h-[40px] rounded-full shrink-0 overflow-hidden mb-[4px]" style={{ backgroundColor: '#c4c4c4' }}>
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                                    <circle cx="12" cy="8" r="4" stroke="white" strokeWidth="2"/>
+                                                    <path d="M4 20C4 17 8 15 12 15C16 15 20 17 20 20" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div className="px-[14px] py-[10px]" style={{ backgroundColor: '#f0f5fa', borderRadius: '16px 16px 16px 4px' }}>
+                                            <div className="flex gap-[4px]">
+                                                <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0s' }} />
+                                                <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.2s' }} />
+                                                <span className="w-[6px] h-[6px] rounded-full bg-[#a0a5ba] animate-bounce" style={{ animationDelay: '0.4s' }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div ref={messagesEndRef} />
                         </div>
                     )}

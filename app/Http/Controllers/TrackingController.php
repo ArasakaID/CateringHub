@@ -77,7 +77,7 @@ class TrackingController extends Controller
     }
 
     /**
-     * Send a new message from the user to the courier.
+     * Send a new message from the user to the courier (AJAX).
      */
     public function sendMessage(Request $request, Order $order)
     {
@@ -95,6 +95,25 @@ class TrackingController extends Controller
             'is_read' => false,
         ]);
 
-        return redirect()->route('tracking.chat', $order->id);
+        return response()->json(['message' => $message->load('order')]);
+    }
+
+    /**
+     * Fetch new messages since a given ID (AJAX polling).
+     */
+    public function fetchNewMessages(Request $request, Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $after = $request->integer('after', 0);
+
+        $messages = $order->chatMessages()
+            ->where('id', '>', $after)
+            ->orderBy('created_at')
+            ->get();
+
+        return response()->json(['messages' => $messages]);
     }
 }
