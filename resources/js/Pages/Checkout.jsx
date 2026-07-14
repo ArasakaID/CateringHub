@@ -51,6 +51,15 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
         }).catch(() => {});
     };
 
+    const handleRemoveItem = (itemId) => {
+        setCartItems(prev => prev.filter(item => item.id !== itemId));
+        fetch(route('cart.remove'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ item_id: itemId }),
+        }).catch(() => {});
+    };
+
     const handleQtyChange = (itemId, delta) => {
         setCartItems(prev => prev.map(item => {
             if (item.id !== itemId) return item;
@@ -251,51 +260,65 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <span className="text-white text-[20px] font-bold">
-                                        Rp {Number(item.price).toLocaleString('id-ID')}
-                                    </span>
-
-                                    {/* Qty selector */}
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            onClick={() => handleQtyChange(item.id, -1)}
-                                            disabled={item.quantity <= 1}
-                                            className="w-[24px] h-[24px] rounded-full bg-white/20 flex items-center justify-center cursor-pointer hover:bg-white/30 transition disabled:opacity-30 disabled:cursor-not-allowed"
+                                    <div className="flex items-center gap-2">
+                                        {/* Check icon */}
+                                        <div
+                                            className="w-[22px] h-[22px] rounded-full flex items-center justify-center cursor-pointer transition shrink-0"
+                                            style={{ backgroundColor: (item.checked ?? true) ? '#059c6a' : '#999999' }}
+                                            onClick={() => handleCheckToggle(item.id)}
                                         >
-                                            <svg width="8" height="2" viewBox="0 0 8 2" fill="none">
-                                                <path d="M0 1H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                                            </svg>
-                                        </button>
-                                        <span className="text-white text-[16px] font-bold min-w-[28px] text-center">
-                                            {item.quantity}
+                                            {(item.checked ?? true) && (
+                                                <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+                                                    <path d="M3 7L5.5 9.5L11 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                            )}
+                                        </div>
+                                        <span className="text-white text-[20px] font-bold">
+                                            Rp {Number(item.price).toLocaleString('id-ID')}
                                         </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-[6px]">
+                                        {/* Qty selector */}
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                onClick={() => handleQtyChange(item.id, -1)}
+                                                disabled={item.quantity <= 1}
+                                                className="w-[24px] h-[24px] rounded-full bg-white/20 flex items-center justify-center cursor-pointer hover:bg-white/30 transition disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <svg width="8" height="2" viewBox="0 0 8 2" fill="none">
+                                                    <path d="M0 1H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                                </svg>
+                                            </button>
+                                            <span className="text-white text-[16px] font-bold min-w-[28px] text-center">
+                                                {item.quantity}
+                                            </span>
+                                            <button
+                                                onClick={() => handleQtyChange(item.id, 1)}
+                                                className="w-[24px] h-[24px] rounded-full bg-white/20 flex items-center justify-center cursor-pointer hover:bg-white/30 transition"
+                                            >
+                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                                                    <path d="M4 0V8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                                    <path d="M0 4H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        {/* Delete button */}
                                         <button
-                                            onClick={() => handleQtyChange(item.id, 1)}
-                                            className="w-[24px] h-[24px] rounded-full bg-white/20 flex items-center justify-center cursor-pointer hover:bg-white/30 transition"
+                                            onClick={() => handleRemoveItem(item.id)}
+                                            className="w-[24px] h-[24px] rounded-full bg-white/20 flex items-center justify-center cursor-pointer hover:bg-red-400 transition shrink-0"
                                         >
-                                            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                                                <path d="M4 0V8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                                                <path d="M0 4H8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                                                <path d="M3 6H21" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                                                <path d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6" stroke="white" strokeWidth="2"/>
+                                                <path d="M5 6L6 21H18L19 6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                                             </svg>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Check icon */}
-                            <div className="flex items-start pt-2 shrink-0">
-                                <div
-                                    className="w-[27px] h-[27px] rounded-full flex items-center justify-center cursor-pointer transition"
-                                    style={{ backgroundColor: (item.checked ?? true) ? '#059c6a' : '#999999' }}
-                                    onClick={() => handleCheckToggle(item.id)}
-                                >
-                                    {(item.checked ?? true) && (
-                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                            <path d="M3 7L5.5 9.5L11 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    )}
-                                </div>
-                            </div>
                         </div>
                     ))}
                 </div>
