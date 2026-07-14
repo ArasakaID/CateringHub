@@ -178,15 +178,15 @@ export default function Checkout({ items, total, userAddress, userPhone, userAdd
             <div className="min-h-screen bg-[#131927] mx-auto relative max-w-md" style={{ fontFamily: 'Sen, sans-serif' }}>
                 {/* ===== TOP BAR ===== */}
                 <div className="px-6 pt-[50px] flex items-center justify-between">
-                    <Link
-                        href={route('home')}
+                    <button
+                        onClick={() => window.history.back()}
                         className="w-[45px] h-[45px] rounded-full flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition"
-                        style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+                        style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none' }}
                     >
                         <svg width="6" height="11" viewBox="0 0 6 11" fill="none">
                             <path d="M5 1L1 5.5L5 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                    </Link>
+                    </button>
 
                     <span className="text-white text-[17px] leading-[22px]">
                         Keranjang Belanja
