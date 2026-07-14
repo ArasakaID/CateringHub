@@ -8,6 +8,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const [cardHeightPx, setCardHeightPx] = useState(isAdvanced ? 85 : 18);
     const startY = useRef(0);
     const currentHeight = useRef(isAdvanced ? 85 : 18);
+    const cardHeightRef = useRef(isAdvanced ? 85 : 18);
     const contentRef = useRef(null);
 
     // Drag handlers (based on vh units for card height)
@@ -17,15 +18,16 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const handleDragStart = (clientY) => {
         setIsDragging(true);
         startY.current = clientY;
-        currentHeight.current = cardHeightPx;
+        currentHeight.current = cardHeightRef.current;
     };
 
     const handleDragMove = (clientY) => {
         if (!isDragging) return;
-        const delta = startY.current - clientY; // negative = swipe down, positive = swipe up
+        const delta = startY.current - clientY;
         const vh = window.innerHeight;
         const deltaVh = (delta / vh) * 100;
         const newVh = Math.max(COLLAPSED_VH, Math.min(EXPANDED_VH, currentHeight.current + deltaVh));
+        cardHeightRef.current = newVh;
         setCardHeightPx(newVh);
     };
 
@@ -33,10 +35,12 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
         if (!isDragging) return;
         setIsDragging(false);
         const midPoint = (COLLAPSED_VH + EXPANDED_VH) / 2;
-        const expanded = cardHeightPx > midPoint;
+        const expanded = cardHeightRef.current > midPoint;
         setIsExpanded(expanded);
-        setCardHeightPx(expanded ? EXPANDED_VH : COLLAPSED_VH);
-        currentHeight.current = expanded ? EXPANDED_VH : COLLAPSED_VH;
+        const target = expanded ? EXPANDED_VH : COLLAPSED_VH;
+        cardHeightRef.current = target;
+        setCardHeightPx(target);
+        currentHeight.current = target;
     };
 
     // Touch events
@@ -281,8 +285,16 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                 </div>
 
                 {/* ===== BOTTOM CARD (Draggable) ===== */}
-                <div className="fixed bottom-0 left-1/2 z-20 w-full max-w-md"
-                    style={{ transform: 'translateX(-50%)' }}
+                <div
+                    className="fixed bottom-0 left-1/2 z-20 w-full max-w-md"
+                    style={{
+                        transform: 'translateX(-50%)',
+                        touchAction: 'none',
+                    }}
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                    onMouseDown={onMouseDown}
                 >
                     <div
                         ref={contentRef}
@@ -292,21 +304,22 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                             height: `${cardHeightPx}vh`,
                             maxHeight: `${cardHeightPx}vh`,
                             transition: isDragging ? 'none' : 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            overflow: isExpanded ? 'hidden' : 'hidden',
                         }}
                     >
-                        {/* Drag Handle */}
-                        <div className="flex justify-center pt-[8px] pb-[2px] cursor-grab active:cursor-grabbing"
-                            onTouchStart={onTouchStart}
-                            onTouchMove={onTouchMove}
-                            onTouchEnd={onTouchEnd}
-                            onMouseDown={onMouseDown}
-                        >
+                        {/* Drag Handle — only starts the drag, events bubble up */}
+                        <div className="flex justify-center pt-[8px] pb-[2px] cursor-grab active:cursor-grabbing">
                             <div className="w-[70px] h-[7px] rounded-[80px]"
                                 style={{ backgroundColor: '#d8e3ed' }}
                             />
                         </div>
 
-                        <div className="px-[24px] pb-[20px] overflow-y-auto" style={{ height: `calc(${cardHeightPx}vh - 20px)` }}>
+                        <div className="px-[24px] pb-[20px] overflow-y-auto styled-scrollbar"
+                            style={{
+                                height: `calc(${cardHeightPx}vh - 30px)`,
+                                WebkitOverflowScrolling: 'touch',
+                            }}
+                        >
                             {/* ===== RESTAURANT INFO ===== */}
                             <div className="flex items-start gap-[14px] mt-[4px]">
                                 {/* Restaurant image */}

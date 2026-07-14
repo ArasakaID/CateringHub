@@ -10,4 +10,14 @@
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
     }
+    .styled-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .styled-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .styled-scrollbar::-webkit-scrollbar-thumb {
+        background: #d0d0d0;
+        border-radius: 2px;
+    }
 }
