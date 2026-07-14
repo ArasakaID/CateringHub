@@ -10,14 +10,14 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const [isDragging, setIsDragging] = useState(false);
     const [cardHeightPx, setCardHeightPx] = useState(MIN_COLLAPSED_VH);
     const startY = useRef(0);
-    const currentHeight = useRef(0);
-    const cardHeightRef = useRef(0);
+    const currentHeight = useRef(MIN_COLLAPSED_VH);
+    const cardHeightRef = useRef(MIN_COLLAPSED_VH);
     const contentRef = useRef(null);
     const contentInnerRef = useRef(null);
 
-    // Measure content height and set initial collapsed size
+    // Measure content height and set collapsed size
     useEffect(() => {
-        if (contentInnerRef.current) {
+        if (contentInnerRef.current && !isDragging) {
             const inner = contentInnerRef.current;
             const padding = 40;
             requestAnimationFrame(() => {
@@ -29,7 +29,7 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
                 setCardHeightPx(collapsed);
             });
         }
-    }, [order.status]);
+    }, [order.status, isDragging]);
 
     // Drag handlers (based on vh units for card height)
     const COLLAPSED_VH = cardHeightPx !== null ? Math.min(cardHeightPx, EXPANDED_VH) : MIN_COLLAPSED_VH;
