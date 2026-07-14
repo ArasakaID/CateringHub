@@ -347,7 +347,7 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
                             ref={popupRef}
                             className="relative bg-white w-full max-w-md rounded-t-[24px] overflow-y-auto"
                             style={{
-                                maxHeight: popupExpanded ? '85vh' : 'auto',
+                                maxHeight: '85vh',
                                 transform: `translateY(${Math.max(0, dragY)}px)`,
                                 transition: isDragging ? 'none' : 'transform 0.3s ease-out, max-height 0.3s ease-out',
                                 animation: showSlideUp && dragY === 0 ? 'slideUp 0.3s ease-out' : 'none',
