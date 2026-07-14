@@ -226,8 +226,8 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const steps = FLOW.map((s, i) => ({
         label: s.label,
         status: s.status,
-        isCompleted: i < currentStepIdx,
-        isActive: i === currentStepIdx,
+        isCompleted: i < currentStepIdx || (i === currentStepIdx && order.status === 'delivered'),
+        isActive: i === currentStepIdx && order.status !== 'delivered',
     }));
 
     return (
