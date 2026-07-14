@@ -117,23 +117,11 @@ class TrackingController extends Controller
             $eta = in_array($order->status, ['picked_up', 'arriving_soon']) ? '20 menit lagi' : 'masih diproses';
 
             $systemContext = "Kamu adalah {$driverName}, kurir pengiriman dari {$cateringName}. "
-                . "Status pesanan saat ini: {$statusLabel} (estimasi {$eta}). "
-                . "Kamu sedang dalam perjalanan mengantar pesanan. "
-                . "Perhatikan PERTANYAAN TERAKHIR dari pembeli dan jawab sesuai konteksnya. "
-                . "Jika ditanya lokasi, jawab posisi kamu saat ini. "
-                . "Jika ditanya waktu, jawab estimasi. "
-                . "Jika hanya salam, balas salam. "
-                . "Balas dengan singkat, sopan, natural dalam Bahasa Indonesia. Maksimal 2 kalimat.";
+                . "Status pesanan: {$statusLabel} (estimasi {$eta}). "
+                . "Balas pesan pembeli dengan singkat, sopan, natural dalam Bahasa Indonesia sebagai seorang kurir. "
+                . "Maksimal 2 kalimat.";
 
-            $recent = $order->chatMessages()->latest()->take(10)->get()->reverse();
-
-            $history = [];
-            foreach ($recent as $m) {
-                $history[] = [
-                    'role' => $m->sender_type === 'courier' ? 'assistant' : 'user',
-                    'content' => $m->message,
-                ];
-            }
+            $latestUserMsg = $validated['message'];
 
             try {
                 $response = Http::withOptions(['verify' => false])
@@ -142,11 +130,11 @@ class TrackingController extends Controller
                         'Content-Type' => 'application/json',
                     ])->timeout(15)->post('https://api.groq.com/openai/v1/chat/completions', [
                         'model' => 'llama-3.3-70b-versatile',
-                        'messages' => array_merge([
+                        'messages' => [
                             ['role' => 'system', 'content' => $systemContext],
-                        ], $history),
+                            ['role' => 'user', 'content' => $latestUserMsg],
+                        ],
                         'max_tokens' => 100,
-                        'temperature' => 0.9,
                     ]);
 
                 if ($response->successful()) {
