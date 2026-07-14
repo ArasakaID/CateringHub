@@ -2,6 +2,9 @@ import { Head, Link, router } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced }) {
+    const COLLAPSED_VH = 22;
+    const EXPANDED_VH = 65;
+
     const [pageLoading, setPageLoading] = useState(false);
     const [isExpanded, setIsExpanded] = useState(isAdvanced);
     const [isDragging, setIsDragging] = useState(false);
@@ -10,9 +13,6 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const currentHeight = useRef(isAdvanced ? EXPANDED_VH : 30);
     const cardHeightRef = useRef(isAdvanced ? EXPANDED_VH : 30);
     const contentRef = useRef(null);
-
-    const COLLAPSED_VH = 22;
-    const EXPANDED_VH = 65;
 
     // Drag handlers (based on vh units for card height)
 
