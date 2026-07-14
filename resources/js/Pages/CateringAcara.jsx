@@ -51,17 +51,19 @@ export default function CateringAcara({ catering, keywords }) {
 
                 {/* ===== RESTAURANT IMAGE ===== */}
                 <div className="px-6 mt-[32px]">
-                    <div className="relative w-full h-[200px] rounded-[32px] overflow-hidden bg-[#ffa027]">
-                        {catering.image ? (
-                            <img
-                                src={catering.image}
-                                alt={catering.name}
-                                className="w-full h-full object-cover"
-                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
-                            />
-                        ) : null}
-                        {/* Fallback placeholder */}
-                        <div className={`absolute inset-0 items-center justify-center ${catering.image ? 'hidden' : 'flex'}`}>
+                    <div className="relative w-full h-[200px]">
+                        {/* Image wrapper with rounded corners and overflow clip */}
+                        <div className="absolute inset-0 rounded-[32px] overflow-hidden bg-[#ffa027]">
+                            {catering.image ? (
+                                <img
+                                    src={catering.image}
+                                    alt={catering.name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                                />
+                            ) : null}
+                            {/* Fallback placeholder */}
+                            <div className={`absolute inset-0 items-center justify-center ${catering.image ? 'hidden' : 'flex'}`}>
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.15">
                                     <circle cx="60" cy="60" r="60" fill="white"/>
@@ -79,6 +81,7 @@ export default function CateringAcara({ catering, keywords }) {
                                 </svg>
                             </div>
                         </div>
+                        </div>{/* closes image wrapper */}
 
                         {/* ===== PROFILE PHOTO OVERLAY ===== */}
                         <div className="absolute -bottom-[40px] left-[26px] w-[80px] h-[80px] rounded-full border-[4px] border-white overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.15)] bg-white">
