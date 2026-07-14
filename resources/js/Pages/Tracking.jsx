@@ -5,10 +5,10 @@ export default function Tracking({ order, courier, trackingLogs, eta, isAdvanced
     const [pageLoading, setPageLoading] = useState(false);
     const [isExpanded, setIsExpanded] = useState(isAdvanced);
     const [isDragging, setIsDragging] = useState(false);
-    const [cardHeightPx, setCardHeightPx] = useState(isAdvanced ? 85 : 22);
+    const [cardHeightPx, setCardHeightPx] = useState(isAdvanced ? EXPANDED_VH : 30);
     const startY = useRef(0);
-    const currentHeight = useRef(isAdvanced ? 85 : 22);
-    const cardHeightRef = useRef(isAdvanced ? 85 : 22);
+    const currentHeight = useRef(isAdvanced ? EXPANDED_VH : 30);
+    const cardHeightRef = useRef(isAdvanced ? EXPANDED_VH : 30);
     const contentRef = useRef(null);
 
     const COLLAPSED_VH = 22;
