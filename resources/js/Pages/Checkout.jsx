@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 
 export default function Checkout({ items, total, catering, userAddress, userPhone, userAddresses, activeAddress }) {
     const [cartItems, setCartItems] = useState(items);
@@ -19,6 +19,16 @@ export default function Checkout({ items, total, catering, userAddress, userPhon
     const [showSlideUp, setShowSlideUp] = useState(true);
     const popupRef = useRef(null);
     const dragState = useRef({ startY: 0, currentY: 0 });
+
+    // Lock body scroll when popup is open
+    useEffect(() => {
+        if (showPopup) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [showPopup]);
 
     const deliveryFee = 0;
     const subtotal = useMemo(() => {
