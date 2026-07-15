@@ -116,7 +116,7 @@ function PopularItem({ item }) {
 
 const periodOptions = ['Daily', 'Weekly', 'Monthly'];
 
-export default function SellerDashboard({ catering, stats, totalRevenue, revenueChartData, reviewsSummary, popularItems }) {
+export default function SellerDashboard({ auth, catering, stats, totalRevenue, revenueChartData, reviewsSummary, popularItems }) {
     const { url } = usePage();
     const urlParams = new URLSearchParams(url.split('?')[1] || '');
     const initialPeriod = urlParams.get('period') || 'daily';
@@ -315,8 +315,13 @@ export default function SellerDashboard({ catering, stats, totalRevenue, revenue
                             background: '#ffffff', padding: 24,
                         }} onClick={e => e.stopPropagation()}>
                             <div style={{ fontSize: 18, fontWeight: 700, color: '#181c2e', fontFamily: 'Sen, sans-serif', marginBottom: 24 }}>
-                                {catering?.name || 'Seller'}
+                                {auth?.user?.name || catering?.name || 'Seller'}
                             </div>
+                            {auth?.user?.name && catering?.name && auth.user.name !== catering.name && (
+                                <div style={{ fontSize: 13, color: '#838799', marginBottom: 20, marginTop: -16 }}>
+                                    {catering.name}
+                                </div>
+                            )}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                 {[
                                     { label: 'Dashboard', path: '/seller/dashboard' },
