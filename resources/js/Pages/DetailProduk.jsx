@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function DetailProduk({ menu, catering, relatedMenus, cartCount = 0 }) {
+export default function DetailProduk({ auth, menu, catering, relatedMenus, cartCount = 0 }) {
     const [qty, setQty] = useState(1);
     const [optionQtys, setOptionQtys] = useState({});
     const [isSaved, setIsSaved] = useState(false);
@@ -362,13 +362,13 @@ export default function DetailProduk({ menu, catering, relatedMenus, cartCount =
                         <div className="flex items-center gap-[10px]">
                             {/* Masuk keranjang button */}
                             <button
-                                onClick={handleAddToCart}
-                                disabled={addingToCart || addedToCart}
+                                onClick={!auth?.user ? () => router.get(route('login')) : handleAddToCart}
+                                disabled={!auth?.user || addingToCart || addedToCart}
                                 className="flex-1 h-[62px] rounded-[12px] flex items-center justify-center cursor-pointer transition active:scale-[0.98] disabled:opacity-80 disabled:cursor-not-allowed"
                                 style={{ backgroundColor: addedToCart ? '#059c6a' : '#ff7622' }}
                             >
                                 <span className="text-white text-[16px] font-bold uppercase tracking-wide">
-                                    {addedToCart ? '✓ Ditambahkan' : addingToCart ? 'Menambahkan...' : 'Masuk keranjang'}
+                                    {!auth?.user ? 'Login untuk membeli' : addedToCart ? '✓ Ditambahkan' : addingToCart ? 'Menambahkan...' : 'Masuk keranjang'}
                                 </span>
                             </button>
 
