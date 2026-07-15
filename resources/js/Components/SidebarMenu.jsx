@@ -292,11 +292,6 @@ export default function SidebarMenu({ user, show, onClose }) {
                             {/* Group: Akun */}
                             <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
                                 <MenuItem
-                                    icon={<LoginIcon />}
-                                    label="Masuk"
-                                    href={route('login')}
-                                />
-                                <MenuItem
                                     icon={<RegisterIcon />}
                                     label="Daftar"
                                     href={route('register')}
@@ -315,6 +310,24 @@ export default function SidebarMenu({ user, show, onClose }) {
                                     label="Buka Catering"
                                     href={route('register.catering')}
                                 />
+                            </div>
+
+                            {/* Login button — prominent at bottom */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] overflow-hidden mb-6">
+                                <Link
+                                    href={route('login')}
+                                    className="flex items-center justify-between w-full h-20 px-5"
+                                >
+                                    <div className="flex items-center" style={{ gap: '14px' }}>
+                                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                                            <LoginIcon />
+                                        </div>
+                                        <span className="text-[#32343e] text-[15px] font-sen font-bold">
+                                            Login
+                                        </span>
+                                    </div>
+                                    <ChevronRight />
+                                </Link>
                             </div>
                         </>
                     )}
