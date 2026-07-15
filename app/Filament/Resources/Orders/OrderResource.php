@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Orders;
 
 use App\Filament\Resources\Orders\Pages\ManageOrders;
 use App\Models\Order;
-use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -17,14 +16,23 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
-
     protected static ?string $recordTitleAttribute = 'order_number';
+
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-shopping-cart';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Transaksi';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -131,5 +139,17 @@ class OrderResource extends Resource
         return [
             'index' => ManageOrders::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()?->isCatering()) {
+            $cateringIds = auth()->user()->managedCateringIds();
+            return $query->whereIn('catering_id', $cateringIds);
+        }
+
+        return $query;
     }
 }

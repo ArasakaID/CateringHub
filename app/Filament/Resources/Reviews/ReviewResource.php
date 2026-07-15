@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Reviews;
 
 use App\Filament\Resources\Reviews\Pages\ManageReviews;
 use App\Models\Review;
-use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -17,14 +16,24 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
-
     protected static ?string $recordTitleAttribute = 'id';
+
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-star';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Transaksi';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -91,5 +100,27 @@ class ReviewResource extends Resource
         return [
             'index' => ManageReviews::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()?->isCatering()) {
+            $cateringIds = auth()->user()->managedCateringIds();
+            return $query->whereIn('catering_id', $cateringIds);
+        }
+
+        return $query;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
     }
 }

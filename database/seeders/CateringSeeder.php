@@ -10,24 +10,63 @@ class CateringSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::first() ?? User::factory()->create([
-            'name' => 'Admin CateringHub',
-            'email' => 'admin@cateringhub.com',
-            'password' => bcrypt('password'),
-            'role' => 'seller',
-        ]);
-
-        // Ensure admin user has a known password even if already exists
-        if (User::where('email', 'admin@cateringhub.com')->exists()) {
-            User::where('email', 'admin@cateringhub.com')->update([
+        // === Admin User ===
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@cateringhub.com'],
+            [
+                'name' => 'Admin CateringHub',
                 'password' => bcrypt('password'),
-                'role' => 'seller',
-            ]);
-        }
+                'role' => 'admin',
+            ]
+        );
+
+        // === Catering Manager Users ===
+        $managers = [
+            'bunda' => User::updateOrCreate(
+                ['email' => 'bunda@cateringhub.com'],
+                [
+                    'name' => 'Dapur Bunda',
+                    'password' => bcrypt('password'),
+                    'role' => 'catering',
+                ]
+            ),
+            'snack' => User::updateOrCreate(
+                ['email' => 'snack@cateringhub.com'],
+                [
+                    'name' => 'Snack Corner',
+                    'password' => bcrypt('password'),
+                    'role' => 'catering',
+                ]
+            ),
+            'hajatan' => User::updateOrCreate(
+                ['email' => 'hajatan@cateringhub.com'],
+                [
+                    'name' => 'Catering Hajatan',
+                    'password' => bcrypt('password'),
+                    'role' => 'catering',
+                ]
+            ),
+            'sedep' => User::updateOrCreate(
+                ['email' => 'sedep@cateringhub.com'],
+                [
+                    'name' => 'Warung Sedep',
+                    'password' => bcrypt('password'),
+                    'role' => 'catering',
+                ]
+            ),
+            'esteh' => User::updateOrCreate(
+                ['email' => 'esteh@cateringhub.com'],
+                [
+                    'name' => 'Es Teh Indonesia',
+                    'password' => bcrypt('password'),
+                    'role' => 'catering',
+                ]
+            ),
+        ];
 
         $caterings = [
             [
-                'user_id' => $user->id,
+                'user_id' => $managers['bunda']->id,
                 'category_id' => 2, // Harian
                 'name' => 'Dapur Bunda',
                 'slug' => 'dapur-bunda',
@@ -45,7 +84,7 @@ class CateringSeeder extends Seeder
                 'logo' => 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=60&h=60&fit=crop',
             ],
             [
-                'user_id' => $user->id,
+                'user_id' => $managers['snack']->id,
                 'category_id' => 3, // Snack
                 'name' => 'Snack Corner',
                 'slug' => 'snack-corner',
@@ -63,7 +102,7 @@ class CateringSeeder extends Seeder
                 'logo' => 'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=60&h=60&fit=crop',
             ],
             [
-                'user_id' => $user->id,
+                'user_id' => $managers['hajatan']->id,
                 'category_id' => 4, // Acara
                 'name' => 'Catering Hajatan',
                 'slug' => 'catering-hajatan',
@@ -81,7 +120,7 @@ class CateringSeeder extends Seeder
                 'logo' => 'https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=60&h=60&fit=crop',
             ],
             [
-                'user_id' => $user->id,
+                'user_id' => $managers['sedep']->id,
                 'category_id' => 2, // Harian
                 'name' => 'Warung Sedep',
                 'slug' => 'warung-sedep',
@@ -99,7 +138,7 @@ class CateringSeeder extends Seeder
                 'logo' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=60&h=60&fit=crop',
             ],
             [
-                'user_id' => $user->id,
+                'user_id' => $managers['esteh']->id,
                 'category_id' => 5, // Minuman
                 'name' => 'Es Teh Indonesia',
                 'slug' => 'es-teh-indonesia',

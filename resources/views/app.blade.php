@@ -21,7 +21,7 @@
     </head>
     <body class="font-sans antialiased sm:bg-[#e8e8e8]">
         <div class="min-h-screen bg-white relative overflow-hidden
-                    w-full sm:max-w-md sm:mx-auto sm:shadow-xl">
+                    w-full sm:max-w-[500px] sm:mx-auto sm:my-6 sm:rounded-[32px] sm:shadow-xl">
             @inertia
         </div>
     </body>

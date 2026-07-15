@@ -134,9 +134,14 @@ export default function CallScreen({ order, courier }) {
                     }}
                 />
 
-                {/* ===== ENDED STATE — full overlay ===== */}
-                {callStatus === 'ended' ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center z-30 px-6">
+                {/* ===== BOTTOM SHEET ===== */}
+                <div className="absolute bottom-0 left-1/2 w-full max-w-[500px]"
+                    style={{
+                        transform: 'translateX(-50%)',
+                    }}
+                >
+                    <div className="bg-white rounded-t-[24px] px-[24px] pb-[40px] pt-[40px] flex flex-col items-center">
+                        {/* Profile photo */}
                         <div className="w-[105px] h-[105px] rounded-full overflow-hidden"
                             style={{ backgroundColor: '#c4c4c4' }}
                         >

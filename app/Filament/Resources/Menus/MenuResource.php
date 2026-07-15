@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Menus;
 
 use App\Filament\Resources\Menus\Pages\ManageMenus;
 use App\Models\Menu;
-use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -19,14 +18,23 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MenuResource extends Resource
 {
     protected static ?string $model = Menu::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
-
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-clipboard-document-list';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Catering';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -37,7 +45,8 @@ class MenuResource extends Resource
                     ->maxLength(255),
                 Select::make('catering_id')
                     ->relationship('catering', 'name')
-                    ->required(),
+                    ->required()
+                    ->searchable(),
                 Select::make('category_id')
                     ->relationship('category', 'name')
                     ->required(),
@@ -90,5 +99,17 @@ class MenuResource extends Resource
         return [
             'index' => ManageMenus::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()?->isCatering()) {
+            $cateringIds = auth()->user()->managedCateringIds();
+            return $query->whereIn('catering_id', $cateringIds);
+        }
+
+        return $query;
     }
 }

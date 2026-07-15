@@ -104,6 +104,22 @@ export default function SidebarMenu({ user, show, onClose }) {
         </svg>
     );
 
+    const LoginIcon = () => (
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+            <path d="M9 14H12.5C13.0523 14 13.5 13.5523 13.5 13V3C13.5 2.44772 13.0523 2 12.5 2H9" stroke="#369bff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M4 11.5L0.5 8L4 4.5" stroke="#369bff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M0.5 8H9.5" stroke="#369bff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+
+    const RegisterIcon = () => (
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+            <path d="M11 2H3C1.89543 2 1 2.89543 1 4V12C1 13.1046 1.89543 14 3 14H11C12.1046 14 13 13.1046 13 12V4C13 2.89543 12.1046 2 11 2Z" stroke="#059c6a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M7 5V9" stroke="#059c6a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M5 7H9" stroke="#059c6a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+
     const MenuItem = ({ icon, label, href, onClick, iconColor }) => (
         <div className="flex items-center justify-between h-10 px-0" style={{ minHeight: '40px' }}>
             {href ? (
@@ -164,108 +180,144 @@ export default function SidebarMenu({ user, show, onClose }) {
                     </div>
                 </div>
 
-                {/* Profile Card */}
-                <div className="flex items-center mt-[24px] px-6" style={{ gap: '16px' }}>
-                    <div className="w-[100px] h-[100px] rounded-full overflow-hidden shrink-0 bg-[#f0f5fa]">
-                        {avatarUrl ? (
-                            <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                                    <circle cx="30" cy="30" r="28" stroke="#d0d5dd" strokeWidth="1.5" />
-                                    <circle cx="30" cy="22" r="8" stroke="#d0d5dd" strokeWidth="1.5" />
-                                    <path d="M12 50C12 40 20 34 30 34C40 34 48 40 48 50" stroke="#d0d5dd" strokeWidth="1.5" strokeLinecap="round" />
-                                </svg>
-                            </div>
-                        )}
+                {/* Profile Card — only shown when logged in */}
+                {user && (
+                    <div className="flex items-center mt-[24px] px-6" style={{ gap: '16px' }}>
+                        <div className="w-[100px] h-[100px] rounded-full overflow-hidden shrink-0 bg-[#f0f5fa]">
+                            {avatarUrl ? (
+                                <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                                        <circle cx="30" cy="30" r="28" stroke="#d0d5dd" strokeWidth="1.5" />
+                                        <circle cx="30" cy="22" r="8" stroke="#d0d5dd" strokeWidth="1.5" />
+                                        <path d="M12 50C12 40 20 34 30 34C40 34 48 40 48 50" stroke="#d0d5dd" strokeWidth="1.5" strokeLinecap="round" />
+                                    </svg>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-[#32343e] text-[20px] font-bold font-sen truncate">
+                                {user?.name || 'User'}
+                            </h2>
+                            <p className="text-[#a0a5ba] text-[14px] font-sen mt-[8px] truncate" style={{ lineHeight: '24px' }}>
+                                {user?.bio || 'Pecinta menu rumahan'}
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                        <h2 className="text-[#32343e] text-[20px] font-bold font-sen truncate">
-                            {user?.name || 'User'}
-                        </h2>
-                        <p className="text-[#a0a5ba] text-[14px] font-sen mt-[8px] truncate" style={{ lineHeight: '24px' }}>
-                            {user?.bio || 'Pecinta menu rumahan'}
-                        </p>
-                    </div>
-                </div>
+                )}
 
                 {/* Menu Items */}
                 <div className="px-6 mt-[24px] space-y-5">
-                    {/* Group 1: Informasi & Alamat */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
-                        <MenuItem
-                            icon={<PersonIcon />}
-                            label="Informasi Pribadi"
-                            href={route('profile.info')}
-                        />
-                        <MenuItem
-                            icon={<MapIcon />}
-                            label="Alamat Pengiriman"
-                            href={route('location.index')}
-                        />
-                    </div>
-
-                    {/* Group 2: Belanja */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
-                        <MenuItem
-                            icon={<CartIcon />}
-                            label="Keranjang Belanja"
-                            href={route('checkout')}
-                        />
-                        <MenuItem
-                            icon={<HeartIcon />}
-                            label="Menu Favorit"
-                            href={route('home')}
-                        />
-                        <MenuItem
-                            icon={<ChatIcon />}
-                            label="Messages"
-                            href={route('messages.index')}
-                        />
-                        <MenuItem
-                            icon={<CardIcon />}
-                            label="Metode Pembayaran"
-                            href={route('home')}
-                        />
-                    </div>
-
-                    {/* Group 3: Lainnya */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
-                        <MenuItem
-                            icon={<FaqIcon />}
-                            label="Tanya Jawab (FAQ)"
-                            href={route('home')}
-                        />
-                        <MenuItem
-                            icon={<ChefIcon />}
-                            label="Buka Catering"
-                            href={route('register.catering')}
-                        />
-                        <MenuItem
-                            icon={<GearIcon />}
-                            label="Pengaturan"
-                            href={route('profile.edit')}
-                        />
-                    </div>
-
-                    {/* Logout */}
-                    <div className="bg-[#f6f8fa] rounded-[16px] overflow-hidden mb-6">
-                        <button
-                            onClick={handleLogout}
-                            disabled={loggingOut}
-                            className="flex items-center justify-between w-full h-20 px-5"
-                        >
-                            <div className="flex items-center" style={{ gap: '14px' }}>
-                                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
-                                    <LogoutIcon />
-                                </div>
-                                <span className="text-[#32343e] text-[15px] font-sen">
-                                    {loggingOut ? 'Logging out...' : 'Log Out'}
-                                </span>
+                    {user ? (
+                        <>
+                            {/* Group 1: Informasi & Alamat */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
+                                <MenuItem
+                                    icon={<PersonIcon />}
+                                    label="Informasi Pribadi"
+                                    href={route('profile.info')}
+                                />
+                                <MenuItem
+                                    icon={<MapIcon />}
+                                    label="Alamat Pengiriman"
+                                    href={route('location.index')}
+                                />
                             </div>
-                            <ChevronRight />
-                        </button>
-                    </div>
+
+                            {/* Group 2: Belanja */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
+                                <MenuItem
+                                    icon={<CartIcon />}
+                                    label="Keranjang Belanja"
+                                    href={route('checkout')}
+                                />
+                                <MenuItem
+                                    icon={<HeartIcon />}
+                                    label="Menu Favorit"
+                                    href={route('home')}
+                                />
+                                <MenuItem
+                                    icon={<ChatIcon />}
+                                    label="Messages"
+                                    href={route('messages.index')}
+                                />
+                                <MenuItem
+                                    icon={<CardIcon />}
+                                    label="Metode Pembayaran"
+                                    href={route('home')}
+                                />
+                            </div>
+
+                            {/* Group 3: Lainnya */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
+                                <MenuItem
+                                    icon={<FaqIcon />}
+                                    label="Tanya Jawab (FAQ)"
+                                    href={route('home')}
+                                />
+                                <MenuItem
+                                    icon={<ChefIcon />}
+                                    label="Buka Catering"
+                                    href={route('register.catering')}
+                                />
+                                <MenuItem
+                                    icon={<GearIcon />}
+                                    label="Pengaturan"
+                                    href={route('profile.edit')}
+                                />
+                            </div>
+
+                            {/* Logout */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] overflow-hidden mb-6">
+                                <button
+                                    onClick={handleLogout}
+                                    disabled={loggingOut}
+                                    className="flex items-center justify-between w-full h-20 px-5"
+                                >
+                                    <div className="flex items-center" style={{ gap: '14px' }}>
+                                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+                                            <LogoutIcon />
+                                        </div>
+                                        <span className="text-[#32343e] text-[15px] font-sen">
+                                            {loggingOut ? 'Logging out...' : 'Log Out'}
+                                        </span>
+                                    </div>
+                                    <ChevronRight />
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {/* Group: Akun */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
+                                <MenuItem
+                                    icon={<LoginIcon />}
+                                    label="Masuk"
+                                    href={route('login')}
+                                />
+                                <MenuItem
+                                    icon={<RegisterIcon />}
+                                    label="Daftar"
+                                    href={route('register')}
+                                />
+                            </div>
+
+                            {/* Group: Lainnya */}
+                            <div className="bg-[#f6f8fa] rounded-[16px] px-5 py-6 flex flex-col gap-y-[18px]">
+                                <MenuItem
+                                    icon={<FaqIcon />}
+                                    label="Tanya Jawab (FAQ)"
+                                    href={route('home')}
+                                />
+                                <MenuItem
+                                    icon={<ChefIcon />}
+                                    label="Buka Catering"
+                                    href={route('register.catering')}
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </>

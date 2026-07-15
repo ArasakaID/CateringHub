@@ -36,8 +36,28 @@ class User extends Authenticatable
         return $this->hasMany(UserAddress::class);
     }
 
-    public function catering()
+    public function caterings(): HasMany
     {
-        return $this->hasOne(\App\Models\Catering::class);
+        return $this->hasMany(Catering::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isCatering(): bool
+    {
+        return $this->role === 'catering';
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    public function managedCateringIds(): array
+    {
+        return $this->caterings()->pluck('id')->toArray();
     }
 }

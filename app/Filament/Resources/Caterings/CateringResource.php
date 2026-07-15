@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Caterings;
 
 use App\Filament\Resources\Caterings\Pages\ManageCaterings;
 use App\Models\Catering;
-use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -21,14 +20,24 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class CateringResource extends Resource
 {
     protected static ?string $model = Catering::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
-
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-building-storefront';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Catering';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -63,6 +72,11 @@ class CateringResource extends Resource
                 Toggle::make('is_active')
                     ->default(true),
                 Toggle::make('is_featured'),
+                Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->label('Owner')
+                    ->searchable()
+                    ->visible(fn () => auth()->user()?->isAdmin() ?? false),
             ]);
     }
 
@@ -106,5 +120,37 @@ class CateringResource extends Resource
         return [
             'index' => ManageCaterings::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()?->isCatering()) {
+            return $query->where('user_id', auth()->id());
+        }
+
+        return $query;
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        if (auth()->user()?->isAdmin()) return true;
+
+        if (auth()->user()?->isCatering()) {
+            return $record->user_id === auth()->id();
+        }
+
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
     }
 }

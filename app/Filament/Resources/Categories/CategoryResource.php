@@ -93,4 +93,9 @@ class CategoryResource extends Resource
             'index' => ManageCategories::route('/'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
 }
