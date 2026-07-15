@@ -65,7 +65,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+    if ($user && in_array($user->role, ['catering', 'admin'])) {
+        return redirect()->route('seller.dashboard');
+    }
+    return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
